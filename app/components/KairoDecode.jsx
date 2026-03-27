@@ -257,7 +257,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         <div className="relative mb-4">
           <input
             type="text"
-            placeholder="Search existing or type a new term — press Enter"
+            placeholder="Search existing or type new term — press Enter"
             value={search}
             onChange={e => { setSearch(e.target.value); setFeedback(null); }}
             onKeyDown={e => e.key === "Enter" && tryAdd(search)}
