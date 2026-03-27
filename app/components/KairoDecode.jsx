@@ -257,12 +257,12 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         <div className="relative mb-4">
           <input
             type="text"
-            placeholder="Search existing or type a new term — press Enter"
+            placeholder="Search existing or type new term — press Enter"
             value={search}
             onChange={e => { setSearch(e.target.value); setFeedback(null); }}
             onKeyDown={e => e.key === "Enter" && tryAdd(search)}
             className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none border transition-all"
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", fontFamily: "inherit" }}
+            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", fontFamily: "inherit", fontSize: "16px" }}
           />
           {searchQ.length > 1 && !generating && (
             <button onClick={() => tryAdd(search)}
