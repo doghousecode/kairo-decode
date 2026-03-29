@@ -150,21 +150,31 @@ export default function AIGlossary() {
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("kairo-decode-v1");
-      if (raw) {
-        const saved = JSON.parse(raw);
-        if (saved.length) {
-          setTerms([...SEED_GLOSSARY, ...saved]);
-          setNewKeys(new Set(saved.map(t => t.term.toLowerCase())));
-        }
-      }
-    } catch {}
+    fetch("/api/terms")
+      .then(r => r.json())
+      .then(data => {
+        if (!Array.isArray(data) || !data.length) return;
+        const remote = data.map(t => ({
+          term: t.term,
+          emoji: t.emoji,
+          definition: t.definition,
+          examples: t.examples || [],
+          deepDive: t.deep_dive,
+          tag: t.tag,
+          seeded: false,
+        }));
+        setTerms([...SEED_GLOSSARY, ...remote]);
+      })
+      .catch(() => {});
   }, []);
 
-  const persist = (all) => {
+  const persist = async (entry) => {
     try {
-      localStorage.setItem("kairo-decode-v1", JSON.stringify(all.filter(t => !t.seeded)));
+      await fetch("/api/terms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(entry),
+      });
     } catch {}
   };
 
@@ -205,11 +215,10 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       else if (parsed.term) {
         const entry = { ...parsed, seeded: false };
         delete entry.relevant;
-        const updated = [...terms, entry];
-        setTerms(updated);
+        setTerms(prev => [...prev, entry]);
         setNewKeys(prev => new Set([...prev, entry.term.toLowerCase()]));
         setOpenTerm(entry.term);
-        persist(updated);
+        persist(entry);
         setSearch("");
       }
     } catch { setFeedback({ type: "error" }); }
@@ -218,11 +227,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
   const tags = ["All", ...Array.from(new Set(terms.map(t => t.tag)))];
 
-  const filtered = terms.filter(item => {
-    const q = search.trim().toLowerCase();
-    const matchSearch = !q || item.term.toLowerCase().includes(q) || item.definition.toLowerCase().includes(q);
-    return matchSearch && (activeTag === "All" || item.tag === activeTag);
-  });
+  const filtered = terms
+    .filter(item => {
+      const q = search.trim().toLowerCase();
+      const matchSearch = !q || item.term.toLowerCase().includes(q) || item.definition.toLowerCase().includes(q);
+      return matchSearch && (activeTag === "All" || item.tag === activeTag);
+    })
+    .sort((a, b) => a.term.localeCompare(b.term));
 
   const searchQ = search.trim();
   const isKnown = searchQ && terms.some(t => t.term.toLowerCase() === searchQ.toLowerCase());
