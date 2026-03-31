@@ -236,8 +236,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl tracking-tight mb-2" style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", color: "#5b80e8", textTransform: "lowercase" }}>
-            Decode
+          <h1 className="text-4xl tracking-tight mb-2" style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", textTransform: "lowercase" }}>
+            <span style={{ color: "#2a3a6a" }}>k</span><span style={{ color: "#5b80e8" }}>ai</span><span style={{ color: "#2a3a6a" }}>ro</span> <span style={{ color: "#5b80e8" }}>decode</span>
           </h1>
           <p className="text-sm mb-2" style={{ color: "rgba(255,255,255,0.38)" }}>
             Search any AI term. Unknown but relevant? It gets added automatically. 🧠
