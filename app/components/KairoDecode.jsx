@@ -242,26 +242,26 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
   return (
     <div className="min-h-screen p-6" style={{ background: "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)", fontFamily: "'DM Sans',system-ui,sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,800&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}`}</style>
 
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold tracking-widest uppercase" style={{ color: "rgba(99,102,241,0.55)" }}>Kairo</span>
-            <span style={{ color: "rgba(255,255,255,0.15)" }}>—</span>
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.28)" }}>Decode</span>
-            {generatedCount > 0 && <>
-              <span style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
-              <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>+{generatedCount} discovered</span>
-            </>}
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-2" style={{ background: "linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.38) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Decode
+      {/* Fixed heading */}
+      <div className="fixed top-0 left-0 right-0 z-50 px-6 pt-6 pb-12" style={{ background: "linear-gradient(to bottom,#080810 72%,transparent 92%)" }}>
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-4xl tracking-tight" style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", textTransform: "lowercase" }}>
+            <span style={{ color: "#2a3a6a" }}>k</span><span style={{ color: "#5b80e8" }}>ai</span><span style={{ color: "#2a3a6a" }}>ro</span> <span style={{ color: "#5b80e8" }}>decode</span>
           </h1>
-          <p className="text-sm" style={{ color: "rgba(255,255,255,0.38)" }}>
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto" style={{ paddingTop: "80px" }}>
+        {/* Sub-header */}
+        <div className="mb-8">
+          <p className="text-sm mb-2" style={{ color: "rgba(255,255,255,0.38)" }}>
             Search any AI term. Unknown but relevant? It gets added automatically. 🧠
           </p>
+          {generatedCount > 0 && (
+            <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>+{generatedCount} discovered</span>
+          )}
         </div>
 
         {/* Search */}
