@@ -1,17 +1,24 @@
 import { NextResponse } from 'next/server'
 
 export function middleware(request) {
-  const authCookie = request.cookies.get('kairo-auth')
+  const { pathname } = request.nextUrl
 
-  if (authCookie?.value === 'granted') {
+  if (pathname.startsWith('/password') || pathname.startsWith('/api/password')) {
     return NextResponse.next()
   }
 
-  return NextResponse.redirect('https://meetkairo.ai/password')
+  const auth = request.cookies.get('kairo-auth')
+  if (!auth || auth.value !== 'granted') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/password'
+    return NextResponse.redirect(url)
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon\.ico|.*\.png$|.*\.jpg$|.*\.jpeg$|.*\.svg$|.*\.ico$).*)',
   ],
 }
