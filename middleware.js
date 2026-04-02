@@ -7,13 +7,12 @@ export function middleware(request) {
     return NextResponse.next()
   }
 
-  // TODO: re-enable password requirement
-  // const auth = request.cookies.get('kairo-auth')
-  // if (!auth || auth.value !== 'granted') {
-  //   const url = request.nextUrl.clone()
-  //   url.pathname = '/password'
-  //   return NextResponse.redirect(url)
-  // }
+  const auth = request.cookies.get('kairo-auth')
+  if (!auth || auth.value !== 'granted') {
+    const url = request.nextUrl.clone()
+    url.pathname = '/password'
+    return NextResponse.redirect(url)
+  }
 
   return NextResponse.next()
 }
