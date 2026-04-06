@@ -171,7 +171,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
           {smartLines.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>Make me look smart</p>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>Make me look like I know what I'm talking about</p>
               <div className="space-y-2">
                 {smartLines.map((line, i) => (
                   <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.52)" }}>
