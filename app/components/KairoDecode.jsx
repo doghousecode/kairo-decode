@@ -424,12 +424,21 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
     <div className="min-h-screen p-6" style={{ background: "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)", fontFamily: "'DM Sans',system-ui,sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,800&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}`}</style>
 
-      {/* Fixed heading */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-6 pt-6 pb-6" style={{ background: "#080810", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-4xl tracking-tight" style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", textTransform: "lowercase" }}>
-            <span style={{ color: "#2a3a6a" }}>k</span><span style={{ color: "#5b80e8" }}>ai</span><span style={{ color: "#2a3a6a" }}>ro</span> <span style={{ color: "#5b80e8" }}>decode</span>
-          </h1>
+      {/* Fixed header */}
+      <div className="fixed top-0 left-0 right-0 z-50" style={{ background: "#0d0d0d", borderBottom: "0.5px solid rgba(255,255,255,0.07)" }}>
+        <div className="max-w-2xl mx-auto flex items-center justify-between" style={{ padding: "1.25rem 2rem" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+              <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "32px", width: "auto", display: "block" }} />
+              <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "1.45rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
+            </div>
+            <div style={{ fontSize: "0.75rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 600, marginTop: "0.4rem" }}>
+              AI terminology, decoded
+            </div>
+          </div>
+          <span style={{ fontSize: "0.6rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.15em", textTransform: "uppercase", fontWeight: 500 }}>
+            meetkairo.ai
+          </span>
         </div>
       </div>
 
