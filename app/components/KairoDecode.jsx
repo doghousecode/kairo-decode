@@ -426,11 +426,11 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
       {/* Fixed header */}
       <div className="fixed top-0 left-0 right-0 z-50" style={{ background: "#0d0d0d", borderBottom: "0.5px solid rgba(255,255,255,0.07)" }}>
-        <div className="max-w-2xl mx-auto flex items-center justify-between" style={{ padding: "1.25rem 2rem" }}>
+        <div className="max-w-2xl mx-auto flex items-center justify-between" style={{ padding: "1.25rem 1.5rem" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
               <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "32px", width: "auto", display: "block" }} />
-              <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "1.45rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
+              <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 800, fontStyle: "italic", fontSize: "2.9rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
             </div>
             <div style={{ fontSize: "0.75rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 600, marginTop: "0.4rem" }}>
               AI terminology, decoded
@@ -442,7 +442,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto" style={{ paddingTop: "96px" }}>
+      <div className="max-w-2xl mx-auto" style={{ paddingTop: "116px" }}>
         {/* Sub-header */}
         <div className="mb-8">
           <p className="text-sm mb-2" style={{ color: "rgba(255,255,255,0.38)" }}>
