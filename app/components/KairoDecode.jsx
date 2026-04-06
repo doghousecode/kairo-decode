@@ -115,7 +115,35 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm }) 
 
 function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm }) {
   const deepDives = Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive];
-  const smartLines = item.smartLines || [];
+  const [smartLines, setSmartLines] = useState(item.smartLines || []);
+  const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen || smartLines.length > 0 || generatingSmartLines || item.seeded) return;
+    setGeneratingSmartLines(true);
+    fetch("/api/claude", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514", max_tokens: 300,
+        system: "You write short, dry, witty example sentences for a tech glossary. Respond ONLY with a raw JSON array — no markdown, no backticks.",
+        messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nWrite exactly 2 sentences (max 20 words each) using this term naturally. Dry wit welcome.\nFormat: ["sentence one.","sentence two."]` }],
+      }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        const text = (d.content?.[0]?.text || "[]").replace(/```json|```/g, "").trim();
+        const lines = JSON.parse(text);
+        if (Array.isArray(lines) && lines.length > 0) {
+          setSmartLines(lines);
+          fetch("/api/terms", {
+            method: "PATCH", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ term: item.term, smartLines: lines }),
+          }).catch(() => {});
+        }
+      })
+      .catch(() => {})
+      .finally(() => setGeneratingSmartLines(false));
+  }, [isOpen]);
   const [loadingIdx, setLoadingIdx] = useState(null);
   const [responses, setResponses] = useState(Array(deepDives.length).fill(null));
   const ref = useRef(null);
@@ -170,16 +198,21 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
           </p>
 
-          {smartLines.length > 0 && (
+          {(smartLines.length > 0 || generatingSmartLines) && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>Make me look like I know what I'm talking about</p>
-              <div className="space-y-2">
-                {smartLines.map((line, i) => (
-                  <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.52)" }}>
-                    "<HighlightedSentence sentence={line} term={item.term} />"
-                  </p>
-                ))}
-              </div>
+              <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+                Make me look like I know what I'm talking about
+                {generatingSmartLines && <PulsingDots />}
+              </p>
+              {smartLines.length > 0 && (
+                <div className="space-y-2">
+                  {smartLines.map((line, i) => (
+                    <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.52)" }}>
+                      "<HighlightedSentence sentence={line} term={item.term} />"
+                    </p>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
