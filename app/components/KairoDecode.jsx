@@ -3,18 +3,18 @@
 import { useState, useEffect, useRef } from "react";
 
 const SEED_GLOSSARY = [
-  { term: "Agent", emoji: "🤖", definition: "An AI system that can take actions autonomously — not just answer questions, but actually do things: browse the web, write code, call APIs, manage files.", examples: [{ label: "Claude agent browsing the web", url: "https://www.anthropic.com/claude" }, { label: "AutoGPT (early popular agent)", url: "https://github.com/Significant-Gravitas/AutoGPT" }], deepDive: "What's the difference between an AI chatbot and an AI agent? Give me a concrete example of each, and explain when you'd use one vs the other.", tag: "Core Concept", seeded: true },
-  { term: "Agentic", emoji: "⚡", definition: "Adjective describing AI behaviour that is goal-directed and multi-step — the AI decides what to do next rather than just responding to a single prompt.", examples: [{ label: "Anthropic on agentic AI", url: "https://www.anthropic.com/research/building-effective-agents" }], deepDive: "Explain 'agentic AI' like I'm a product manager. What does it mean in practice for building products? What are the risks?", tag: "Core Concept", seeded: true },
-  { term: "Model", emoji: "🧠", definition: "The actual AI brain — the trained neural network that processes input and generates output. GPT-4, Claude 3.5 Sonnet, Gemini are all 'models'.", examples: [{ label: "Anthropic model overview", url: "https://docs.anthropic.com/en/docs/about-claude/models/overview" }, { label: "OpenAI model comparison", url: "https://platform.openai.com/docs/models" }], deepDive: "Compare the major frontier AI models available today (Claude, GPT-4o, Gemini, Llama) — strengths, weaknesses, best use cases, cost differences.", tag: "Core Concept", seeded: true },
-  { term: "CLI", emoji: "💻", definition: "Command Line Interface — you type text commands directly into a terminal instead of clicking around a GUI. How developers talk to computers (and increasingly, to AI tools).", examples: [{ label: "Claude Code CLI", url: "https://docs.anthropic.com/en/docs/claude-code/overview" }, { label: "GitHub CLI", url: "https://cli.github.com/" }], deepDive: "I'm a non-developer learning to use the CLI for AI development. Give me the 10 commands I'll use most often, with plain-English explanations.", tag: "Dev Tool", seeded: true },
-  { term: "IDE", emoji: "🖥️", definition: "Integrated Development Environment — a fancy text editor for writing code. Think Xcode but for everything. Cursor and VS Code are the popular ones right now.", examples: [{ label: "Cursor (AI-native IDE)", url: "https://cursor.com" }, { label: "VS Code", url: "https://code.visualstudio.com/" }], deepDive: "Compare Cursor vs VS Code for someone building AI-powered web apps as a side project. Which should I use and why?", tag: "Dev Tool", seeded: true },
-  { term: "Token", emoji: "🪙", definition: "The unit of text that AI models process — roughly ¾ of a word. API costs are measured in tokens. 1,000 tokens ≈ 750 words. This is the 'spend' on those Instagram dashboards.", examples: [{ label: "Anthropic pricing (tokens)", url: "https://www.anthropic.com/pricing" }], deepDive: "Explain AI token economics to me like I'm building a subscription product. How do I model costs vs revenue at scale?", tag: "Economics", seeded: true },
-  { term: "Context Window", emoji: "🪟", definition: "How much text an AI can 'hold in its head' at once — its working memory. Bigger = more expensive but smarter in long conversations or large document tasks.", examples: [{ label: "Claude's 200k context window explained", url: "https://www.anthropic.com/news/claude-2-1" }], deepDive: "What are the practical implications of context window size when building a product like a daily briefing tool? When does it matter, when doesn't it?", tag: "Core Concept", seeded: true },
-  { term: "RAG", emoji: "📚", definition: "Retrieval-Augmented Generation — instead of asking the model to 'remember' facts, you fetch relevant docs at runtime and inject them into the prompt. Smarter than fine-tuning for most use cases.", examples: [{ label: "What is RAG?", url: "https://aws.amazon.com/what-is/retrieval-augmented-generation/" }], deepDive: "Explain RAG vs fine-tuning for a non-technical founder building a B2B SaaS AI product. Which approach for which problem?", tag: "Architecture", seeded: true },
-  { term: "Prompt Engineering", emoji: "✍️", definition: "The craft of writing instructions to AI models to get reliably good outputs. More art than science — but there are real patterns that work.", examples: [{ label: "Anthropic prompt engineering guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" }], deepDive: "Give me the 5 most impactful prompt engineering techniques with before/after examples. Focus on techniques that improve consistency and reduce hallucination.", tag: "Craft", seeded: true },
-  { term: "MCP", emoji: "🔌", definition: "Model Context Protocol — Anthropic's open standard for connecting AI models to external tools, data sources, and services. Like USB-C but for AI integrations.", examples: [{ label: "MCP introduction", url: "https://modelcontextprotocol.io/introduction" }, { label: "Claude MCP docs", url: "https://docs.anthropic.com/en/docs/mcp" }], deepDive: "Explain MCP (Model Context Protocol) to a product builder — what problems does it solve, and what could I realistically build with it as a solo developer?", tag: "Architecture", seeded: true },
-  { term: "Hallucination", emoji: "👻", definition: "When an AI confidently states something false — it doesn't 'know' it's wrong. The #1 reliability problem in production AI products.", examples: [{ label: "Why LLMs hallucinate", url: "https://www.ibm.com/topics/ai-hallucinations" }], deepDive: "What are the most effective techniques for reducing hallucinations in a production AI app? Give me a ranked list from easiest to implement to hardest.", tag: "Risk", seeded: true },
-  { term: "Fine-tuning", emoji: "🎛️", definition: "Training an existing model further on your own data to make it better at a specific task or style. Expensive, often overkill — RAG is usually the right answer first.", examples: [{ label: "OpenAI fine-tuning guide", url: "https://platform.openai.com/docs/guides/fine-tuning" }], deepDive: "When does fine-tuning actually make sense vs RAG vs prompt engineering? Give me a decision framework with real examples.", tag: "Architecture", seeded: true },
+  { term: "Agent", emoji: "🤖", definition: "An AI system that can take actions autonomously — not just answer questions, but actually do things: browse the web, write code, call APIs, manage files.", examples: [{ label: "Claude agent browsing the web", url: "https://www.anthropic.com/claude" }, { label: "AutoGPT (early popular agent)", url: "https://github.com/Significant-Gravitas/AutoGPT" }], deepDive: ["What's the difference between an AI chatbot and an AI agent? Give me a concrete example of each, and explain when you'd use one vs the other.", "What are the biggest failure modes of AI agents in production today, and how do teams guard against them?", "How do you decide when a task should be handled by a single AI call vs a multi-step agent?"], tag: "Core Concept", seeded: true },
+  { term: "Agentic", emoji: "⚡", definition: "Adjective describing AI behaviour that is goal-directed and multi-step — the AI decides what to do next rather than just responding to a single prompt.", examples: [{ label: "Anthropic on agentic AI", url: "https://www.anthropic.com/research/building-effective-agents" }], deepDive: ["Explain 'agentic AI' like I'm a product manager. What does it mean in practice for building products? What are the risks?", "What's the difference between 'agentic' and 'autonomous' AI? Where does one end and the other begin?", "Give me three real products that are meaningfully agentic, and explain what makes each agentic vs just a chatbot."], tag: "Core Concept", seeded: true },
+  { term: "Model", emoji: "🧠", definition: "The actual AI brain — the trained neural network that processes input and generates output. GPT-4, Claude 3.5 Sonnet, Gemini are all 'models'.", examples: [{ label: "Anthropic model overview", url: "https://docs.anthropic.com/en/docs/about-claude/models/overview" }, { label: "OpenAI model comparison", url: "https://platform.openai.com/docs/models" }], deepDive: ["Compare the major frontier AI models available today (Claude, GPT-4o, Gemini, Llama) — strengths, weaknesses, best use cases, cost differences.", "How do you pick the right model for a production product — what trade-offs matter most between speed, cost, and quality?", "What does 'model capability' actually mean in practice — how do benchmark scores translate to real-world product quality?"], tag: "Core Concept", seeded: true },
+  { term: "CLI", emoji: "💻", definition: "Command Line Interface — you type text commands directly into a terminal instead of clicking around a GUI. How developers talk to computers (and increasingly, to AI tools).", examples: [{ label: "Claude Code CLI", url: "https://docs.anthropic.com/en/docs/claude-code/overview" }, { label: "GitHub CLI", url: "https://cli.github.com/" }], deepDive: ["I'm a non-developer learning to use the CLI for AI development. Give me the 10 commands I'll use most often, with plain-English explanations.", "What's the fastest way to get comfortable with the CLI as a non-technical founder building AI tools?", "How is the CLI used differently in AI development vs traditional software development? What new patterns have emerged?"], tag: "Dev Tool", seeded: true },
+  { term: "IDE", emoji: "🖥️", definition: "Integrated Development Environment — a fancy text editor for writing code. Think Xcode but for everything. Cursor and VS Code are the popular ones right now.", examples: [{ label: "Cursor (AI-native IDE)", url: "https://cursor.com" }, { label: "VS Code", url: "https://code.visualstudio.com/" }], deepDive: ["Compare Cursor vs VS Code for someone building AI-powered web apps as a side project. Which should I use and why?", "What AI IDE features actually save meaningful time vs feel impressive but don't change your workflow?", "How do AI-native IDEs like Cursor change how you should think about writing and structuring code?"], tag: "Dev Tool", seeded: true },
+  { term: "Token", emoji: "🪙", definition: "The unit of text that AI models process — roughly ¾ of a word. API costs are measured in tokens. 1,000 tokens ≈ 750 words. This is the 'spend' on those Instagram dashboards.", examples: [{ label: "Anthropic pricing (tokens)", url: "https://www.anthropic.com/pricing" }], deepDive: ["Explain AI token economics to me like I'm building a subscription product. How do I model costs vs revenue at scale?", "What's the most common mistake founders make when estimating token costs for their AI product?", "How do context window size and token count interact — and what does that mean for product design decisions?"], tag: "Economics", seeded: true },
+  { term: "Context Window", emoji: "🪟", definition: "How much text an AI can 'hold in its head' at once — its working memory. Bigger = more expensive but smarter in long conversations or large document tasks.", examples: [{ label: "Claude's 200k context window explained", url: "https://www.anthropic.com/news/claude-2-1" }], deepDive: ["What are the practical implications of context window size when building a product like a daily briefing tool? When does it matter, when doesn't it?", "How should I design my app's architecture differently depending on whether I have a small vs large context window?", "What happens when you hit the context window limit in production — and what are the best strategies to handle it gracefully?"], tag: "Core Concept", seeded: true },
+  { term: "RAG", emoji: "📚", definition: "Retrieval-Augmented Generation — instead of asking the model to 'remember' facts, you fetch relevant docs at runtime and inject them into the prompt. Smarter than fine-tuning for most use cases.", examples: [{ label: "What is RAG?", url: "https://aws.amazon.com/what-is/retrieval-augmented-generation/" }], deepDive: ["Explain RAG vs fine-tuning for a non-technical founder building a B2B SaaS AI product. Which approach for which problem?", "What are the most common ways RAG implementations fail in production, and how do you prevent them?", "Walk me through the minimum viable RAG setup for a startup — what do I actually need to build vs what can I skip?"], tag: "Architecture", seeded: true },
+  { term: "Prompt Engineering", emoji: "✍️", definition: "The craft of writing instructions to AI models to get reliably good outputs. More art than science — but there are real patterns that work.", examples: [{ label: "Anthropic prompt engineering guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" }], deepDive: ["Give me the 5 most impactful prompt engineering techniques with before/after examples. Focus on techniques that improve consistency and reduce hallucination.", "How much does prompt engineering actually matter now that models are smarter — or is it becoming less important?", "What's the difference between a prompt that works in a demo and one that works reliably in production?"], tag: "Craft", seeded: true },
+  { term: "MCP", emoji: "🔌", definition: "Model Context Protocol — Anthropic's open standard for connecting AI models to external tools, data sources, and services. Like USB-C but for AI integrations.", examples: [{ label: "MCP introduction", url: "https://modelcontextprotocol.io/introduction" }, { label: "Claude MCP docs", url: "https://docs.anthropic.com/en/docs/mcp" }], deepDive: ["Explain MCP (Model Context Protocol) to a product builder — what problems does it solve, and what could I realistically build with it as a solo developer?", "How does MCP compare to building custom API integrations — when would I use one over the other?", "What are the most useful MCP integrations available right now, and which ones are actually worth implementing?"], tag: "Architecture", seeded: true },
+  { term: "Hallucination", emoji: "👻", definition: "When an AI confidently states something false — it doesn't 'know' it's wrong. The #1 reliability problem in production AI products.", examples: [{ label: "Why LLMs hallucinate", url: "https://www.ibm.com/topics/ai-hallucinations" }], deepDive: ["What are the most effective techniques for reducing hallucinations in a production AI app? Give me a ranked list from easiest to implement to hardest.", "How do you detect hallucinations at scale in a production system — what monitoring or evaluation approaches work?", "What product design patterns make hallucinations less likely to cause real harm even when they do happen?"], tag: "Risk", seeded: true },
+  { term: "Fine-tuning", emoji: "🎛️", definition: "Training an existing model further on your own data to make it better at a specific task or style. Expensive, often overkill — RAG is usually the right answer first.", examples: [{ label: "OpenAI fine-tuning guide", url: "https://platform.openai.com/docs/guides/fine-tuning" }], deepDive: ["When does fine-tuning actually make sense vs RAG vs prompt engineering? Give me a decision framework with real examples.", "What data quality and quantity do you actually need to make fine-tuning worthwhile — what are the minimums?", "How do you evaluate whether a fine-tuned model is actually better than a well-prompted base model for your use case?"], tag: "Architecture", seeded: true },
 ];
 
 const TAG_COLORS = {
@@ -38,29 +38,33 @@ function TagBadge({ tag, isNew }) {
 }
 
 function GlossaryCard({ item, isOpen, onToggle, isNew }) {
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState(null);
+  const deepDives = Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive];
+  const [loadingIdx, setLoadingIdx] = useState(null);
+  const [responses, setResponses] = useState(Array(deepDives.length).fill(null));
   const ref = useRef(null);
 
   useEffect(() => {
     if (isNew && ref.current) setTimeout(() => ref.current.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
   }, [isNew]);
 
-  const runDeepDive = async () => {
-    setLoading(true); setResponse(null);
+  const runDeepDive = async (idx) => {
+    setLoadingIdx(idx);
+    setResponses(prev => { const next = [...prev]; next[idx] = null; return next; });
     try {
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
           system: "You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.",
-          messages: [{ role: "user", content: item.deepDive }],
+          messages: [{ role: "user", content: deepDives[idx] }],
         }),
       });
       const d = await res.json();
-      setResponse(d.content?.[0]?.text || "No response.");
-    } catch { setResponse("Error — try again."); }
-    setLoading(false);
+      setResponses(prev => { const next = [...prev]; next[idx] = d.content?.[0]?.text || "No response."; return next; });
+    } catch {
+      setResponses(prev => { const next = [...prev]; next[idx] = "Error — try again."; return next; });
+    }
+    setLoadingIdx(null);
   };
 
   return (
@@ -102,22 +106,31 @@ function GlossaryCard({ item, isOpen, onToggle, isNew }) {
             </div>
           )}
 
-          <div className="rounded-lg p-3" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="text-xs uppercase tracking-widest mb-1.5" style={{ color: "rgba(255,255,255,0.3)" }}>Deep dive</p>
-            <p className="text-sm italic mb-3" style={{ color: "rgba(255,255,255,0.5)" }}>"{item.deepDive}"</p>
-            <button onClick={runDeepDive} disabled={loading} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
-              style={{
-                background: loading ? "rgba(255,255,255,0.04)" : "rgba(99,102,241,0.22)",
-                color: loading ? "rgba(255,255,255,0.2)" : "rgba(199,210,254,1)",
-                border: "1px solid rgba(99,102,241,0.28)",
-              }}>
-              {loading ? "Asking Claude..." : "▶ Run this prompt"}
-            </button>
-            {response && (
-              <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(255,255,255,0.68)" }}>{response}</p>
-              </div>
-            )}
+          <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Deep dive</p>
+            {deepDives.map((prompt, idx) => {
+              const isLoading = loadingIdx === idx;
+              const response = responses[idx];
+              return (
+                <div key={idx} className="pt-2" style={{ borderTop: idx === 0 ? "none" : "1px solid rgba(255,255,255,0.06)" }}>
+                  <p className="text-sm italic mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>"{prompt}"</p>
+                  <button onClick={() => runDeepDive(idx)} disabled={loadingIdx !== null} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
+                    style={{
+                      background: isLoading ? "rgba(255,255,255,0.04)" : "rgba(99,102,241,0.22)",
+                      color: (loadingIdx !== null && !isLoading) ? "rgba(255,255,255,0.15)" : isLoading ? "rgba(255,255,255,0.2)" : "rgba(199,210,254,1)",
+                      border: "1px solid rgba(99,102,241,0.28)",
+                      cursor: loadingIdx !== null ? "not-allowed" : "pointer",
+                    }}>
+                    {isLoading ? "Asking Claude..." : "▶ Run this prompt"}
+                  </button>
+                  {response && (
+                    <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(255,255,255,0.68)" }}>{response}</p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -159,7 +172,7 @@ export default function AIGlossary() {
           emoji: t.emoji,
           definition: t.definition,
           examples: t.examples || [],
-          deepDive: t.deep_dive,
+          deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
           tag: t.tag,
           seeded: false,
         }));
@@ -199,7 +212,7 @@ Given a term, decide if it's genuinely relevant to that domain. If yes, generate
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
 
 If relevant:
-{"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":"One punchy question a product builder would want answered.","tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
+{"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["First punchy question a product builder would want answered.","Second distinct angle on the term — practical or comparative.","Third question — edge case, risk, or real-world implementation detail."],"tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
 
 If not relevant (random word, name, off-topic): {"relevant":false}
 
