@@ -26,6 +26,7 @@ export async function POST(request) {
       definition: body.definition,
       examples: body.examples,
       deep_dive: body.deepDive,
+      smart_lines: body.smartLines ?? null,
       tag: body.tag,
     })
     .select()
