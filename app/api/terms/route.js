@@ -39,9 +39,13 @@ export async function POST(request) {
 export async function PATCH(request) {
   const body = await request.json();
 
+  const updates = {};
+  if (body.smartLines !== undefined) updates.smart_lines = body.smartLines;
+  if (body.deepDive !== undefined) updates.deep_dive = body.deepDive;
+
   const { data, error } = await supabase
     .from("decode_terms")
-    .update({ smart_lines: body.smartLines })
+    .update(updates)
     .eq("term", body.term)
     .select()
     .single();
