@@ -35,3 +35,17 @@ export async function POST(request) {
   if (error) return Response.json({ error: error.message }, { status: 500 });
   return Response.json(data, { status: 201 });
 }
+
+export async function PATCH(request) {
+  const body = await request.json();
+
+  const { data, error } = await supabase
+    .from("decode_terms")
+    .update({ smart_lines: body.smartLines })
+    .eq("term", body.term)
+    .select()
+    .single();
+
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+  return Response.json(data);
+}
