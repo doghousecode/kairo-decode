@@ -37,29 +37,32 @@ function TagBadge({ tag, isNew }) {
   );
 }
 
-function HighlightedSentence({ sentence, term }) {
-  const esc = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const match = new RegExp(`\\b(${esc}s?)\\b`, "i").exec(sentence);
-  if (!match) return <span>{sentence}</span>;
-  return (
-    <span>
-      {sentence.slice(0, match.index)}
-      <strong style={{ color: "rgba(199,210,254,1)", background: "rgba(99,102,241,0.2)", borderRadius: "3px", padding: "0 3px" }}>
-        {match[0]}
-      </strong>
-      {sentence.slice(match.index + match[0].length)}
-    </span>
-  );
-}
 
-function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm }) {
+function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, highlightTerm }) {
   const otherTerms = terms
     .filter(t => t.term.toLowerCase() !== currentTerm.toLowerCase())
     .map(t => t.term)
     .sort((a, b) => b.length - a.length);
 
-  // Pass 1: split by known glossary terms (case-insensitive, word-boundary, optional plural s)
   let segments = [{ type: "text", content: text }];
+
+  // Pass 0: bold-highlight the specified term (used in smartLines to mark the card's own term)
+  if (highlightTerm) {
+    const esc = highlightTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(`\\b(${esc}s?)\\b`, "i");
+    const next = [];
+    for (const seg of segments) {
+      if (seg.type !== "text") { next.push(seg); continue; }
+      seg.content.split(re).forEach((part, i) => {
+        if (!part) return;
+        if (i % 2 === 1) next.push({ type: "highlight", content: part });
+        else next.push({ type: "text", content: part });
+      });
+    }
+    segments = next;
+  }
+
+  // Pass 1: link known glossary terms (case-insensitive, word-boundary, optional plural s)
   for (const term of otherTerms) {
     const esc = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const re = new RegExp(`\\b(${esc}s?)\\b`, "i");
@@ -89,6 +92,13 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm }) 
   return (
     <span>
       {final.map((seg, i) => {
+        if (seg.type === "highlight") {
+          return (
+            <strong key={i} style={{ color: "rgba(199,210,254,1)", background: "rgba(99,102,241,0.2)", borderRadius: "3px", padding: "0 3px" }}>
+              {seg.content}
+            </strong>
+          );
+        }
         if (seg.type === "known") {
           return (
             <button key={i} onClick={() => onTermClick(seg.term)}
@@ -235,7 +245,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 <div className="space-y-2">
                   {smartLines.map((line, i) => (
                     <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.52)" }}>
-                      "<HighlightedSentence sentence={line} term={item.term} />"
+                      "<LinkedDefinition text={line} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} highlightTerm={item.term} />"
                     </p>
                   ))}
                 </div>
@@ -265,7 +275,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               const response = responses[idx];
               return (
                 <div key={idx} className="pt-2" style={{ borderTop: idx === 0 ? "none" : "1px solid rgba(255,255,255,0.06)" }}>
-                  <p className="text-sm italic mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>"{prompt}"</p>
+                  <p className="text-sm italic mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>"<LinkedDefinition text={prompt} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />"</p>
                   <button onClick={() => runDeepDive(idx)} disabled={loadingIdx !== null} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
                     style={{
                       background: isLoading ? "rgba(255,255,255,0.04)" : "rgba(99,102,241,0.22)",
