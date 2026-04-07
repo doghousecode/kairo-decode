@@ -72,6 +72,13 @@ export default function RootLayout({ children }) {
               root.style.opacity    = '1';
               hideSplash();
             }, 3000);
+
+            window.kairoShowSplash = function() {
+              splash.style.transition    = 'opacity 0.4s ease';
+              splash.style.opacity       = '1';
+              splash.style.pointerEvents = 'auto';
+              setTimeout(function() { hideSplash(); }, 2500);
+            };
           })();
         `}} />
       </body>
