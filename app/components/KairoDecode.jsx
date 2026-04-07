@@ -428,9 +428,9 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       <div className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "#0d0d0d", borderBottom: "0.5px solid rgba(255,255,255,0.07)" }}>
         <div className="max-w-2xl mx-auto flex items-center justify-between" style={{ padding: "1.25rem 0" }}>
           <div>
-            <div style={{ display: "flex", alignItems: "flex-end", gap: "0.45rem" }}>
-              <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "32px", width: "auto", display: "block" }} />
-              <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.4rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+              <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "32px", width: "auto", display: "block", transform: "translateY(-2px)" }} />
+              <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.6rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
             </div>
             <div style={{ fontSize: "0.75rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 600, marginTop: "0.4rem" }}>
               AI terminology, decoded
