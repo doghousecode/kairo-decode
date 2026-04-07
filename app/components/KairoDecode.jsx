@@ -432,7 +432,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
   return (
     <div className="min-h-screen p-6" style={{ background: "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)", fontFamily: "'DM Sans',system-ui,sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}`}</style>
 
       {/* Fixed header */}
       <div className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "#0d0d0d", borderBottom: "0.5px solid rgba(255,255,255,0.07)" }}>
@@ -455,24 +455,36 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
         {/* Search */}
         <div className="relative mb-4">
+          {/* Spinning gradient border */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: "13px", overflow: "hidden", zIndex: 0 }}>
+            <div style={{
+              position: "absolute", width: "200%", height: "200%", top: "-50%", left: "-50%",
+              background: "conic-gradient(from 0deg, #3b82f6, #8b5cf6, #ec4899, #f97316, #f59e0b, #8b5cf6, #3b82f6)",
+              animation: "ai-border-spin 6s linear infinite, ai-glow-pulse 3s ease-in-out infinite",
+            }} />
+          </div>
+          {/* Inner mask */}
+          <div style={{ position: "absolute", inset: "1.5px", borderRadius: "11.5px", background: "#09090f", zIndex: 1 }} />
+          {/* Outer glow */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: "13px", boxShadow: "0 0 22px rgba(139,92,246,0.18), 0 0 8px rgba(236,72,153,0.12)", zIndex: 0, pointerEvents: "none" }} />
           <input
             type="text"
             placeholder="Search existing or add new term"
             value={search}
             onChange={e => { setSearch(e.target.value); setFeedback(null); }}
             onKeyDown={e => e.key === "Enter" && tryAdd(search)}
-            className="w-full px-4 py-4 rounded-xl text-sm text-white outline-none border transition-all"
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", fontFamily: "inherit", fontSize: "16px" }}
+            className="w-full px-4 py-4 rounded-xl text-sm text-white outline-none"
+            style={{ position: "relative", zIndex: 2, background: "transparent", border: "none", fontFamily: "inherit", fontSize: "16px" }}
           />
           {searchQ.length > 1 && !generating && (
             <button onClick={() => tryAdd(search)}
               className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-3 py-1.5 rounded-lg font-medium"
-              style={{ background: "rgba(99,102,241,0.22)", color: "rgba(199,210,254,1)", border: "1px solid rgba(99,102,241,0.28)" }}>
+              style={{ zIndex: 3, background: "rgba(99,102,241,0.22)", color: "rgba(199,210,254,1)", border: "1px solid rgba(99,102,241,0.28)" }}>
               {isKnown ? "Open ↵" : "Add ✨"}
             </button>
           )}
           {generating && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2"><PulsingDots /></div>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2" style={{ zIndex: 3 }}><PulsingDots /></div>
           )}
         </div>
 
