@@ -463,9 +463,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             </a>
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
           </div>
+          <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.72rem", color: "rgba(255,255,255,0.32)", marginTop: "3px", letterSpacing: 0 }}>
+            <a href="https://meetkairo.ai" style={{ color: "inherit", textDecoration: "none" }}>meetkairo.ai</a>
+            {" "}the adaptive intelligence chief of staff
+          </p>
 
           {/* Search bar */}
-          <div className="relative" style={{ marginTop: "0.75rem" }}>
+          <div className="relative" style={{ marginTop: "1.1rem" }}>
             <div style={{ position: "absolute", inset: 0, borderRadius: "13px", overflow: "hidden", zIndex: 0 }}>
               <div style={{
                 position: "absolute", width: "200%", height: "200%", top: "-50%", left: "-50%",
@@ -499,11 +503,11 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           {/* Sliding categories */}
           <div style={{
             overflow: "hidden",
-            maxHeight: showCategories ? "56px" : "0px",
+            maxHeight: showCategories ? "90px" : "0px",
             opacity: showCategories ? 1 : 0,
             transition: "max-height 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease",
           }}>
-            <div className="flex flex-wrap gap-2" style={{ paddingTop: "10px" }}>
+            <div className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "4px" }}>
               {tags.map(tag => (
                 <button key={tag} onClick={() => setActiveTag(tag)}
                   className="text-xs px-3 py-1.5 rounded-full border transition-all"
@@ -522,7 +526,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       </div>
 
       <div className="max-w-2xl mx-auto px-6" style={{
-        paddingTop: showCategories ? "196px" : "146px",
+        paddingTop: showCategories ? "238px" : "168px",
         paddingBottom: "2rem",
         transition: "padding-top 0.32s cubic-bezier(0.4,0,0.2,1)",
       }}>
