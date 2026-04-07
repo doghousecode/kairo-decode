@@ -28,6 +28,8 @@ const TAG_COLORS = {
 };
 const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)" };
 
+const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
+
 function TagBadge({ tag, isNew }) {
   const c = getTagColor(tag);
   return (
@@ -327,6 +329,11 @@ export default function AIGlossary() {
   const [generating, setGenerating] = useState(null);
   const [showCategories, setShowCategories] = useState(true);
   const lastScrollY = useRef(0);
+  const ignoreScrollUntil = useRef(0);
+  const headerRef = useRef(null);
+  const categoriesRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(200);
+  const [categoriesHeight, setCategoriesHeight] = useState(90);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
 
@@ -342,7 +349,7 @@ export default function AIGlossary() {
           examples: t.examples || [],
           deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
           smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
-          tag: t.tag,
+          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Models" : t.tag,
           seeded: false,
         }));
         setTerms([...SEED_GLOSSARY, ...remote]);
@@ -352,6 +359,7 @@ export default function AIGlossary() {
 
   useEffect(() => {
     const onScroll = () => {
+      if (Date.now() < ignoreScrollUntil.current) return;
       const y = window.scrollY;
       if (y <= 8) setShowCategories(true);
       else if (y > lastScrollY.current + 4) setShowCategories(false);
@@ -360,6 +368,17 @@ export default function AIGlossary() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const hEl = headerRef.current;
+    const cEl = categoriesRef.current;
+    if (!hEl || !cEl) return;
+    const hRo = new ResizeObserver(() => setHeaderHeight(hEl.offsetHeight));
+    hRo.observe(hEl);
+    const cRo = new ResizeObserver(() => setCategoriesHeight(cEl.scrollHeight));
+    cRo.observe(cEl);
+    return () => { hRo.disconnect(); cRo.disconnect(); };
   }, []);
 
   const persist = async (entry) => {
@@ -453,7 +472,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}`}</style>
 
       {/* Fixed header */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "#0d0d1c", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "#0d0d1c", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
         <div className="max-w-2xl mx-auto" style={{ paddingTop: "1.1rem", paddingBottom: "1rem" }}>
 
           {/* Logo row */}
@@ -464,8 +483,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.72rem", color: "rgba(255,255,255,0.32)", marginTop: "3px", letterSpacing: 0 }}>
-            <a href="https://meetkairo.ai" style={{ color: "inherit", textDecoration: "none" }}>meetkairo.ai</a>
-            {" "}the adaptive intelligence chief of staff
+            adaptive intelligence chief of staff
           </p>
 
           {/* Search bar */}
@@ -503,13 +521,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           {/* Sliding categories */}
           <div style={{
             overflow: "hidden",
-            maxHeight: showCategories ? "90px" : "0px",
+            maxHeight: showCategories ? `${categoriesHeight}px` : "0px",
             opacity: showCategories ? 1 : 0,
             transition: "max-height 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease",
           }}>
-            <div className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "4px" }}>
+            <div ref={categoriesRef} className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "6px" }}>
               {tags.map(tag => (
-                <button key={tag} onClick={() => setActiveTag(tag)}
+                <button key={tag} onClick={() => { ignoreScrollUntil.current = Date.now() + 500; setActiveTag(tag); }}
                   className="text-xs px-3 py-1.5 rounded-full border transition-all"
                   style={{
                     border: activeTag === tag ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(255,255,255,0.09)",
@@ -526,9 +544,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       </div>
 
       <div className="max-w-2xl mx-auto px-6" style={{
-        paddingTop: showCategories ? "238px" : "168px",
+        paddingTop: `${headerHeight + 12}px`,
         paddingBottom: "2rem",
-        transition: "padding-top 0.32s cubic-bezier(0.4,0,0.2,1)",
       }}>
 
         {/* Feedback */}
