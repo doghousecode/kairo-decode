@@ -28,7 +28,7 @@ const TAG_COLORS = {
 };
 const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)" };
 
-const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
+const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
 function TagBadge({ tag, isNew }) {
   const c = getTagColor(tag);
@@ -349,7 +349,7 @@ export default function AIGlossary() {
           examples: t.examples || [],
           deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
           smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
-          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Models" : t.tag,
+          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Models" : (t.tag === "Dev Tool" ? "Dev Tools" : t.tag),
           seeded: false,
         }));
         setTerms([...SEED_GLOSSARY, ...remote]);
@@ -487,7 +487,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           </p>
 
           {/* Search bar */}
-          <div className="relative" style={{ marginTop: "1.1rem" }}>
+          <div className="relative" style={{ marginTop: "1.1rem", marginBottom: "0.5rem" }}>
             <div style={{ position: "absolute", inset: 0, borderRadius: "13px", overflow: "hidden", zIndex: 0 }}>
               <div style={{
                 position: "absolute", width: "200%", height: "200%", top: "-50%", left: "-50%",
@@ -527,7 +527,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           }}>
             <div ref={categoriesRef} className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "6px" }}>
               {tags.map(tag => (
-                <button key={tag} onClick={() => { ignoreScrollUntil.current = Date.now() + 500; setActiveTag(tag); }}
+                <button key={tag} onClick={() => { ignoreScrollUntil.current = Date.now() + 800; lastScrollY.current = window.scrollY; setShowCategories(true); setActiveTag(tag); }}
                   className="text-xs px-3 py-1.5 rounded-full border transition-all"
                   style={{
                     border: activeTag === tag ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(255,255,255,0.09)",
