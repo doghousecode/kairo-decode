@@ -452,15 +452,6 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       </div>
 
       <div className="max-w-2xl mx-auto" style={{ paddingTop: "116px" }}>
-        {/* Sub-header */}
-        <div className="mb-8">
-          <p className="text-sm mb-2" style={{ color: "rgba(255,255,255,0.38)" }}>
-            Search any AI term. Unknown but relevant? It gets added automatically. 🧠
-          </p>
-          {generatedCount > 0 && (
-            <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>+{generatedCount} discovered</span>
-          )}
-        </div>
 
         {/* Search */}
         <div className="relative mb-4">
@@ -527,7 +518,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         )}
 
         {/* Tag filter */}
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="flex flex-wrap gap-2 mb-3">
           {tags.map(tag => (
             <button key={tag} onClick={() => setActiveTag(tag)}
               className="text-xs px-3 py-1.5 rounded-full border transition-all"
@@ -540,6 +531,11 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             </button>
           ))}
         </div>
+        {generatedCount > 0 && (
+          <div className="mb-4">
+            <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>+{generatedCount} discovered</span>
+          </div>
+        )}
 
         {/* Cards */}
         <div className="space-y-2">
@@ -568,7 +564,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               <span style={{ color: "#2a3a6a" }}>k</span><span style={{ color: "#5b80e8" }}>ai</span><span style={{ color: "#2a3a6a" }}>ro</span>
             </span>
           </button>
-          <span style={{ fontSize: "0.6rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500 }}>© 2026 — Personal use</span>
+          <span style={{ fontSize: "0.6rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500 }}>© 2026</span>
         </footer>
       </div>
     </div>
