@@ -381,6 +381,12 @@ export default function AIGlossary() {
     return () => { hRo.disconnect(); cRo.disconnect(); };
   }, []);
 
+  useEffect(() => {
+    ignoreScrollUntil.current = Date.now() + 1000;
+    lastScrollY.current = window.scrollY;
+    setShowCategories(true);
+  }, [activeTag]);
+
   const persist = async (entry) => {
     try {
       await fetch("/api/terms", {
@@ -469,7 +475,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
   return (
     <div className="min-h-screen" style={{ background: "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)", fontFamily: "'DM Sans',system-ui,sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{color:rgba(255,255,255,0.22)}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "#0d0d1c", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
