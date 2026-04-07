@@ -451,7 +451,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto" style={{ paddingTop: "116px" }}>
+      <div className="max-w-2xl mx-auto" style={{ paddingTop: "96px" }}>
 
         {/* Search */}
         <div className="relative mb-4">
@@ -461,7 +461,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             value={search}
             onChange={e => { setSearch(e.target.value); setFeedback(null); }}
             onKeyDown={e => e.key === "Enter" && tryAdd(search)}
-            className="w-full px-4 py-3 rounded-xl text-sm text-white outline-none border transition-all"
+            className="w-full px-4 py-4 rounded-xl text-sm text-white outline-none border transition-all"
             style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", fontFamily: "inherit", fontSize: "16px" }}
           />
           {searchQ.length > 1 && !generating && (
