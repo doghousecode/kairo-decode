@@ -77,8 +77,10 @@ export default function RootLayout({ children }) {
               splash.style.transition    = 'opacity 0.4s ease';
               splash.style.opacity       = '1';
               splash.style.pointerEvents = 'auto';
+              splash.style.cursor        = 'pointer';
               done = false;
-              setTimeout(show, 2500);
+              // Stay until user taps/clicks — no auto-dismiss
+              splash.addEventListener('click', show, { once: true });
             };
           })();
         `}} />
