@@ -214,8 +214,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
   return (
     <div ref={ref} className="rounded-xl overflow-hidden transition-all duration-300" style={{
-      background: isNew ? "rgba(20,184,166,0.05)" : "rgba(255,255,255,0.04)",
-      border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(255,255,255,0.09)",
+      background: isNew ? "rgba(20,184,166,0.05)" : "rgba(var(--rgb),0.04)",
+      border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(var(--rgb),0.09)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
     }}>
       <button onClick={onToggle} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
@@ -226,28 +226,28 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
               <TagBadge tag={item.tag} isNew={isNew} />
             </div>
-            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(255,255,255,0.45)" }}>{item.definition}</p>
+            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{item.definition}</p>
           </div>
         </div>
-        <span className="flex-shrink-0 transition-transform duration-200" style={{ color: "rgba(255,255,255,0.25)", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</span>
+        <span className="flex-shrink-0 transition-transform duration-200" style={{ color: "rgba(var(--rgb),0.25)", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</span>
       </button>
 
       {isOpen && (
-        <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-          <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.78)" }}>
+        <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
+          <p className="text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
             <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
           </p>
 
           {(smartLines.length > 0 || generatingSmartLines) && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+              <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(var(--rgb),0.3)" }}>
                 Make me look like I know what I'm talking about
                 {generatingSmartLines && <PulsingDots />}
               </p>
               {smartLines.length > 0 && (
                 <div className="space-y-2">
                   {smartLines.map((line, i) => (
-                    <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.52)" }}>
+                    <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(var(--rgb),0.52)" }}>
                       "<LinkedDefinition text={line} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} highlightTerm={item.term} />"
                     </p>
                   ))}
@@ -258,12 +258,12 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
           {item.examples?.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>Examples</p>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>Examples</p>
               <div className="flex flex-wrap gap-2">
                 {item.examples.map((ex, i) => (
                   <a key={i} href={ex.url} target="_blank" rel="noreferrer"
                     className="text-xs px-3 py-1.5 rounded-lg transition-colors"
-                    style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+                    style={{ border: "1px solid rgba(var(--rgb),0.1)", color: "rgba(var(--rgb),0.5)" }}>
                     {ex.label} ↗
                   </a>
                 ))}
@@ -271,26 +271,26 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>Deep dive</p>
+          <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
+            <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>Deep dive</p>
             {deepDives.map((prompt, idx) => {
               const isLoading = loadingIdx === idx;
               const response = responses[idx];
               return (
-                <div key={idx} className="pt-2" style={{ borderTop: idx === 0 ? "none" : "1px solid rgba(255,255,255,0.06)" }}>
-                  <p className="text-sm italic mb-2" style={{ color: "rgba(255,255,255,0.5)" }}>"<LinkedDefinition text={prompt} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />"</p>
+                <div key={idx} className="pt-2" style={{ borderTop: idx === 0 ? "none" : "1px solid rgba(var(--rgb),0.06)" }}>
+                  <p className="text-sm italic mb-2" style={{ color: "rgba(var(--rgb),0.5)" }}>"<LinkedDefinition text={prompt} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />"</p>
                   <button onClick={() => runDeepDive(idx)} disabled={loadingIdx !== null} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
                     style={{
-                      background: isLoading ? "rgba(255,255,255,0.04)" : "rgba(99,102,241,0.22)",
-                      color: (loadingIdx !== null && !isLoading) ? "rgba(255,255,255,0.15)" : isLoading ? "rgba(255,255,255,0.2)" : "rgba(199,210,254,1)",
+                      background: isLoading ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
+                      color: (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
                       border: "1px solid rgba(99,102,241,0.28)",
                       cursor: loadingIdx !== null ? "not-allowed" : "pointer",
                     }}>
                     {isLoading ? "Asking Claude..." : "▶ Run this prompt"}
                   </button>
                   {response && (
-                    <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(255,255,255,0.68)" }}>{response}</p>
+                    <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(var(--rgb),0.68)" }}>{response}</p>
                     </div>
                   )}
                 </div>
@@ -335,6 +335,7 @@ export default function AIGlossary() {
   const categoriesRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(200);
   const [categoriesHeight, setCategoriesHeight] = useState(90);
+  const [isDark, setIsDark] = useState(true);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
 
@@ -461,7 +462,9 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   };
 
   const allTagSet = new Set(terms.map(t => t.tag));
-  const tags = [...TAG_ORDER.filter(t => t === "All" || allTagSet.has(t)), ...Array.from(allTagSet).filter(t => !TAG_ORDER.includes(t))];
+  const knownTags = TAG_ORDER.filter(t => t === "All" || allTagSet.has(t)).slice(1).sort((a, b) => a.length - b.length || a.localeCompare(b));
+  const extraTags = Array.from(allTagSet).filter(t => !TAG_ORDER.includes(t)).sort((a, b) => a.length - b.length || a.localeCompare(b));
+  const tags = ["All", ...knownTags, ...extraTags];
 
   const filtered = terms
     .filter(item => {
@@ -476,22 +479,33 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   const showAddHint = searchQ.length > 1 && !isKnown && !generating && filtered.length === 0;
   const generatedCount = terms.filter(t => !t.seeded).length;
 
+  const surface = isDark ? "#0d0d1c" : "#f5f6ff";
+
   return (
-    <div className="min-h-screen" style={{ background: "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)", fontFamily: "'DM Sans',system-ui,sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}`}</style>
+    <div className={`min-h-screen${isDark ? "" : " light-text-override"}`} style={{
+      background: isDark ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)" : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)",
+      fontFamily: "'DM Sans',system-ui,sans-serif",
+      "--rgb": isDark ? "255,255,255" : "15,15,30",
+      "--surface": surface,
+    }}>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}`}</style>
 
       {/* Fixed header */}
-      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "#0d0d1c", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
         <div className="max-w-2xl mx-auto" style={{ paddingTop: "1.1rem", paddingBottom: "1rem" }}>
 
           {/* Logo row */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", position: "relative" }}>
             <a href="https://meetkairo.ai" style={{ display: "block", lineHeight: 0 }}>
               <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
             </a>
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
+            <button onClick={() => setIsDark(d => !d)} title="Toggle light/dark"
+              style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: "1rem", lineHeight: 1, color: `rgba(var(--rgb),0.35)`, padding: "4px 2px" }}>
+              {isDark ? "○" : "●"}
+            </button>
           </div>
-          <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.79rem", color: "rgba(255,255,255,0.32)", marginTop: "3px", letterSpacing: 0 }}>
+          <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.79rem", color: "rgba(var(--rgb),0.32)", marginTop: "3px", letterSpacing: 0 }}>
             adaptive intelligence chief of staff
           </p>
 
@@ -504,7 +518,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 animation: "ai-border-spin 6s linear infinite, ai-glow-pulse 3s ease-in-out infinite",
               }} />
             </div>
-            <div style={{ position: "absolute", inset: "1.5px", borderRadius: "11.5px", background: "#0d0d1c", zIndex: 1 }} />
+            <div style={{ position: "absolute", inset: "1.5px", borderRadius: "11.5px", background: "var(--surface)", zIndex: 1 }} />
             <div style={{ position: "absolute", inset: 0, borderRadius: "13px", boxShadow: "0 0 22px rgba(139,92,246,0.18), 0 0 8px rgba(236,72,153,0.12)", zIndex: 0, pointerEvents: "none" }} />
             <input
               type="text"
@@ -546,9 +560,9 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                   }}
                   className="text-xs px-3 py-1.5 rounded-full border transition-all"
                   style={{
-                    border: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(255,255,255,0.09)",
+                    border: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(var(--rgb),0.09)",
                     background: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "rgba(99,102,241,0.18)" : "transparent",
-                    color: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "rgba(199,210,254,1)" : "rgba(255,255,255,0.38)",
+                    color: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.38)",
                   }}>
                   {tag}
                 </button>
@@ -628,11 +642,11 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           ))}
         </div>
 
-        <p className="text-center text-xs mt-8" style={{ color: "rgba(255,255,255,0.13)" }}>
+        <p className="text-center text-xs mt-8" style={{ color: "rgba(var(--rgb),0.13)" }}>
           {terms.length} terms · {generatedCount} auto-discovered · Kairo Decode
         </p>
 
-        <footer style={{ borderTop: "0.5px solid rgba(255,255,255,0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
+        <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
           <button onClick={() => window.kairoShowSplash?.()} style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>
             <span style={{ fontSize: "0.85rem", fontWeight: 900, letterSpacing: "0.04em", fontFamily: "'Jost',system-ui,sans-serif", fontStyle: "italic" }}>
               <span style={{ color: "#2a3a6a" }}>k</span><span style={{ color: "#5b80e8" }}>ai</span><span style={{ color: "#2a3a6a" }}>ro</span>
