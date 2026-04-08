@@ -127,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -186,19 +186,32 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   }, [isOpen]);
 
   const [displayedDef, setDisplayedDef] = useState(isTyping ? "" : item.definition);
+  const [displayedSmartLines, setDisplayedSmartLines] = useState(
+    isTyping ? (item.smartLines || []).map(() => "") : (item.smartLines || [])
+  );
+  const [displayedDeepDives, setDisplayedDeepDives] = useState(
+    isTyping ? (Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]).map(() => "") : []
+  );
   const [typingDone, setTypingDone] = useState(!isTyping);
 
   useEffect(() => {
     if (!isTyping) return;
+    const def = item.definition;
+    const smarts = item.smartLines || [];
+    const dives = Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive];
+    const maxLen = Math.max(def.length, ...smarts.map(s => s.length), ...dives.map(d => d.length), 0);
     setDisplayedDef("");
+    setDisplayedSmartLines(smarts.map(() => ""));
+    setDisplayedDeepDives(dives.map(() => ""));
     setTypingDone(false);
-    let i = 0;
-    const full = item.definition;
+    let tick = 0;
     const iv = setInterval(() => {
-      i++;
-      setDisplayedDef(full.slice(0, i));
-      if (i >= full.length) { clearInterval(iv); setTypingDone(true); }
-    }, 14);
+      tick++;
+      setDisplayedDef(def.slice(0, tick));
+      setDisplayedSmartLines(smarts.map(s => s.slice(0, tick)));
+      setDisplayedDeepDives(dives.map(d => d.slice(0, tick)));
+      if (tick >= maxLen) { clearInterval(iv); setTypingDone(true); }
+    }, 5);
     return () => clearInterval(iv);
   }, [isTyping, item.definition]);
 
@@ -266,7 +279,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             }
           </p>
 
-          {typingDone && (smartLines.length > 0 || generatingSmartLines) && (
+          {(isTyping ? smartLines.length > 0 : (typingDone && (smartLines.length > 0 || generatingSmartLines))) && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(var(--rgb),0.3)" }}>
                 Make me look smart
@@ -276,7 +289,10 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 <div className="space-y-2">
                   {smartLines.map((line, i) => (
                     <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(var(--rgb),0.52)" }}>
-                      "<LinkedDefinition text={line} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} highlightTerm={item.term} />"
+                      "{isTyping && !typingDone
+                        ? (displayedSmartLines[i] || "")
+                        : <LinkedDefinition text={line} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} highlightTerm={item.term} />
+                      }"
                     </p>
                   ))}
                 </div>
@@ -299,22 +315,30 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          {typingDone && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
+          {(isTyping || typingDone) && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
             <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>Deep dive</p>
             {deepDives.map((prompt, idx) => {
               const isLoading = loadingIdx === idx;
               const response = responses[idx];
+              const stillTyping = isTyping && !typingDone;
               return (
                 <div key={idx} className="pt-2" style={{ borderTop: idx === 0 ? "none" : "1px solid rgba(var(--rgb),0.06)" }}>
-                  <p className="text-sm italic mb-2" style={{ color: "rgba(var(--rgb),0.5)" }}>"<LinkedDefinition text={prompt} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />"</p>
-                  <button onClick={() => runDeepDive(idx)} disabled={loadingIdx !== null} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
+                  <p className="text-sm italic mb-2" style={{ color: "rgba(var(--rgb),0.5)" }}>
+                    "{stillTyping
+                      ? (displayedDeepDives[idx] || "")
+                      : <LinkedDefinition text={prompt} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+                    }"
+                  </p>
+                  <button onClick={() => !stillTyping && isOnline && runDeepDive(idx)}
+                    disabled={!isOnline || stillTyping || loadingIdx !== null}
+                    className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
                     style={{
-                      background: isLoading ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
-                      color: (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
+                      background: (!isOnline || stillTyping || isLoading) ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
+                      color: (!isOnline || stillTyping) ? "rgba(var(--rgb),0.2)" : (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
                       border: "1px solid rgba(99,102,241,0.28)",
-                      cursor: loadingIdx !== null ? "not-allowed" : "pointer",
+                      cursor: (!isOnline || stillTyping || loadingIdx !== null) ? "not-allowed" : "pointer",
                     }}>
-                    {isLoading ? "Asking Claude..." : "▶ Run this prompt"}
+                    {isLoading ? "Asking Claude..." : (!isOnline) ? "Offline" : "▶ Run this prompt"}
                   </button>
                   {response && (
                     <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -356,6 +380,7 @@ export default function AIGlossary() {
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState("All");
   const [generating, setGenerating] = useState(null);
+  const [streamingPreview, setStreamingPreview] = useState("");
   const [showCategories, setShowCategories] = useState(true);
   const lastScrollY = useRef(0);
   const ignoreScrollUntil = useRef(0);
@@ -365,6 +390,7 @@ export default function AIGlossary() {
   const [headerHeight, setHeaderHeight] = useState(200);
   const [categoriesHeight, setCategoriesHeight] = useState(90);
   const [isDark, setIsDark] = useState(true);
+  const [isOnline, setIsOnline] = useState(true);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
   const [typingTerm, setTypingTerm] = useState(null);
@@ -389,6 +415,21 @@ export default function AIGlossary() {
       })
       .catch(() => {})
       .finally(() => setTermsLoaded(true));
+  }, []);
+
+  useEffect(() => {
+    // Signal layout to hide splash as soon as the app mounts
+    window.kairoReady?.();
+
+    setIsOnline(navigator.onLine);
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
+    return () => {
+      window.removeEventListener('online', goOnline);
+      window.removeEventListener('offline', goOffline);
+    };
   }, []);
 
   useEffect(() => {
@@ -454,9 +495,16 @@ export default function AIGlossary() {
     if (openTerm === termName) setOpenTerm(null);
   };
 
+  const handleToggle = (termName) => {
+    const y = window.scrollY;
+    setOpenTerm(prev => prev === termName ? null : termName);
+    requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" }));
+  };
+
   const allTermNames = terms.map(t => t.term.toLowerCase());
 
   const tryAdd = async (raw) => {
+    if (!isOnline) return;
     const query = raw.trim();
     if (!query) return;
     setFeedback(null);
@@ -465,11 +513,12 @@ export default function AIGlossary() {
     if (exact) { setOpenTerm(exact.term); setSearch(""); return; }
 
     setGenerating(query);
+    setStreamingPreview("");
     try {
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 1000,
+          model: "claude-sonnet-4-20250514", max_tokens: 1000, stream: true,
           system: `You maintain a glossary for AI, ML, software dev, and tech entrepreneurship.
 Given a term, decide if it's genuinely relevant to that domain. If yes, generate a glossary entry.
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
@@ -483,8 +532,34 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           messages: [{ role: "user", content: query }],
         }),
       });
-      const d = await res.json();
-      const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+
+      // Consume SSE stream, extract definition preview as it arrives
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split("\n")) {
+          if (!line.startsWith("data: ")) continue;
+          const data = line.slice(6).trim();
+          if (!data || data === "[DONE]") continue;
+          try {
+            const event = JSON.parse(data);
+            if (event.type === "content_block_delta" && event.delta?.type === "text_delta") {
+              accumulated += event.delta.text;
+              // Show definition as it streams (complete or partial)
+              const full = accumulated.match(/"definition"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+              const partial = full ? null : accumulated.match(/"definition"\s*:\s*"((?:[^"\\]|\\.){4,})/);
+              const preview = full ? full[1] : partial ? partial[1] : null;
+              if (preview) setStreamingPreview(preview.replace(/\\n/g, " ").replace(/\\"/g, '"'));
+            }
+          } catch {}
+        }
+      }
+
+      const text = accumulated.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(text);
 
       if (!parsed.relevant) { setFeedback({ type: "notRelevant", term: query }); }
@@ -500,6 +575,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       }
     } catch { setFeedback({ type: "error" }); }
     setGenerating(null);
+    setStreamingPreview("");
   };
 
   const allTagSet = new Set(terms.map(t => t.tag));
@@ -564,15 +640,15 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               placeholder="Search existing or add new term"
               value={search}
               onChange={e => { setSearch(e.target.value); setFeedback(null); }}
-              onKeyDown={e => e.key === "Enter" && tryAdd(search)}
+              onKeyDown={e => e.key === "Enter" && isOnline && tryAdd(search)}
               className="w-full px-4 rounded-xl text-sm text-white outline-none"
               style={{ position: "relative", zIndex: 2, background: "transparent", border: "none", fontFamily: "inherit", fontSize: "16px", paddingTop: "14px", paddingBottom: "14px" }}
             />
             {searchQ.length > 1 && !generating && (
-              <button onClick={() => tryAdd(search)}
+              <button onClick={() => isOnline && tryAdd(search)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-3 py-1.5 rounded-lg font-medium"
-                style={{ zIndex: 3, background: "rgba(99,102,241,0.22)", color: "rgba(199,210,254,1)", border: "1px solid rgba(99,102,241,0.28)" }}>
-                {isKnown ? "Open ↵" : "Add ✨"}
+                style={{ zIndex: 3, background: isOnline ? "rgba(99,102,241,0.22)" : "rgba(var(--rgb),0.06)", color: isOnline ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.25)", border: "1px solid rgba(99,102,241,0.18)", cursor: isOnline ? "pointer" : "default" }}>
+                {isKnown ? "Open ↵" : isOnline ? "Add ✨" : "Offline"}
               </button>
             )}
             {generating && (
@@ -616,6 +692,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           </div>
         )}
 
+        {/* Offline banner */}
+        {!isOnline && (
+          <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.22)", color: "rgba(252,211,77,0.8)" }}>
+            You're offline — browsing cached terms. Adding terms and deep dives are unavailable.
+          </div>
+        )}
+
         {/* Feedback */}
         {feedback?.type === "notRelevant" && (
           <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", color: "rgba(252,165,165,0.85)" }}>
@@ -633,11 +716,17 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           <div className="mb-2 px-5 py-4 rounded-xl flex items-center gap-3"
             style={{ background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.22)", boxShadow: "0 0 20px rgba(20,184,166,0.07)" }}>
             <span className="text-2xl">✨</span>
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="text-white font-bold tracking-tight">{generating}</p>
-              <p className="text-sm flex items-center gap-1.5" style={{ color: "rgba(20,184,166,0.75)" }}>
-                Generating entry <PulsingDots />
-              </p>
+              {streamingPreview ? (
+                <p className="text-sm leading-relaxed mt-0.5 italic" style={{ color: "rgba(20,184,166,0.75)" }}>
+                  {streamingPreview}<span style={{ display: "inline-block", width: "2px", height: "0.9em", background: "rgba(20,184,166,0.7)", marginLeft: "2px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} />
+                </p>
+              ) : (
+                <p className="text-sm flex items-center gap-1.5" style={{ color: "rgba(20,184,166,0.75)" }}>
+                  Generating entry <PulsingDots />
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -648,12 +737,16 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             style={{ background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.18)" }}>
             <div>
               <p className="text-white font-medium">"{searchQ}" isn't in the glossary yet</p>
-              <p className="text-sm mt-0.5" style={{ color: "rgba(20,184,166,0.65)" }}>Press Enter or tap Add to generate an entry</p>
+              <p className="text-sm mt-0.5" style={{ color: isOnline ? "rgba(20,184,166,0.65)" : "rgba(245,158,11,0.6)" }}>
+                {isOnline ? "Press Enter or tap Add to generate an entry" : "Connect to add new terms"}
+              </p>
             </div>
-            <button onClick={() => tryAdd(search)} className="text-xs px-4 py-2 rounded-lg font-medium flex-shrink-0"
-              style={{ background: "rgba(20,184,166,0.18)", color: "rgba(94,234,212,1)", border: "1px solid rgba(20,184,166,0.28)" }}>
-              Add ✨
-            </button>
+            {isOnline && (
+              <button onClick={() => tryAdd(search)} className="text-xs px-4 py-2 rounded-lg font-medium flex-shrink-0"
+                style={{ background: "rgba(20,184,166,0.18)", color: "rgba(94,234,212,1)", border: "1px solid rgba(20,184,166,0.28)" }}>
+                Add ✨
+              </button>
+            )}
           </div>
         )}
 
@@ -670,7 +763,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               key={item.term}
               item={item}
               isOpen={openTerm === item.term}
-              onToggle={() => setOpenTerm(openTerm === item.term ? null : item.term)}
+              onToggle={() => handleToggle(item.term)}
               isNew={newKeys.has(item.term.toLowerCase())}
               shouldScrollTo={scrollToTerm === item.term}
               allTerms={terms}
@@ -678,6 +771,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onAddTerm={handleAddTerm}
               onDelete={handleDelete}
               isTyping={typingTerm === item.term}
+              isOnline={isOnline}
             />
           ))}
         </div>
