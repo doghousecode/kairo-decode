@@ -330,6 +330,7 @@ export default function AIGlossary() {
   const [showCategories, setShowCategories] = useState(true);
   const lastScrollY = useRef(0);
   const ignoreScrollUntil = useRef(0);
+  const activeTagRef = useRef("All");
   const headerRef = useRef(null);
   const categoriesRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(200);
@@ -359,6 +360,7 @@ export default function AIGlossary() {
 
   useEffect(() => {
     const onScroll = () => {
+      if (activeTagRef.current !== "All") return;
       if (Date.now() < ignoreScrollUntil.current) return;
       const y = window.scrollY;
       if (y <= 8) setShowCategories(true);
@@ -382,6 +384,7 @@ export default function AIGlossary() {
   }, []);
 
   useEffect(() => {
+    activeTagRef.current = activeTag;
     ignoreScrollUntil.current = Date.now() + 1000;
     lastScrollY.current = window.scrollY;
     setShowCategories(true);
