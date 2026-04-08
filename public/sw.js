@@ -1,9 +1,7 @@
 const CACHE = 'kairo-decode-v1';
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(['/']))
-  );
+  // Don't pre-cache anything at install — avoids caching auth-redirect responses
   self.skipWaiting();
 });
 
@@ -23,16 +21,21 @@ self.addEventListener('fetch', event => {
   // Only handle same-origin GET requests
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  // /api/terms: network-first, update cache on success, fall back to cache
+  // Let the browser handle navigation normally — middleware auth must not be bypassed
+  if (request.mode === 'navigate') return;
+
+  // /api/terms: network-first, cache fallback for offline browsing
   if (url.pathname === '/api/terms') {
     event.respondWith(
       fetch(request)
         .then(response => {
-          const clone = response.clone();
-          caches.open(CACHE).then(cache => cache.put(request, clone));
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE).then(cache => cache.put(request, clone));
+          }
           return response;
         })
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request).then(r => r || Response.error()))
     );
     return;
   }
@@ -54,31 +57,22 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Navigation requests: network-first, fall back to cached '/'
-  if (request.mode === 'navigate') {
+  // Other static assets (images, fonts): cache-first, then network
+  if (
+    url.pathname.startsWith('/_next/') ||
+    /\.(png|jpg|jpeg|svg|ico|woff2?|ttf)$/.test(url.pathname)
+  ) {
     event.respondWith(
-      fetch(request)
-        .then(response => {
-          const clone = response.clone();
-          caches.open(CACHE).then(cache => cache.put(request, clone));
+      caches.match(request).then(cached => {
+        if (cached) return cached;
+        return fetch(request).then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE).then(cache => cache.put(request, clone));
+          }
           return response;
-        })
-        .catch(() => caches.match('/'))
+        });
+      })
     );
-    return;
   }
-
-  // Everything else (images, fonts, etc.): cache-first, then network
-  event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-      return fetch(request).then(response => {
-        if (response.ok) {
-          const clone = response.clone();
-          caches.open(CACHE).then(cache => cache.put(request, clone));
-        }
-        return response;
-      }).catch(() => cached);
-    })
-  );
 });

@@ -17,7 +17,6 @@ export async function POST(request) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    domain: process.env.NODE_ENV === 'production' ? '.meetkairo.ai' : undefined,
     maxAge: 60 * 60 * 24 * 30,
     path: '/',
   })

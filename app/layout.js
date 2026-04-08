@@ -56,25 +56,29 @@ export default function RootLayout({ children }) {
           (function() {
             var splash = document.getElementById('kairo-splash');
             var root   = document.getElementById('kairo-root');
+            var done   = false;
 
-            function hideSplash() {
-              splash.style.transition    = 'opacity 0.8s ease';
-              splash.style.opacity       = '0';
-              splash.style.pointerEvents = 'none';
+            function show() {
+              if (done) return;
+              done = true;
+              if (root)   { root.style.transition = 'opacity 0.5s ease'; root.style.opacity = '1'; }
+              if (splash) { splash.style.transition = 'opacity 0.8s ease'; splash.style.opacity = '0'; splash.style.pointerEvents = 'none'; }
+              document.documentElement.style.overflow = '';
             }
 
-            setTimeout(function() {
-              document.documentElement.style.overflow = '';
-              root.style.transition = 'opacity 0.6s ease';
-              root.style.opacity    = '1';
-              hideSplash();
-            }, 3000);
+            // React signals when mounted — hides splash immediately
+            window.kairoReady = show;
+
+            // Fallback: always hide after 4s regardless
+            setTimeout(show, 4000);
 
             window.kairoShowSplash = function() {
+              if (!splash) return;
               splash.style.transition    = 'opacity 0.4s ease';
               splash.style.opacity       = '1';
               splash.style.pointerEvents = 'auto';
-              setTimeout(function() { hideSplash(); }, 2500);
+              done = false;
+              setTimeout(show, 2500);
             };
           })();
         `}} />

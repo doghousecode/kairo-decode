@@ -418,6 +418,9 @@ export default function AIGlossary() {
   }, []);
 
   useEffect(() => {
+    // Signal layout to hide splash as soon as the app mounts
+    window.kairoReady?.();
+
     setIsOnline(navigator.onLine);
     const goOnline = () => setIsOnline(true);
     const goOffline = () => setIsOnline(false);
