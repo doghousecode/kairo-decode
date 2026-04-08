@@ -244,7 +244,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   };
 
   return (
-    <div ref={ref} className="rounded-xl overflow-hidden transition-all duration-300" style={{
+    <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
       background: isNew ? "rgba(20,184,166,0.05)" : "rgba(var(--rgb),0.04)",
       border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(var(--rgb),0.09)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
@@ -300,7 +300,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          {typingDone && item.examples?.length > 0 && (
+          {item.examples?.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>Examples</p>
               <div className="flex flex-wrap gap-2">
@@ -496,9 +496,36 @@ export default function AIGlossary() {
   };
 
   const handleToggle = (termName) => {
-    const y = window.scrollY;
-    setOpenTerm(prev => prev === termName ? null : termName);
-    requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" }));
+    const isOpening = openTerm !== termName;
+
+    if (!isOpening) {
+      setOpenTerm(null);
+      return;
+    }
+
+    // Anchor the viewport to the card being opened: capture its screen-space
+    // top before React re-renders, then scroll by the delta afterwards so it
+    // stays exactly where the user tapped.
+    const el = document.querySelector(`[data-kairo-term="${CSS.escape(termName)}"]`);
+    const beforeTop = el ? el.getBoundingClientRect().top : null;
+
+    setOpenTerm(termName);
+
+    if (beforeTop === null) return;
+
+    // Suppress the scroll event during our programmatic scrollBy so it doesn't
+    // trigger filter show/hide (which would shift headerHeight and re-offset the card)
+    ignoreScrollUntil.current = Date.now() + 300;
+
+    requestAnimationFrame(() => {
+      const afterTop = el.getBoundingClientRect().top;
+      const delta = afterTop - beforeTop;
+      if (Math.abs(delta) > 1) {
+        window.scrollBy({ top: delta, behavior: 'instant' });
+      }
+      // Keep lastScrollY in sync so the next user scroll is measured correctly
+      lastScrollY.current = window.scrollY;
+    });
   };
 
   const allTermNames = terms.map(t => t.term.toLowerCase());

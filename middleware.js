@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 
 export function middleware(request) {
+  if (process.env.DISABLE_AUTH === 'true') return NextResponse.next()
+
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/password') || pathname.startsWith('/api/password')) {
