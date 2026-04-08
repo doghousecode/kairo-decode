@@ -127,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, onScrollCapture, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, headerHeight }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -223,6 +223,22 @@ function GlossaryCard({ item, isOpen, onToggle, onScrollCapture, isNew, shouldSc
     if ((isNew || shouldScrollTo) && ref.current) setTimeout(() => ref.current.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
   }, [isNew, shouldScrollTo]);
 
+  const prevIsOpenRef = useRef(false);
+  useEffect(() => {
+    if (isOpen && !prevIsOpenRef.current && ref.current) {
+      // Card just opened — ensure header isn't hidden behind the fixed nav
+      requestAnimationFrame(() => {
+        if (!ref.current) return;
+        const pad = (headerHeight || 120) + 16;
+        const rect = ref.current.getBoundingClientRect();
+        if (rect.top < pad) {
+          window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - pad), behavior: "smooth" });
+        }
+      });
+    }
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen, headerHeight]);
+
   const runDeepDive = async (idx) => {
     setLoadingIdx(idx);
     setResponses(prev => { const next = [...prev]; next[idx] = null; return next; });
@@ -249,7 +265,7 @@ function GlossaryCard({ item, isOpen, onToggle, onScrollCapture, isNew, shouldSc
       border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(var(--rgb),0.09)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
     }}>
-      <button onClick={onToggle} onPointerDown={onScrollCapture} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
+      <button onClick={onToggle} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-2xl flex-shrink-0">{item.emoji}</span>
           <div className="min-w-0">
@@ -495,12 +511,8 @@ export default function AIGlossary() {
     if (openTerm === termName) setOpenTerm(null);
   };
 
-  const savedScrollY = useRef(0);
-
   const handleToggle = (termName) => {
-    const y = savedScrollY.current;
     setOpenTerm(prev => prev === termName ? null : termName);
-    requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" }));
   };
 
   const allTermNames = terms.map(t => t.term.toLowerCase());
@@ -766,7 +778,6 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               item={item}
               isOpen={openTerm === item.term}
               onToggle={() => handleToggle(item.term)}
-              onScrollCapture={() => { savedScrollY.current = window.scrollY; }}
               isNew={newKeys.has(item.term.toLowerCase())}
               shouldScrollTo={scrollToTerm === item.term}
               allTerms={terms}
@@ -775,6 +786,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onDelete={handleDelete}
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
+              headerHeight={headerHeight}
             />
           ))}
         </div>
