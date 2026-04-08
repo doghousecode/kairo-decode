@@ -5,26 +5,27 @@ import { useState, useEffect, useRef } from "react";
 const SEED_GLOSSARY = [
   { term: "Agent", emoji: "🤖", definition: "An AI system that can take actions on its own — not just answer questions, but actually do things: browse the web, write code, send messages, manage files.", examples: [{ label: "Claude agent browsing the web", url: "https://www.anthropic.com/claude" }, { label: "AutoGPT (early popular agent)", url: "https://github.com/Significant-Gravitas/AutoGPT" }], deepDive: ["What's the difference between an AI chatbot and an AI agent? Give me a concrete example of each, and explain when you'd use one vs the other.", "What are the biggest failure modes of AI agents in production today, and how do teams guard against them?", "How do you decide when a task should be handled by a single AI call vs a multi-step agent?"], smartLines: ["An agent can book a meeting or pull a report — things a chatbot would just tell you how to do yourself.", "Saying 'I have an agent on it' sounds better than 'automated script', and is usually more accurate."], tag: "Behaviour", seeded: true },
   { term: "Agentic", emoji: "⚡", definition: "Adjective for AI behaviour that's goal-driven and multi-step — the AI works out what to do next, rather than just responding to a single question.", examples: [{ label: "Anthropic on agentic AI", url: "https://www.anthropic.com/research/building-effective-agents" }], deepDive: ["Explain 'agentic AI' like I'm a product manager. What does it mean in practice for building products? What are the risks?", "What's the difference between 'agentic' and 'autonomous' AI? Where does one end and the other begin?", "Give me three real products that are meaningfully agentic, and explain what makes each agentic vs just a chatbot."], smartLines: ["The difference between agentic and a chatbot: one gives you instructions, the other just does it.", "Our workflow is fully agentic — the AI handles the steps, we handle explaining it to everyone else."], tag: "Behaviour", seeded: true },
-  { term: "Model", emoji: "🧠", definition: "The AI brain itself — software trained on vast amounts of text that reads your input and generates a response. GPT-4, Claude, and Gemini are all different models with different strengths.", examples: [{ label: "Anthropic model overview", url: "https://docs.anthropic.com/en/docs/about-claude/models/overview" }, { label: "OpenAI model comparison", url: "https://platform.openai.com/docs/models" }], deepDive: ["Compare the major frontier AI models available today (Claude, GPT-4o, Gemini, Llama) — strengths, weaknesses, best use cases, cost differences.", "How do you pick the right model for a production product — what trade-offs matter most between speed, cost, and quality?", "What does 'model capability' actually mean in practice — how do benchmark scores translate to real-world product quality?"], smartLines: ["We switched models and output quality improved — not all models are equal for every task.", "Claude handles nuance well, GPT-4o is fast, Llama runs locally. Picking the right one matters."], tag: "Models", seeded: true },
-  { term: "CLI", emoji: "💻", definition: "Command Line Interface — you type commands into a terminal window instead of clicking through an app. How developers talk to their computers, and increasingly how they use AI tools.", examples: [{ label: "Claude Code CLI", url: "https://docs.anthropic.com/en/docs/claude-code/overview" }, { label: "GitHub CLI", url: "https://cli.github.com/" }], deepDive: ["I'm a non-developer learning to use the CLI for AI development. Give me the 10 commands I'll use most often, with plain-English explanations.", "What's the fastest way to get comfortable with the CLI as a non-technical founder building AI tools?", "How is the CLI used differently in AI development vs traditional software development? What new patterns have emerged?"], smartLines: ["Once you're comfortable with the CLI, it's faster than any app — the learning curve is the only real barrier.", "The CLI does exactly what you type, nothing more. That's both the appeal and the occasional problem."], tag: "Dev Tools", seeded: true },
-  { term: "IDE", emoji: "🖥️", definition: "Integrated Development Environment — a powerful text editor for writing code, with tools built in to help you navigate, debug, and ship faster. Cursor and VS Code are the popular ones right now.", examples: [{ label: "Cursor (AI-native IDE)", url: "https://cursor.com" }, { label: "VS Code", url: "https://code.visualstudio.com/" }], deepDive: ["Compare Cursor vs VS Code for someone building AI-powered web apps as a side project. Which should I use and why?", "What AI IDE features actually save meaningful time vs feel impressive but don't change your workflow?", "How do AI-native IDEs like Cursor change how you should think about writing and structuring code?"], smartLines: ["Switched to an AI-native IDE and haven't looked back — it handles the repetitive parts so you can focus on the interesting ones.", "Cursor and VS Code are the main options — both solid, but Cursor is built with AI at the core."], tag: "Dev Tools", seeded: true },
+  { term: "Model", emoji: "🧠", definition: "The AI brain itself — software trained on vast amounts of text that reads your input and generates a response. GPT-4, Claude, and Gemini are all different models with different strengths.", examples: [{ label: "Anthropic model overview", url: "https://docs.anthropic.com/en/docs/about-claude/models/overview" }, { label: "OpenAI model comparison", url: "https://platform.openai.com/docs/models" }], deepDive: ["Compare the major frontier AI models available today (Claude, GPT-4o, Gemini, Llama) — strengths, weaknesses, best use cases, cost differences.", "How do you pick the right model for a production product — what trade-offs matter most between speed, cost, and quality?", "What does 'model capability' actually mean in practice — how do benchmark scores translate to real-world product quality?"], smartLines: ["We switched models and output quality improved — not all models are equal for every task.", "Claude handles nuance well, GPT-4o is fast, Llama runs locally. Picking the right one matters."], tag: "Model", seeded: true },
+  { term: "CLI", emoji: "💻", definition: "Command Line Interface — you type commands into a terminal window instead of clicking through an app. How developers talk to their computers, and increasingly how they use AI tools.", examples: [{ label: "Claude Code CLI", url: "https://docs.anthropic.com/en/docs/claude-code/overview" }, { label: "GitHub CLI", url: "https://cli.github.com/" }], deepDive: ["I'm a non-developer learning to use the CLI for AI development. Give me the 10 commands I'll use most often, with plain-English explanations.", "What's the fastest way to get comfortable with the CLI as a non-technical founder building AI tools?", "How is the CLI used differently in AI development vs traditional software development? What new patterns have emerged?"], smartLines: ["Once you're comfortable with the CLI, it's faster than any app — the learning curve is the only real barrier.", "The CLI does exactly what you type, nothing more. That's both the appeal and the occasional problem."], tag: "Dev Tool", seeded: true },
+  { term: "IDE", emoji: "🖥️", definition: "Integrated Development Environment — a powerful text editor for writing code, with tools built in to help you navigate, debug, and ship faster. Cursor and VS Code are the popular ones right now.", examples: [{ label: "Cursor (AI-native IDE)", url: "https://cursor.com" }, { label: "VS Code", url: "https://code.visualstudio.com/" }], deepDive: ["Compare Cursor vs VS Code for someone building AI-powered web apps as a side project. Which should I use and why?", "What AI IDE features actually save meaningful time vs feel impressive but don't change your workflow?", "How do AI-native IDEs like Cursor change how you should think about writing and structuring code?"], smartLines: ["Switched to an AI-native IDE and haven't looked back — it handles the repetitive parts so you can focus on the interesting ones.", "Cursor and VS Code are the main options — both solid, but Cursor is built with AI at the core."], tag: "Dev Tool", seeded: true },
   { term: "Token", emoji: "🪙", definition: "The unit AI models use to measure text — roughly ¾ of a word. Every message you send and receive uses tokens, and that's what you're billed for. 1,000 tokens ≈ 750 words.", examples: [{ label: "Anthropic pricing (tokens)", url: "https://www.anthropic.com/pricing" }], deepDive: ["Explain AI token economics to me like I'm building a subscription product. How do I model costs vs revenue at scale?", "What's the most common mistake founders make when estimating token costs for their AI product?", "How do context window size and token count interact — and what does that mean for product design decisions?"], smartLines: ["Every message you send uses tokens — inputs and outputs both count, so longer conversations cost more.", "Knowing your token usage per request is the first step to making your AI costs predictable."], tag: "Economics", seeded: true },
   { term: "Context Window", emoji: "🪟", definition: "How much text an AI can hold in mind at once — its working memory. Bigger windows cost more but let you work with longer documents and conversations without the AI losing track.", examples: [{ label: "Claude's 200k context window explained", url: "https://www.anthropic.com/news/claude-2-1" }], deepDive: ["What are the practical implications of context window size when building a product like a daily briefing tool? When does it matter, when doesn't it?", "How should I design my app's architecture differently depending on whether I have a small vs large context window?", "What happens when you hit the context window limit in production — and what are the best strategies to handle it gracefully?"], smartLines: ["The context window is why your AI forgot something you mentioned earlier in a long conversation. Entirely by design.", "We hit the limit mid-document. The AI now has very confident opinions about page one."], tag: "Economics", seeded: true },
   { term: "RAG", emoji: "📚", definition: "Retrieval-Augmented Generation — instead of relying on the model's memory, you pull in relevant documents at the moment of asking and include them with the question. Usually smarter than fine-tuning.", examples: [{ label: "What is RAG?", url: "https://aws.amazon.com/what-is/retrieval-augmented-generation/" }], deepDive: ["Explain RAG vs fine-tuning for a non-technical founder building a B2B SaaS AI product. Which approach for which problem?", "What are the most common ways RAG implementations fail in production, and how do you prevent them?", "Walk me through the minimum viable RAG setup for a startup — what do I actually need to build vs what can I skip?"], smartLines: ["RAG means the model searches your docs before it answers — more reliable than hoping it remembers the right thing.", "We added RAG to our knowledge base. The model now knows our policies better than most people on the team."], tag: "Architecture", seeded: true },
-  { term: "Prompt Engineering", emoji: "✍️", definition: "The practice of writing clear, well-structured instructions for AI models to get consistently good outputs. Small changes to how you phrase things can make a significant difference to the results.", examples: [{ label: "Anthropic prompt engineering guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" }], deepDive: ["Give me the 5 most impactful prompt engineering techniques with before/after examples. Focus on techniques that improve consistency and reduce hallucination.", "How much does prompt engineering actually matter now that models are smarter — or is it becoming less important?", "What's the difference between a prompt that works in a demo and one that works reliably in production?"], smartLines: ["Good prompt engineering is invisible — bad prompt engineering starts every response with 'Certainly! Here's a numbered list.'", "Spent an afternoon on prompt engineering so the model would stop saying 'As an AI language model.' Completely worth it."], tag: "Techniques", seeded: true },
+  { term: "Prompt Engineering", emoji: "✍️", definition: "The practice of writing clear, well-structured instructions for AI models to get consistently good outputs. Small changes to how you phrase things can make a significant difference to the results.", examples: [{ label: "Anthropic prompt engineering guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" }], deepDive: ["Give me the 5 most impactful prompt engineering techniques with before/after examples. Focus on techniques that improve consistency and reduce hallucination.", "How much does prompt engineering actually matter now that models are smarter — or is it becoming less important?", "What's the difference between a prompt that works in a demo and one that works reliably in production?"], smartLines: ["Good prompt engineering is invisible — bad prompt engineering starts every response with 'Certainly! Here's a numbered list.'", "Spent an afternoon on prompt engineering so the model would stop saying 'As an AI language model.' Completely worth it."], tag: "Technique", seeded: true },
   { term: "MCP", emoji: "🔌", definition: "Model Context Protocol — Anthropic's open standard for connecting AI models to external tools, data, and services. Instead of building separate connections for everything, MCP gives you one consistent way to wire things together.", examples: [{ label: "MCP introduction", url: "https://modelcontextprotocol.io/introduction" }, { label: "Claude MCP docs", url: "https://docs.anthropic.com/en/docs/mcp" }], deepDive: ["Explain MCP (Model Context Protocol) to a product builder — what problems does it solve, and what could I realistically build with it as a solo developer?", "How does MCP compare to building custom API integrations — when would I use one over the other?", "What are the most useful MCP integrations available right now, and which ones are actually worth implementing?"], smartLines: ["MCP lets an AI connect to your calendar, files, or databases without a custom integration for each one.", "Think of MCP as the connector layer between your AI and the rest of your tools — one standard instead of one-off solutions."], tag: "Architecture", seeded: true },
   { term: "Hallucination", emoji: "👻", definition: "When an AI states something confidently that simply isn't true — and doesn't know it's wrong. The biggest reliability challenge in real-world AI products, and the main reason you should always verify important outputs.", examples: [{ label: "Why LLMs hallucinate", url: "https://www.ibm.com/topics/ai-hallucinations" }], deepDive: ["What are the most effective techniques for reducing hallucinations in a production AI app? Give me a ranked list from easiest to implement to hardest.", "How do you detect hallucinations at scale in a production system — what monitoring or evaluation approaches work?", "What product design patterns make hallucinations less likely to cause real harm even when they do happen?"], smartLines: ["The model cited a source so convincingly I nearly used it in a presentation. Turned out not to exist.", "We have a dedicated hallucination review step in QA now — not a sentence I expected to be writing."], tag: "Risk", seeded: true },
   { term: "Fine-tuning", emoji: "🎛️", definition: "Further training an existing model on your own data to improve it for a specific task or writing style. It works well, but it's expensive and time-consuming — better prompts or RAG usually get you there first.", examples: [{ label: "OpenAI fine-tuning guide", url: "https://platform.openai.com/docs/guides/fine-tuning" }], deepDive: ["When does fine-tuning actually make sense vs RAG vs prompt engineering? Give me a decision framework with real examples.", "What data quality and quantity do you actually need to make fine-tuning worthwhile — what are the minimums?", "How do you evaluate whether a fine-tuned model is actually better than a well-prompted base model for your use case?"], smartLines: ["We fine-tuned on our support tickets. The model now handles edge cases the base model never got right.", "Fine-tuning makes sense when you have lots of examples and need consistent outputs at scale — otherwise, start with RAG."], tag: "Architecture", seeded: true },
 ];
 
 const TAG_COLORS = {
-  "Behaviour":    { bg: "rgba(59,130,246,0.13)",  text: "rgba(147,197,253,1)", border: "rgba(59,130,246,0.3)" },
-  "Models":       { bg: "rgba(99,102,241,0.13)",  text: "rgba(165,180,252,1)", border: "rgba(99,102,241,0.3)" },
-  "Dev Tools":    { bg: "rgba(16,185,129,0.13)",  text: "rgba(110,231,183,1)", border: "rgba(16,185,129,0.3)" },
-  "Economics":    { bg: "rgba(245,158,11,0.13)",  text: "rgba(252,211,77,1)",  border: "rgba(245,158,11,0.3)" },
-  "Architecture": { bg: "rgba(139,92,246,0.13)",  text: "rgba(196,181,253,1)", border: "rgba(139,92,246,0.3)" },
-  "Techniques":   { bg: "rgba(236,72,153,0.13)",  text: "rgba(249,168,212,1)", border: "rgba(236,72,153,0.3)" },
-  "Risk":         { bg: "rgba(239,68,68,0.13)",   text: "rgba(252,165,165,1)", border: "rgba(239,68,68,0.3)" },
+  "Behaviour":     { bg: "rgba(59,130,246,0.13)",  text: "rgba(147,197,253,1)", border: "rgba(59,130,246,0.3)" },
+  "Model":         { bg: "rgba(99,102,241,0.13)",  text: "rgba(165,180,252,1)", border: "rgba(99,102,241,0.3)" },
+  "Dev Tool":      { bg: "rgba(16,185,129,0.13)",  text: "rgba(110,231,183,1)", border: "rgba(16,185,129,0.3)" },
+  "Economics":     { bg: "rgba(245,158,11,0.13)",  text: "rgba(252,211,77,1)",  border: "rgba(245,158,11,0.3)" },
+  "Architecture":  { bg: "rgba(139,92,246,0.13)",  text: "rgba(196,181,253,1)", border: "rgba(139,92,246,0.3)" },
+  "Technique":     { bg: "rgba(236,72,153,0.13)",  text: "rgba(249,168,212,1)", border: "rgba(236,72,153,0.3)" },
+  "Risk":          { bg: "rgba(239,68,68,0.13)",   text: "rgba(252,165,165,1)", border: "rgba(239,68,68,0.3)" },
+  "Core Concept":  { bg: "rgba(20,184,166,0.13)",  text: "rgba(94,234,212,1)",  border: "rgba(20,184,166,0.3)" },
 };
 const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)" };
 
@@ -126,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -184,6 +185,23 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     }
   }, [isOpen]);
 
+  const [displayedDef, setDisplayedDef] = useState(isTyping ? "" : item.definition);
+  const [typingDone, setTypingDone] = useState(!isTyping);
+
+  useEffect(() => {
+    if (!isTyping) return;
+    setDisplayedDef("");
+    setTypingDone(false);
+    let i = 0;
+    const full = item.definition;
+    const iv = setInterval(() => {
+      i++;
+      setDisplayedDef(full.slice(0, i));
+      if (i >= full.length) { clearInterval(iv); setTypingDone(true); }
+    }, 14);
+    return () => clearInterval(iv);
+  }, [isTyping, item.definition]);
+
   const [loadingIdx, setLoadingIdx] = useState(null);
   const [responses, setResponses] = useState(Array(3).fill(null));
   const ref = useRef(null);
@@ -229,19 +247,29 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{item.definition}</p>
           </div>
         </div>
-        <span className="flex-shrink-0 transition-transform duration-200" style={{ color: "rgba(var(--rgb),0.25)", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</span>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {onDelete && (
+            <button onClick={e => { e.stopPropagation(); if (confirm(`Delete "${item.term}"?`)) onDelete(item.term); }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(var(--rgb),0.18)", fontSize: "0.85rem", padding: "2px 4px", lineHeight: 1 }}
+              title="Delete term">✕</button>
+          )}
+          <span className="transition-transform duration-200" style={{ color: "rgba(var(--rgb),0.25)", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</span>
+        </div>
       </button>
 
       {isOpen && (
         <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
           <p className="text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
-            <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+            {isTyping && !typingDone
+              ? <>{displayedDef}<span style={{ display: "inline-block", width: "2px", height: "1em", background: "rgba(var(--rgb),0.5)", marginLeft: "1px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} /></>
+              : <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+            }
           </p>
 
-          {(smartLines.length > 0 || generatingSmartLines) && (
+          {typingDone && (smartLines.length > 0 || generatingSmartLines) && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(var(--rgb),0.3)" }}>
-                Make me look like I know what I'm talking about
+                Make me look smart
                 {generatingSmartLines && <PulsingDots />}
               </p>
               {smartLines.length > 0 && (
@@ -256,7 +284,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          {item.examples?.length > 0 && (
+          {typingDone && item.examples?.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>Examples</p>
               <div className="flex flex-wrap gap-2">
@@ -271,7 +299,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
+          {typingDone && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
             <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>Deep dive</p>
             {deepDives.map((prompt, idx) => {
               const isLoading = loadingIdx === idx;
@@ -296,7 +324,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 </div>
               );
             })}
-          </div>
+          </div>}
         </div>
       )}
     </div>
@@ -318,7 +346,7 @@ function PulsingDots() {
   );
 }
 
-const TAG_ORDER = ["All", "Behaviour", "Models", "Risk", "Dev Tools", "Economics", "Techniques", "Architecture"];
+const TAG_ORDER = ["All", "Model", "Core Concept", "Dev Tool", "Risk", "Behaviour", "Economics", "Technique", "Architecture"];
 
 export default function AIGlossary() {
   const [terms, setTerms] = useState(SEED_GLOSSARY);
@@ -338,6 +366,7 @@ export default function AIGlossary() {
   const [isDark, setIsDark] = useState(true);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
+  const [typingTerm, setTypingTerm] = useState(null);
 
   useEffect(() => {
     fetch("/api/terms")
@@ -351,7 +380,7 @@ export default function AIGlossary() {
           examples: t.examples || [],
           deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
           smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
-          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Models" : (t.tag === "Dev Tool" ? "Dev Tools" : t.tag),
+          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
           seeded: false,
         }));
         setTerms([...SEED_GLOSSARY, ...remote]);
@@ -414,6 +443,14 @@ export default function AIGlossary() {
     tryAdd(term);
   };
 
+  const handleDelete = async (termName) => {
+    try {
+      await fetch("/api/terms", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ term: termName }) });
+    } catch {}
+    setTerms(prev => prev.filter(t => t.term !== termName));
+    if (openTerm === termName) setOpenTerm(null);
+  };
+
   const allTermNames = terms.map(t => t.term.toLowerCase());
 
   const tryAdd = async (raw) => {
@@ -454,6 +491,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         setTerms(prev => [...prev, entry]);
         setNewKeys(prev => new Set([...prev, entry.term.toLowerCase()]));
         setOpenTerm(entry.term);
+        setTypingTerm(entry.term);
         persist(entry);
         setSearch("");
       }
@@ -462,9 +500,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   };
 
   const allTagSet = new Set(terms.map(t => t.tag));
-  const knownTags = TAG_ORDER.filter(t => t === "All" || allTagSet.has(t)).slice(1).sort((a, b) => a.length - b.length || a.localeCompare(b));
-  const extraTags = Array.from(allTagSet).filter(t => !TAG_ORDER.includes(t)).sort((a, b) => a.length - b.length || a.localeCompare(b));
-  const tags = ["All", ...knownTags, ...extraTags];
+  const tags = [...TAG_ORDER.filter(t => allTagSet.has(t) || t === "All"), ...Array.from(allTagSet).filter(t => !TAG_ORDER.includes(t)).sort()];
 
   const filtered = terms
     .filter(item => {
@@ -488,7 +524,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
     }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -506,7 +542,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             </button>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.79rem", color: "rgba(var(--rgb),0.32)", marginTop: "3px", letterSpacing: 0 }}>
-            adaptive intelligence chief of staff
+            adaptive intelligence jargon buster
           </p>
 
           {/* Search bar */}
@@ -631,6 +667,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               allTerms={terms}
               onTermClick={handleTermClick}
               onAddTerm={handleAddTerm}
+              onDelete={item.seeded ? null : handleDelete}
+              isTyping={typingTerm === item.term}
             />
           ))}
         </div>
