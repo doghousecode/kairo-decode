@@ -260,7 +260,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   };
 
   return (
-    <div ref={ref} className="rounded-xl overflow-hidden transition-all duration-300" style={{
+    <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
       background: isNew ? "rgba(20,184,166,0.05)" : "rgba(var(--rgb),0.04)",
       border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(var(--rgb),0.09)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
@@ -512,7 +512,29 @@ export default function AIGlossary() {
   };
 
   const handleToggle = (termName) => {
-    setOpenTerm(prev => prev === termName ? null : termName);
+    const isOpening = openTerm !== termName;
+
+    if (!isOpening) {
+      setOpenTerm(null);
+      return;
+    }
+
+    // Anchor the viewport to the card being opened: capture its screen-space
+    // top before React re-renders, then scroll by the delta afterwards so it
+    // stays exactly where the user tapped.
+    const el = document.querySelector(`[data-kairo-term="${CSS.escape(termName)}"]`);
+    const beforeTop = el ? el.getBoundingClientRect().top : null;
+
+    setOpenTerm(termName);
+
+    if (beforeTop === null) return;
+    requestAnimationFrame(() => {
+      const afterTop = el.getBoundingClientRect().top;
+      const delta = afterTop - beforeTop;
+      if (Math.abs(delta) > 1) {
+        window.scrollBy({ top: delta, behavior: 'instant' });
+      }
+    });
   };
 
   const allTermNames = terms.map(t => t.term.toLowerCase());
