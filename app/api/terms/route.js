@@ -1,12 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
+const supabase = () => createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
 
 export async function GET() {
-  const { data, error } = await supabase
+  const { data, error } = await supabase()
     .from("decode_terms")
     .select("*")
     .order("term");
@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request) {
   const body = await request.json();
 
-  const { data, error } = await supabase
+  const { data, error } = await supabase()
     .from("decode_terms")
     .insert({
       term: body.term,
@@ -39,7 +39,7 @@ export async function POST(request) {
 export async function DELETE(request) {
   const { term } = await request.json();
 
-  const { error } = await supabase
+  const { error } = await supabase()
     .from("decode_terms")
     .delete()
     .eq("term", term);
@@ -55,7 +55,7 @@ export async function PATCH(request) {
   if (body.smartLines !== undefined) updates.smart_lines = body.smartLines;
   if (body.deepDive !== undefined) updates.deep_dive = body.deepDive;
 
-  const { data, error } = await supabase
+  const { data, error } = await supabase()
     .from("decode_terms")
     .update(updates)
     .eq("term", body.term)
