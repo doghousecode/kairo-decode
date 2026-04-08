@@ -127,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -307,14 +307,14 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               return (
                 <div key={idx} className="pt-2" style={{ borderTop: idx === 0 ? "none" : "1px solid rgba(var(--rgb),0.06)" }}>
                   <p className="text-sm italic mb-2" style={{ color: "rgba(var(--rgb),0.5)" }}>"<LinkedDefinition text={prompt} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />"</p>
-                  <button onClick={() => runDeepDive(idx)} disabled={loadingIdx !== null} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
+                  <button onClick={() => isOnline && runDeepDive(idx)} disabled={!isOnline || loadingIdx !== null} className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
                     style={{
-                      background: isLoading ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
-                      color: (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
+                      background: (!isOnline || isLoading) ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
+                      color: !isOnline ? "rgba(var(--rgb),0.2)" : (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
                       border: "1px solid rgba(99,102,241,0.28)",
-                      cursor: loadingIdx !== null ? "not-allowed" : "pointer",
+                      cursor: (!isOnline || loadingIdx !== null) ? "not-allowed" : "pointer",
                     }}>
-                    {isLoading ? "Asking Claude..." : "▶ Run this prompt"}
+                    {isLoading ? "Asking Claude..." : isOnline ? "▶ Run this prompt" : "Offline"}
                   </button>
                   {response && (
                     <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -365,6 +365,7 @@ export default function AIGlossary() {
   const [headerHeight, setHeaderHeight] = useState(200);
   const [categoriesHeight, setCategoriesHeight] = useState(90);
   const [isDark, setIsDark] = useState(true);
+  const [isOnline, setIsOnline] = useState(true);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
   const [typingTerm, setTypingTerm] = useState(null);
@@ -389,6 +390,18 @@ export default function AIGlossary() {
       })
       .catch(() => {})
       .finally(() => setTermsLoaded(true));
+  }, []);
+
+  useEffect(() => {
+    setIsOnline(navigator.onLine);
+    const goOnline = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener('online', goOnline);
+    window.addEventListener('offline', goOffline);
+    return () => {
+      window.removeEventListener('online', goOnline);
+      window.removeEventListener('offline', goOffline);
+    };
   }, []);
 
   useEffect(() => {
@@ -457,6 +470,7 @@ export default function AIGlossary() {
   const allTermNames = terms.map(t => t.term.toLowerCase());
 
   const tryAdd = async (raw) => {
+    if (!isOnline) return;
     const query = raw.trim();
     if (!query) return;
     setFeedback(null);
@@ -564,15 +578,15 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               placeholder="Search existing or add new term"
               value={search}
               onChange={e => { setSearch(e.target.value); setFeedback(null); }}
-              onKeyDown={e => e.key === "Enter" && tryAdd(search)}
+              onKeyDown={e => e.key === "Enter" && isOnline && tryAdd(search)}
               className="w-full px-4 rounded-xl text-sm text-white outline-none"
               style={{ position: "relative", zIndex: 2, background: "transparent", border: "none", fontFamily: "inherit", fontSize: "16px", paddingTop: "14px", paddingBottom: "14px" }}
             />
             {searchQ.length > 1 && !generating && (
-              <button onClick={() => tryAdd(search)}
+              <button onClick={() => isOnline && tryAdd(search)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-3 py-1.5 rounded-lg font-medium"
-                style={{ zIndex: 3, background: "rgba(99,102,241,0.22)", color: "rgba(199,210,254,1)", border: "1px solid rgba(99,102,241,0.28)" }}>
-                {isKnown ? "Open ↵" : "Add ✨"}
+                style={{ zIndex: 3, background: isOnline ? "rgba(99,102,241,0.22)" : "rgba(var(--rgb),0.06)", color: isOnline ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.25)", border: "1px solid rgba(99,102,241,0.18)", cursor: isOnline ? "pointer" : "default" }}>
+                {isKnown ? "Open ↵" : isOnline ? "Add ✨" : "Offline"}
               </button>
             )}
             {generating && (
@@ -616,6 +630,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           </div>
         )}
 
+        {/* Offline banner */}
+        {!isOnline && (
+          <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.22)", color: "rgba(252,211,77,0.8)" }}>
+            You're offline — browsing cached terms. Adding terms and deep dives are unavailable.
+          </div>
+        )}
+
         {/* Feedback */}
         {feedback?.type === "notRelevant" && (
           <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", color: "rgba(252,165,165,0.85)" }}>
@@ -648,12 +669,16 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             style={{ background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.18)" }}>
             <div>
               <p className="text-white font-medium">"{searchQ}" isn't in the glossary yet</p>
-              <p className="text-sm mt-0.5" style={{ color: "rgba(20,184,166,0.65)" }}>Press Enter or tap Add to generate an entry</p>
+              <p className="text-sm mt-0.5" style={{ color: isOnline ? "rgba(20,184,166,0.65)" : "rgba(245,158,11,0.6)" }}>
+                {isOnline ? "Press Enter or tap Add to generate an entry" : "Connect to add new terms"}
+              </p>
             </div>
-            <button onClick={() => tryAdd(search)} className="text-xs px-4 py-2 rounded-lg font-medium flex-shrink-0"
-              style={{ background: "rgba(20,184,166,0.18)", color: "rgba(94,234,212,1)", border: "1px solid rgba(20,184,166,0.28)" }}>
-              Add ✨
-            </button>
+            {isOnline && (
+              <button onClick={() => tryAdd(search)} className="text-xs px-4 py-2 rounded-lg font-medium flex-shrink-0"
+                style={{ background: "rgba(20,184,166,0.18)", color: "rgba(94,234,212,1)", border: "1px solid rgba(20,184,166,0.28)" }}>
+                Add ✨
+              </button>
+            )}
           </div>
         )}
 
@@ -678,6 +703,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onAddTerm={handleAddTerm}
               onDelete={handleDelete}
               isTyping={typingTerm === item.term}
+              isOnline={isOnline}
             />
           ))}
         </div>

@@ -10,6 +10,7 @@ export default function RootLayout({ children }) {
     <html lang="en" style={{ background: '#0d0d0d' }}>
       <head>
         <meta name="theme-color" content="#0d0d0d" />
+        <link rel="manifest" href="/manifest.json" />
         <script dangerouslySetInnerHTML={{ __html:
           `document.documentElement.style.background='#0d0d0d';document.documentElement.style.overflow='hidden';`
         }} />
@@ -44,6 +45,13 @@ export default function RootLayout({ children }) {
           {children}
         </div>
 
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js').catch(function() {});
+            });
+          }
+        `}} />
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             var splash = document.getElementById('kairo-splash');
