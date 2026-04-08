@@ -127,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, headerHeight }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -223,22 +223,6 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     if ((isNew || shouldScrollTo) && ref.current) setTimeout(() => ref.current.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
   }, [isNew, shouldScrollTo]);
 
-  const prevIsOpenRef = useRef(false);
-  useEffect(() => {
-    if (isOpen && !prevIsOpenRef.current && ref.current) {
-      // Card just opened — ensure header isn't hidden behind the fixed nav
-      requestAnimationFrame(() => {
-        if (!ref.current) return;
-        const pad = (headerHeight || 120) + 16;
-        const rect = ref.current.getBoundingClientRect();
-        if (rect.top < pad) {
-          window.scrollTo({ top: Math.max(0, window.scrollY + rect.top - pad), behavior: "smooth" });
-        }
-      });
-    }
-    prevIsOpenRef.current = isOpen;
-  }, [isOpen, headerHeight]);
-
   const runDeepDive = async (idx) => {
     setLoadingIdx(idx);
     setResponses(prev => { const next = [...prev]; next[idx] = null; return next; });
@@ -316,7 +300,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          {typingDone && item.examples?.length > 0 && (
+          {item.examples?.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>Examples</p>
               <div className="flex flex-wrap gap-2">
@@ -808,7 +792,6 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onDelete={handleDelete}
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
-              headerHeight={headerHeight}
             />
           ))}
         </div>
