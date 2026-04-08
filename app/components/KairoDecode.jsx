@@ -127,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
+function GlossaryCard({ item, isOpen, onToggle, onScrollCapture, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -249,7 +249,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
       border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(var(--rgb),0.09)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
     }}>
-      <button onClick={onToggle} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
+      <button onClick={onToggle} onPointerDown={onScrollCapture} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-2xl flex-shrink-0">{item.emoji}</span>
           <div className="min-w-0">
@@ -495,8 +495,10 @@ export default function AIGlossary() {
     if (openTerm === termName) setOpenTerm(null);
   };
 
+  const savedScrollY = useRef(0);
+
   const handleToggle = (termName) => {
-    const y = window.scrollY;
+    const y = savedScrollY.current;
     setOpenTerm(prev => prev === termName ? null : termName);
     requestAnimationFrame(() => window.scrollTo({ top: y, behavior: "instant" }));
   };
@@ -764,6 +766,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               item={item}
               isOpen={openTerm === item.term}
               onToggle={() => handleToggle(item.term)}
+              onScrollCapture={() => { savedScrollY.current = window.scrollY; }}
               isNew={newKeys.has(item.term.toLowerCase())}
               shouldScrollTo={scrollToTerm === item.term}
               allTerms={terms}
