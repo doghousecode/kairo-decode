@@ -505,7 +505,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             </button>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.79rem", color: "rgba(var(--rgb),0.32)", marginTop: "3px", letterSpacing: 0 }}>
-            adaptive intelligence chief of staff
+            adaptive intelligence jargon buster
           </p>
 
           {/* Search bar */}
