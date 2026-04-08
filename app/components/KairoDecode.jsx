@@ -383,7 +383,9 @@ export default function AIGlossary() {
           tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
           seeded: false,
         }));
-        setTerms([...SEED_GLOSSARY, ...remote]);
+        const remoteNames = new Set(remote.map(t => t.term.toLowerCase()));
+        const seedOnly = SEED_GLOSSARY.filter(s => !remoteNames.has(s.term.toLowerCase()));
+        setTerms([...seedOnly, ...remote]);
       })
       .catch(() => {});
   }, []);
@@ -667,7 +669,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               allTerms={terms}
               onTermClick={handleTermClick}
               onAddTerm={handleAddTerm}
-              onDelete={item.seeded ? null : handleDelete}
+              onDelete={handleDelete}
               isTyping={typingTerm === item.term}
             />
           ))}
