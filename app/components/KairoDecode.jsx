@@ -555,7 +555,9 @@ Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
 If relevant:
 {"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["First punchy question a product builder would want answered.","Second distinct angle on the term — practical or comparative.","Third question — edge case, risk, or real-world implementation detail."],"smartLines":["First sentence using the term naturally in a realistic context, with a touch of dry wit.","Second sentence — different angle, equally grounded."],"tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
 
-If not relevant (random word, name, off-topic): {"relevant":false}
+IMPORTANT: AI model names and products (Claude, GPT-4, Gemini, Llama, Mistral, Grok, Copilot, etc.) and developer tools are ALWAYS relevant — do not reject them as "just names".
+
+If not relevant (random word, generic name, off-topic): {"relevant":false}
 
 Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           messages: [{ role: "user", content: query }],
