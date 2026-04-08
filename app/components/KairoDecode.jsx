@@ -349,7 +349,7 @@ function PulsingDots() {
 const TAG_ORDER = ["All", "Model", "Core Concept", "Dev Tool", "Risk", "Behaviour", "Economics", "Technique", "Architecture"];
 
 export default function AIGlossary() {
-  const [terms, setTerms] = useState([]);
+  const [terms, setTerms] = useState(SEED_GLOSSARY);
   const [termsLoaded, setTermsLoaded] = useState(false);
   const [newKeys, setNewKeys] = useState(new Set());
   const [openTerm, setOpenTerm] = useState(null);
@@ -373,22 +373,21 @@ export default function AIGlossary() {
     fetch("/api/terms")
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setTerms(data.map(t => ({
-            term: t.term,
-            emoji: t.emoji,
-            definition: t.definition,
-            examples: t.examples || [],
-            deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
-            smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
-            tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
-            seeded: false,
-          })));
-        } else {
-          setTerms(SEED_GLOSSARY);
-        }
+        if (!Array.isArray(data) || !data.length) return;
+        const remote = data.map(t => ({
+          term: t.term,
+          emoji: t.emoji,
+          definition: t.definition,
+          examples: t.examples || [],
+          deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
+          smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
+          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
+          seeded: false,
+        }));
+        const remoteNames = new Set(remote.map(t => t.term.toLowerCase()));
+        setTerms([...SEED_GLOSSARY.filter(s => !remoteNames.has(s.term.toLowerCase())), ...remote]);
       })
-      .catch(() => setTerms(SEED_GLOSSARY))
+      .catch(() => {})
       .finally(() => setTermsLoaded(true));
   }, []);
 
