@@ -48,6 +48,7 @@ export async function DELETE(request) {
   return Response.json({ ok: true });
 }
 
+export async function PATCH(request) {
   const body = await request.json();
 
   const updates = {};
