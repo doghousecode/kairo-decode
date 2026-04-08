@@ -512,12 +512,19 @@ export default function AIGlossary() {
     setOpenTerm(termName);
 
     if (beforeTop === null) return;
+
+    // Suppress the scroll event during our programmatic scrollBy so it doesn't
+    // trigger filter show/hide (which would shift headerHeight and re-offset the card)
+    ignoreScrollUntil.current = Date.now() + 300;
+
     requestAnimationFrame(() => {
       const afterTop = el.getBoundingClientRect().top;
       const delta = afterTop - beforeTop;
       if (Math.abs(delta) > 1) {
         window.scrollBy({ top: delta, behavior: 'instant' });
       }
+      // Keep lastScrollY in sync so the next user scroll is measured correctly
+      lastScrollY.current = window.scrollY;
     });
   };
 
