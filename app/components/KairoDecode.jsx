@@ -325,12 +325,12 @@ export default function AIGlossary() {
   const [newKeys, setNewKeys] = useState(new Set());
   const [openTerm, setOpenTerm] = useState(null);
   const [search, setSearch] = useState("");
-  const [activeTag, setActiveTag] = useState("All");
+  const [activeTags, setActiveTags] = useState(new Set());
   const [generating, setGenerating] = useState(null);
   const [showCategories, setShowCategories] = useState(true);
   const lastScrollY = useRef(0);
   const ignoreScrollUntil = useRef(0);
-  const activeTagRef = useRef("All");
+  const activeTagRef = useRef(false); // true = filtered (not All)
   const headerRef = useRef(null);
   const categoriesRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(200);
@@ -360,7 +360,7 @@ export default function AIGlossary() {
 
   useEffect(() => {
     const onScroll = () => {
-      if (activeTagRef.current !== "All") return;
+      if (activeTagRef.current) return;
       if (Date.now() < ignoreScrollUntil.current) return;
       const y = window.scrollY;
       if (y <= 8) setShowCategories(true);
@@ -384,11 +384,11 @@ export default function AIGlossary() {
   }, []);
 
   useEffect(() => {
-    activeTagRef.current = activeTag;
+    activeTagRef.current = activeTags.size > 0;
     ignoreScrollUntil.current = Date.now() + 1000;
     lastScrollY.current = window.scrollY;
     setShowCategories(true);
-  }, [activeTag]);
+  }, [activeTags]);
 
   const persist = async (entry) => {
     try {
@@ -401,7 +401,7 @@ export default function AIGlossary() {
   };
 
   const handleTermClick = (termKey) => {
-    setActiveTag("All");
+    setActiveTags(new Set());
     setSearch("");
     setOpenTerm(termKey);
     setScrollToTerm(termKey);
@@ -467,7 +467,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
     .filter(item => {
       const q = search.trim().toLowerCase();
       const matchSearch = !q || item.term.toLowerCase().includes(q) || item.definition.toLowerCase().includes(q);
-      return matchSearch && (activeTag === "All" || item.tag === activeTag);
+      return matchSearch && (activeTags.size === 0 || activeTags.has(item.tag));
     })
     .sort((a, b) => a.term.localeCompare(b.term));
 
@@ -536,12 +536,19 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           }}>
             <div ref={categoriesRef} className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "6px" }}>
               {tags.map(tag => (
-                <button key={tag} onClick={() => { ignoreScrollUntil.current = Date.now() + 800; lastScrollY.current = window.scrollY; setShowCategories(true); setActiveTag(tag); }}
+                <button key={tag} onClick={() => {
+                    setActiveTags(prev => {
+                      if (tag === "All") return new Set();
+                      const next = new Set(prev);
+                      if (next.has(tag)) { next.delete(tag); } else { next.add(tag); }
+                      return next;
+                    });
+                  }}
                   className="text-xs px-3 py-1.5 rounded-full border transition-all"
                   style={{
-                    border: activeTag === tag ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(255,255,255,0.09)",
-                    background: activeTag === tag ? "rgba(99,102,241,0.18)" : "transparent",
-                    color: activeTag === tag ? "rgba(199,210,254,1)" : "rgba(255,255,255,0.38)",
+                    border: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(255,255,255,0.09)",
+                    background: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "rgba(99,102,241,0.18)" : "transparent",
+                    color: (tag === "All" ? activeTags.size === 0 : activeTags.has(tag)) ? "rgba(199,210,254,1)" : "rgba(255,255,255,0.38)",
                   }}>
                   {tag}
                 </button>
