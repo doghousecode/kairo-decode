@@ -127,7 +127,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -185,6 +185,23 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     }
   }, [isOpen]);
 
+  const [displayedDef, setDisplayedDef] = useState(isTyping ? "" : item.definition);
+  const [typingDone, setTypingDone] = useState(!isTyping);
+
+  useEffect(() => {
+    if (!isTyping) return;
+    setDisplayedDef("");
+    setTypingDone(false);
+    let i = 0;
+    const full = item.definition;
+    const iv = setInterval(() => {
+      i++;
+      setDisplayedDef(full.slice(0, i));
+      if (i >= full.length) { clearInterval(iv); setTypingDone(true); }
+    }, 14);
+    return () => clearInterval(iv);
+  }, [isTyping, item.definition]);
+
   const [loadingIdx, setLoadingIdx] = useState(null);
   const [responses, setResponses] = useState(Array(3).fill(null));
   const ref = useRef(null);
@@ -230,16 +247,26 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{item.definition}</p>
           </div>
         </div>
-        <span className="flex-shrink-0 transition-transform duration-200" style={{ color: "rgba(var(--rgb),0.25)", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</span>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {onDelete && (
+            <button onClick={e => { e.stopPropagation(); if (confirm(`Delete "${item.term}"?`)) onDelete(item.term); }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(var(--rgb),0.18)", fontSize: "0.85rem", padding: "2px 4px", lineHeight: 1 }}
+              title="Delete term">✕</button>
+          )}
+          <span className="transition-transform duration-200" style={{ color: "rgba(var(--rgb),0.25)", transform: isOpen ? "rotate(180deg)" : "none" }}>▾</span>
+        </div>
       </button>
 
       {isOpen && (
         <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
           <p className="text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
-            <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+            {isTyping && !typingDone
+              ? <>{displayedDef}<span style={{ display: "inline-block", width: "2px", height: "1em", background: "rgba(var(--rgb),0.5)", marginLeft: "1px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} /></>
+              : <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+            }
           </p>
 
-          {(smartLines.length > 0 || generatingSmartLines) && (
+          {typingDone && (smartLines.length > 0 || generatingSmartLines) && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(var(--rgb),0.3)" }}>
                 Make me look smart
@@ -257,7 +284,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          {item.examples?.length > 0 && (
+          {typingDone && item.examples?.length > 0 && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>Examples</p>
               <div className="flex flex-wrap gap-2">
@@ -272,7 +299,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
+          {typingDone && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
             <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>Deep dive</p>
             {deepDives.map((prompt, idx) => {
               const isLoading = loadingIdx === idx;
@@ -297,7 +324,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 </div>
               );
             })}
-          </div>
+          </div>}
         </div>
       )}
     </div>
@@ -339,6 +366,7 @@ export default function AIGlossary() {
   const [isDark, setIsDark] = useState(true);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
+  const [typingTerm, setTypingTerm] = useState(null);
 
   useEffect(() => {
     fetch("/api/terms")
@@ -415,6 +443,14 @@ export default function AIGlossary() {
     tryAdd(term);
   };
 
+  const handleDelete = async (termName) => {
+    try {
+      await fetch("/api/terms", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ term: termName }) });
+    } catch {}
+    setTerms(prev => prev.filter(t => t.term !== termName));
+    if (openTerm === termName) setOpenTerm(null);
+  };
+
   const allTermNames = terms.map(t => t.term.toLowerCase());
 
   const tryAdd = async (raw) => {
@@ -455,6 +491,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         setTerms(prev => [...prev, entry]);
         setNewKeys(prev => new Set([...prev, entry.term.toLowerCase()]));
         setOpenTerm(entry.term);
+        setTypingTerm(entry.term);
         persist(entry);
         setSearch("");
       }
@@ -487,7 +524,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
     }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -630,6 +667,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               allTerms={terms}
               onTermClick={handleTermClick}
               onAddTerm={handleAddTerm}
+              onDelete={item.seeded ? null : handleDelete}
+              isTyping={typingTerm === item.term}
             />
           ))}
         </div>

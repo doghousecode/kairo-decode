@@ -36,7 +36,18 @@ export async function POST(request) {
   return Response.json(data, { status: 201 });
 }
 
-export async function PATCH(request) {
+export async function DELETE(request) {
+  const { term } = await request.json();
+
+  const { error } = await supabase
+    .from("decode_terms")
+    .delete()
+    .eq("term", term);
+
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+  return Response.json({ ok: true });
+}
+
   const body = await request.json();
 
   const updates = {};
