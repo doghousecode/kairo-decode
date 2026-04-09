@@ -245,8 +245,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
   return (
     <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
-      background: isNew ? "rgba(20,184,166,0.05)" : "rgba(var(--rgb),0.04)",
-      border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid rgba(var(--rgb),0.09)",
+      background: isNew ? "rgba(20,184,166,0.05)" : "var(--card-bg)",
+      border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid var(--card-border)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
     }}>
       <button onClick={onToggle} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
@@ -625,7 +625,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   const showAddHint = searchQ.length > 1 && !isKnown && !generating && filtered.length === 0;
   const generatedCount = terms.filter(t => !t.seeded).length;
 
-  const surface = isSpaghetti ? "rgba(0,0,0,0.72)" : isDark ? "#0d0d1c" : "#f5f6ff";
+  const surface = isSpaghetti ? "rgba(8,8,14,0.94)" : isDark ? "#0d0d1c" : "#f5f6ff";
+  const fillBg  = isSpaghetti ? "rgba(8,8,14,0.98)" : surface;
 
   return (
     <div className={`min-h-screen${!isDark ? " light-text-override" : ""}`} style={{
@@ -633,6 +634,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       fontFamily: "'DM Sans',system-ui,sans-serif",
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
+      "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : "rgba(var(--rgb),0.04)",
+      "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : "rgba(var(--rgb),0.09)",
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
@@ -666,7 +669,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 animation: "ai-border-spin 6s linear infinite, ai-glow-pulse 3s ease-in-out infinite",
               }} />
             </div>
-            <div style={{ position: "absolute", inset: "1.5px", borderRadius: "11.5px", background: "var(--surface)", zIndex: 1 }} />
+            <div style={{ position: "absolute", inset: "1.5px", borderRadius: "11.5px", background: fillBg, zIndex: 1 }} />
             <div style={{ position: "absolute", inset: 0, borderRadius: "13px", boxShadow: "0 0 22px rgba(139,92,246,0.18), 0 0 8px rgba(236,72,153,0.12)", zIndex: 0, pointerEvents: "none" }} />
             <input
               type="text"
