@@ -625,8 +625,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   const showAddHint = searchQ.length > 1 && !isKnown && !generating && filtered.length === 0;
   const generatedCount = terms.filter(t => !t.seeded).length;
 
-  const surface = isSpaghetti ? "rgba(8,8,14,0.94)" : isDark ? "#0d0d1c" : "#f5f6ff";
-  const fillBg  = isSpaghetti ? "rgba(8,8,14,0.98)" : surface;
+  const surface = isDark ? "#0d0d1c" : "#f5f6ff";
+  const fillBg  = surface;
 
   return (
     <div className={`min-h-screen${!isDark ? " light-text-override" : ""}`} style={{
@@ -639,7 +639,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -678,7 +678,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onChange={e => { setSearch(e.target.value); setFeedback(null); }}
               onKeyDown={e => e.key === "Enter" && isOnline && tryAdd(search)}
               className="w-full px-4 rounded-xl text-sm text-white outline-none"
-              style={{ position: "relative", zIndex: 2, background: "transparent", border: "none", fontFamily: "inherit", fontSize: "16px", paddingTop: "14px", paddingBottom: "14px" }}
+              style={{ position: "relative", zIndex: 2, background: "transparent", border: "none", fontFamily: "inherit", fontSize: "16px", fontWeight: 700, paddingTop: "14px", paddingBottom: "14px" }}
             />
             {searchQ.length > 1 && !generating && (
               <button onClick={() => isOnline && tryAdd(search)}
