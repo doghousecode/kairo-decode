@@ -642,8 +642,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
-      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-6" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
-        <div className="max-w-2xl mx-auto" style={{ paddingTop: "1.1rem", paddingBottom: "1rem" }}>
+      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
+        <div style={{ maxWidth: 680, margin: "0 auto", paddingTop: "1.1rem", paddingBottom: "1rem" }}>
 
           {/* Logo row */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", position: "relative" }}>
@@ -653,7 +653,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
             <button onClick={() => setThemeMode(m => m === "light" ? "dark" : m === "dark" ? "spaghetti" : "light")} title="Cycle theme: light → dark → spaghetti"
               style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
-              🍝
+              {themeMode === "dark" ? "🌙" : themeMode === "light" ? "☀️" : "🍝"}
             </button>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "1rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
@@ -673,7 +673,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             <div style={{ position: "absolute", inset: 0, borderRadius: "13px", boxShadow: "0 0 22px rgba(139,92,246,0.18), 0 0 8px rgba(236,72,153,0.12)", zIndex: 0, pointerEvents: "none" }} />
             <input
               type="text"
-              placeholder="Search existing or add new term"
+              placeholder="Search existing or add new term…"
               value={search}
               onChange={e => { setSearch(e.target.value); setFeedback(null); }}
               onKeyDown={e => e.key === "Enter" && isOnline && tryAdd(search)}
@@ -717,7 +717,9 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-6" style={{
+      <div style={{
+        maxWidth: 680, margin: "0 auto",
+        paddingLeft: "8px", paddingRight: "8px",
         paddingTop: `${headerHeight + 12}px`,
         paddingBottom: "2rem",
         position: "relative",
