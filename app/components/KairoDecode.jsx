@@ -245,7 +245,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
   return (
     <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
-      background: isNew ? "rgba(20,184,166,0.05)" : "var(--card-bg)",
+      background: isNew ? "var(--new-card-bg)" : "var(--card-bg)",
       border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid var(--card-border)",
       boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
     }}>
@@ -636,6 +636,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       "--surface": surface,
       "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : "rgba(var(--rgb),0.04)",
       "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : "rgba(var(--rgb),0.09)",
+      "--new-card-bg": isSpaghetti ? "rgba(5,35,30,0.88)" : "rgba(20,184,166,0.05)",
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
