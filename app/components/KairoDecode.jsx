@@ -635,7 +635,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       "--surface": surface,
       position: "relative",
     }}>
-      {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: -1, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
+      {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
@@ -717,6 +717,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       <div className="max-w-2xl mx-auto px-6" style={{
         paddingTop: `${headerHeight + 12}px`,
         paddingBottom: "2rem",
+        position: "relative",
+        zIndex: 1,
       }}>
 
         {!termsLoaded && (
