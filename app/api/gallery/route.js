@@ -1,17 +1,23 @@
 import { createClient } from "@supabase/supabase-js";
 
 /*
-  Supabase Storage setup — run once in your Supabase dashboard:
+  Run this SQL in your Supabase dashboard (SQL editor):
 
-  1. Go to Storage → New bucket
-  2. Name: "session1-gallery"
-  3. Toggle ON "Public bucket"
-  4. Under Storage → Policies, add two policies for "session1-gallery":
-     - SELECT (read): allow all  → using (true)
-     - INSERT (upload): allow all → with check (true)
+  create table gallery_entries (
+    id uuid default gen_random_uuid() primary key,
+    filename text not null unique,
+    display_name text,
+    uploaded_at timestamptz default now() not null
+  );
+  alter table gallery_entries enable row level security;
+  create policy "allow_insert" on gallery_entries for insert with check (true);
+  create policy "allow_select" on gallery_entries for select using (true);
+
+  Storage bucket "session1-gallery" should remain public with an INSERT policy.
+  No SELECT storage policy needed — we read from the table instead.
 */
 
-const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+const MAX_BYTES = 10 * 1024 * 1024;
 const BUCKET = 'session1-gallery';
 
 const supabase = () => createClient(
@@ -21,19 +27,18 @@ const supabase = () => createClient(
 
 export async function GET() {
   const client = supabase();
-  const { data, error } = await client.storage.from(BUCKET).list('', {
-    limit: 200,
-    sortBy: { column: 'created_at', order: 'desc' },
-  });
+  const { data, error } = await client
+    .from('gallery_entries')
+    .select('filename, display_name, uploaded_at')
+    .order('uploaded_at', { ascending: false })
+    .limit(200);
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
-  const images = (data || [])
-    .filter(f => f.name !== '.emptyFolderPlaceholder')
-    .map(f => ({
-      name: f.name,
-      url: client.storage.from(BUCKET).getPublicUrl(f.name).data.publicUrl,
-    }));
+  const images = (data || []).map(row => ({
+    url: client.storage.from(BUCKET).getPublicUrl(row.filename).data.publicUrl,
+    display_name: row.display_name || null,
+  }));
 
   return Response.json({ images });
 }
@@ -42,6 +47,7 @@ export async function POST(request) {
   try {
     const formData = await request.formData();
     const file = formData.get('image');
+    const displayName = (formData.get('display_name') || '').trim().slice(0, 80) || null;
 
     if (!file || !file.size) {
       return Response.json({ error: 'No image provided' }, { status: 400 });
@@ -57,14 +63,17 @@ export async function POST(request) {
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const client = supabase();
-    const { error } = await client.storage
+
+    const { error: uploadError } = await client.storage
       .from(BUCKET)
       .upload(filename, new Uint8Array(await file.arrayBuffer()), { contentType: file.type });
 
-    if (error) return Response.json({ error: error.message }, { status: 500 });
+    if (uploadError) return Response.json({ error: uploadError.message }, { status: 500 });
+
+    await client.from('gallery_entries').insert({ filename, display_name: displayName });
 
     const { data: { publicUrl } } = client.storage.from(BUCKET).getPublicUrl(filename);
-    return Response.json({ ok: true, url: publicUrl, name: filename });
+    return Response.json({ ok: true, url: publicUrl });
   } catch {
     return Response.json({ error: 'Upload failed' }, { status: 500 });
   }
