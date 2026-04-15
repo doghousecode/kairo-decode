@@ -105,11 +105,35 @@ const html = `<!DOCTYPE html>
     }
 
     .setup-box {
+      position: relative;
       background: rgba(255, 255, 255, 0.03);
       border-radius: 16px;
       padding: 1.25rem 1.5rem;
       margin-bottom: 1.5rem;
       border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .help-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 4px;
+      padding: 0.35rem 0.5rem;
+      cursor: pointer;
+      color: #9ca3af;
+      font-size: 12px;
+      transition: background 0.2s, color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      text-decoration: none;
+    }
+
+    .help-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
     }
 
     .setup-box ol {
@@ -380,6 +404,7 @@ const html = `<!DOCTYPE html>
     <h2>⚡ Setup</h2>
     <p style="font-size: 10pt; color: #6b7280; margin-bottom: 0.75rem; margin-top: -0.25rem;">Follow these steps before the session</p>
     <div class="setup-box">
+      <a class="help-btn" href="https://apple.enterprise.slack.com/archives/DJY1CF1AS" target="_blank" rel="noopener noreferrer">HELP!</a>
       <ol>
         <li><a href="https://enchante.hwe.apple.com" style="color: #818cf8;">Install Enchanté</a> on your Mac</li>
         <li>Go through Apple's GenAI <a href="https://genai.apple.com/usage/before-you-begin/" style="color: #818cf8;">Onboarding Wizard</a>.</li>
