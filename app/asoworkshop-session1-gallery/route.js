@@ -23,7 +23,6 @@ export async function GET() {
     }
     .page { width: 100%; max-width: 820px; }
 
-    /* Header */
     .badge {
       display: inline-block;
       background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -44,12 +43,31 @@ export async function GET() {
     }
     .subtitle { font-size: 11pt; color: #71717a; margin-bottom: 2rem; }
 
-    /* Upload */
+    /* Upload form */
+    .upload-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-bottom: 2.5rem;
+    }
+    .name-input {
+      width: 280px;
+      padding: 0.5rem 0.85rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: #e5e5e7;
+      font-size: 10pt;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .name-input::placeholder { color: #52525b; }
+    .name-input:focus { border-color: rgba(99,102,241,0.5); }
     .upload-row {
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 2.5rem;
       flex-wrap: wrap;
     }
     .upload-btn {
@@ -79,12 +97,7 @@ export async function GET() {
     .upload-status.success { background: rgba(34,197,94,0.12); color: #4ade80; display: inline-block; }
     .upload-status.error { background: rgba(239,68,68,0.12); color: #f87171; display: inline-block; }
 
-    /* Gallery stage */
-    .gallery-wrap {
-      width: 100%;
-      position: relative;
-      margin-bottom: 2rem;
-    }
+    /* Gallery */
     .stage {
       perspective: 1100px;
       perspective-origin: 50% 50%;
@@ -93,6 +106,7 @@ export async function GET() {
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 0;
     }
     .card {
       position: absolute;
@@ -107,13 +121,29 @@ export async function GET() {
       cursor: pointer;
       will-change: transform, opacity;
     }
-    .card.center { cursor: default; box-shadow: 0 32px 80px rgba(99,102,241,0.25), 0 24px 64px rgba(0,0,0,0.6); }
+    .card.center {
+      cursor: default;
+      box-shadow: 0 32px 80px rgba(99,102,241,0.25), 0 24px 64px rgba(0,0,0,0.6);
+    }
     .card img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       display: block;
       background: #111118;
+    }
+    .card .card-name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.25rem 0.75rem 0.65rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.72));
+      color: #e5e5e7;
+      font-size: 9pt;
+      font-weight: 500;
+      text-align: center;
+      pointer-events: none;
     }
 
     /* Nav */
@@ -132,7 +162,6 @@ export async function GET() {
       background: rgba(255,255,255,0.06);
       color: #e5e5e7;
       font-size: 20pt;
-      line-height: 1;
       cursor: pointer;
       transition: background 0.2s, transform 0.15s;
       display: flex;
@@ -143,7 +172,6 @@ export async function GET() {
     .nav-btn:disabled { opacity: 0.3; cursor: default; transform: none; }
     .counter { font-size: 10pt; color: #52525b; min-width: 3rem; text-align: center; }
 
-    /* Loading / empty */
     .loading, .empty {
       text-align: center;
       padding: 4rem 0;
@@ -151,6 +179,15 @@ export async function GET() {
       font-size: 10.5pt;
     }
     .empty strong { display: block; font-size: 13pt; color: #71717a; margin-bottom: 0.4rem; }
+    .api-error {
+      font-size: 9.5pt;
+      color: #f87171;
+      background: rgba(239,68,68,0.08);
+      border-radius: 8px;
+      padding: 0.5rem 0.85rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
 
     /* Lightbox */
     .lightbox {
@@ -186,7 +223,7 @@ export async function GET() {
     .lightbox-close:hover { color: #fff; }
 
     footer {
-      margin-top: 2.5rem;
+      margin-top: 3rem;
       font-size: 9.5pt;
       color: #3f3f46;
       text-align: center;
@@ -195,6 +232,7 @@ export async function GET() {
     @media (max-width: 500px) {
       .stage { height: 340px; }
       .card { width: 220px; height: 310px; }
+      .name-input { width: 100%; }
     }
   </style>
 </head>
@@ -204,27 +242,30 @@ export async function GET() {
   <h1>What everyone built</h1>
   <p class="subtitle">AI Jargon Busters from the workshop — yours could be here too</p>
 
-  <div class="upload-row">
-    <label class="upload-btn" id="upload-label">
-      📸 Share yours
-      <input type="file" id="file-input" accept="image/*" hidden>
-    </label>
-    <span class="upload-status" id="upload-status"></span>
-    <span class="upload-hint" id="upload-hint">Upload a screenshot of your Jargon Buster</span>
+  <div class="upload-form">
+    <input type="text" id="name-input" class="name-input" placeholder="Your name (optional)" maxlength="80">
+    <div class="upload-row">
+      <label class="upload-btn" id="upload-label">
+        📸 Share yours
+        <input type="file" id="file-input" accept="image/*" hidden>
+      </label>
+      <span class="upload-hint" id="upload-hint">Upload a screenshot of your Jargon Buster</span>
+      <span class="upload-status" id="upload-status"></span>
+    </div>
   </div>
 
-  <div class="gallery-wrap">
-    <div class="loading" id="loading">Loading gallery...</div>
-    <div class="stage" id="stage" style="display:none;"></div>
-    <div class="nav" id="nav" style="display:none;">
-      <button class="nav-btn" id="prev-btn" onclick="prev()">&#8249;</button>
-      <span class="counter" id="counter"></span>
-      <button class="nav-btn" id="next-btn" onclick="next()">&#8250;</button>
-    </div>
-    <div class="empty" id="empty" style="display:none;">
-      <strong>No uploads yet</strong>
-      Be the first to share your Jargon Buster!
-    </div>
+  <div class="loading" id="loading">Loading gallery...</div>
+  <div class="api-error" id="api-error"></div>
+
+  <div class="stage" id="stage" style="display:none;"></div>
+  <div class="nav" id="nav" style="display:none;">
+    <button class="nav-btn" id="prev-btn" onclick="prev()">&#8249;</button>
+    <span class="counter" id="counter"></span>
+    <button class="nav-btn" id="next-btn" onclick="next()">&#8250;</button>
+  </div>
+  <div class="empty" id="empty" style="display:none;">
+    <strong>No uploads yet</strong>
+    Be the first to share your Jargon Buster!
   </div>
 
   <footer>Decode &middot; ASO Ops AI Workshop &middot; Session 1</footer>
@@ -241,11 +282,10 @@ export async function GET() {
   let active = 0;
   let touchStartX = 0;
 
-  // ── Transforms ──────────────────────────────────────────────────────────────
-  const TX     = [0,   62,  105, 138];
-  const SCALE  = [1, 0.80, 0.64, 0.52];
-  const RY     = [0,   22,   38,  48];
-  const OPAC   = [1, 0.82, 0.58, 0.32];
+  const TX    = [0,   62,  105, 138];
+  const SCALE = [1, 0.80, 0.64, 0.52];
+  const RY    = [0,   22,   38,  48];
+  const OPAC  = [1, 0.82, 0.58, 0.32];
 
   function applyStyle(card, offset) {
     const abs = Math.abs(offset);
@@ -267,18 +307,26 @@ export async function GET() {
     card.classList.toggle('center', abs === 0);
   }
 
-  // ── Render ───────────────────────────────────────────────────────────────────
   function render() {
     const stage = document.getElementById('stage');
     stage.innerHTML = '';
     images.forEach((img, i) => {
       const card = document.createElement('div');
       card.className = 'card';
+
       const el = document.createElement('img');
       el.src = img.url;
-      el.alt = 'Jargon Buster ' + (i + 1);
+      el.alt = img.display_name || ('Jargon Buster ' + (i + 1));
       el.loading = 'lazy';
       card.appendChild(el);
+
+      if (img.display_name) {
+        const nameEl = document.createElement('div');
+        nameEl.className = 'card-name';
+        nameEl.textContent = img.display_name;
+        card.appendChild(nameEl);
+      }
+
       applyStyle(card, i - active);
       card.addEventListener('click', () => {
         if (i !== active) navigate(i);
@@ -304,7 +352,6 @@ export async function GET() {
   function prev() { navigate(active - 1); }
   function next() { navigate(active + 1); }
 
-  // ── Keyboard + touch ─────────────────────────────────────────────────────────
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  prev();
     if (e.key === 'ArrowRight') next();
@@ -316,7 +363,6 @@ export async function GET() {
     if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
   });
 
-  // ── Lightbox ─────────────────────────────────────────────────────────────────
   function openLightbox(url) {
     document.getElementById('lightbox-img').src = url;
     document.getElementById('lightbox').classList.add('open');
@@ -325,38 +371,44 @@ export async function GET() {
     document.getElementById('lightbox').classList.remove('open');
   }
 
-  // ── Load images ───────────────────────────────────────────────────────────────
   async function load(jumpToFirst) {
+    const errEl = document.getElementById('api-error');
     try {
       const res = await fetch('/api/gallery');
-      const { images: imgs, error } = await res.json();
-      if (error) throw new Error(error);
-      images = imgs || [];
-    } catch {
+      const body = await res.json();
+      if (body.error) throw new Error(body.error);
+      images = body.images || [];
+      errEl.style.display = 'none';
+    } catch (e) {
       images = [];
+      errEl.textContent = 'Could not load gallery: ' + e.message;
+      errEl.style.display = 'block';
     }
 
     document.getElementById('loading').style.display = 'none';
 
     if (images.length === 0) {
       document.getElementById('empty').style.display = 'block';
+      document.getElementById('stage').style.display = 'none';
+      document.getElementById('nav').style.display = 'none';
       return;
     }
 
+    document.getElementById('empty').style.display = 'none';
     if (jumpToFirst) active = 0;
     document.getElementById('stage').style.display = 'flex';
     document.getElementById('nav').style.display = images.length > 1 ? 'flex' : 'none';
     render();
   }
 
-  // ── Upload ────────────────────────────────────────────────────────────────────
   document.getElementById('file-input').addEventListener('change', async function () {
     const file = this.files[0];
     if (!file) return;
 
-    const label  = document.getElementById('upload-label');
-    const status = document.getElementById('upload-status');
-    const hint   = document.getElementById('upload-hint');
+    const label      = document.getElementById('upload-label');
+    const status     = document.getElementById('upload-status');
+    const hint       = document.getElementById('upload-hint');
+    const nameInput  = document.getElementById('name-input');
 
     label.classList.add('uploading');
     label.childNodes[0].textContent = '⏳ Uploading…';
@@ -366,16 +418,16 @@ export async function GET() {
     try {
       const fd = new FormData();
       fd.append('image', file);
+      fd.append('display_name', nameInput.value.trim());
+
       const res  = await fetch('/api/gallery', { method: 'POST', body: fd });
       const data = await res.json();
-
       if (!res.ok || !data.ok) throw new Error(data.error || 'Upload failed');
 
       status.textContent = '✓ Uploaded!';
       status.className = 'upload-status success';
       hint.style.display = 'none';
 
-      // Reload gallery and jump to the new image (first slot, newest first)
       await load(true);
     } catch (e) {
       status.textContent = '✗ ' + (e.message || 'Upload failed');
@@ -387,7 +439,6 @@ export async function GET() {
     }
   });
 
-  // ── Init ──────────────────────────────────────────────────────────────────────
   load(false);
 </script>
 </body>
