@@ -493,6 +493,9 @@ Update the decoder with these style improvements:
   <div class="section section-locked" id="section-5">
     <h2>Prompt 4: Add Interactivity</h2>
     <div class="prompt-section">
+      <div class="teaching-moment">
+        💡 Try clicking on <strong>Reasoning</strong> to see how Enchanté is interpreting your request in real time, or click on <strong>Native Tools Edit</strong> to see what's happening 'under the hood'
+      </div>
       <pre><span class="option-delete">MAKE THE CARDS EXPANDABLE:</span>
 - Initially, show only the term and emoji
 - When tapped, smoothly expand to reveal the definition</pre>
