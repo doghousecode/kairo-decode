@@ -298,7 +298,7 @@ const html = `<!DOCTYPE html>
     }
 
     .section-locked {
-      opacity: 0.06;
+      opacity: 0.25;
       filter: blur(4px);
       pointer-events: none;
       user-select: none;
