@@ -430,7 +430,7 @@ Include:
 - Each term should be a card with the term name, an emoji, and a one-sentence definition
 
 Save it as index.html in a folder called "ai-decoder" in my Documents folder.</pre>
-      <p style="margin-top: 0.75rem; font-size: 10pt; color: #6b7280;">⏸️ <em>The preview pane will open up, with the first version of your Decoder page (this may take some time...)</em></p>
+      <p style="margin-top: 0.75rem; font-size: 10pt; color: #6b7280;">⏸️ <em>The preview pane will open up, with the first version of your Decoder page (this may take a minute or two...)</em></p>
     </div>
     <button class="next-btn" data-reveals="section-3" onclick="revealNext(this)">Next step →</button>
   </div>
