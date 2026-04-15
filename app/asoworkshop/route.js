@@ -280,9 +280,9 @@ const html = `<!DOCTYPE html>
   <div class="setup-box">
     <ol>
       <li><a href="https://enchante.hwe.apple.com" style="color: #818cf8;">Install Enchanté</a> on your Mac</li>
-      <li>Go through the <a href="https://genai.apple.com/usage/before-you-begin/" style="color: #818cf8;">AI Onboarding Wizard</a></li>
+      <li>Go through Apple's GenAI <a href="https://genai.apple.com/usage/before-you-begin/" style="color: #818cf8;">Onboarding Wizard</a>.</li>
       <li>Open <strong>Enchanté</strong> on your Mac</li>
-      <li>Select <strong>Claude Sonnet</strong> from the Model dropdown, and start a new conversation</li>
+      <li>Select <strong>Claude Sonnet</strong> from the Model dropdown, and start a <strong>new conversation</strong></li>
       <li>Copy and paste each prompt below, one at a time</li>
       <li><strong>Personalise the choices</strong> — delete the options you don't want!</li>
     </ol>
