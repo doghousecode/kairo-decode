@@ -5,7 +5,7 @@ export function middleware(request) {
 
   const { pathname } = request.nextUrl
 
-  if (pathname.startsWith('/password') || pathname.startsWith('/api/password')) {
+  if (pathname.startsWith('/password') || pathname.startsWith('/api/password') || pathname.startsWith('/asoworkshop')) {
     return NextResponse.next()
   }
 
