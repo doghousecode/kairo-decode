@@ -394,7 +394,7 @@ const html = `<!DOCTYPE html>
   <div class="section" id="section-0">
     <div class="header">
       <div class="badge">ASO Ops | AI Workshop</div>
-      <h1>Session 1: AI Jargon Buster</h1>
+      <h1>Session 1: Build Your Own AI Jargon Buster</h1>
       <p class="subtitle">with <span>Enchanté</span> and <span>Claude Code</span></p>
     </div>
   </div>
