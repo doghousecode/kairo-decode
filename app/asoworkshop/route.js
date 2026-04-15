@@ -518,7 +518,7 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
       <ul class="whats-next-list">
         <li>
           <span class="wn-icon">💬</span>
-          <span>Join the <a href="https://app.slack.com/app_redirect?channel=team-aso-ops-emeia-ai">ASO Ops AI Slack Channel</a></span>
+          <span>Join the <a href="https://apple.enterprise.slack.com/archives/C0ATE745KHP">ASO Ops AI Slack Channel</a></span>
         </li>
         <li>
           <span class="wn-icon">📋</span>
