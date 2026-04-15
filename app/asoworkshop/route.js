@@ -402,7 +402,7 @@ const html = `<!DOCTYPE html>
   <!-- Setup: visible by default -->
   <div class="section" id="section-1">
     <h2>⚡ Setup</h2>
-    <p style="font-size: 10pt; color: #6b7280; margin-bottom: 0.75rem; margin-top: -0.25rem;">Follow these steps before the session</p>
+    <p style="font-size: 10pt; color: #6b7280; margin-bottom: 0.75rem; margin-top: -0.25rem;">Follow these steps before the workshop</p>
     <div class="setup-box">
       <a class="help-btn" href="https://apple.enterprise.slack.com/archives/DJY1CF1AS" target="_blank" rel="noopener noreferrer">HELP!</a>
       <ol>
