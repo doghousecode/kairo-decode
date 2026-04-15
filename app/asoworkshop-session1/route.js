@@ -655,7 +655,7 @@ Update the decoder with these style improvements:
     function revealAll(btn) {
       document.querySelectorAll('.section-locked').forEach(s => s.classList.remove('section-locked'));
       btn.style.display = 'none';
-      const first = document.getElementById('section-10');
+      const first = document.getElementById('section-9');
       if (first) setTimeout(() => first.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     }
 
