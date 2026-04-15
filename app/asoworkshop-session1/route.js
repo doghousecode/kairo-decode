@@ -201,6 +201,12 @@ const html = `<!DOCTYPE html>
       color: #fbbf24;
     }
 
+    .pre-comment {
+      color: #4b5563;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
     .tips-table {
       width: 100%;
       border-collapse: collapse;
@@ -372,14 +378,13 @@ const html = `<!DOCTYPE html>
   <!-- Setup: visible by default -->
   <div class="section" id="section-1">
     <h2>⚡ Setup</h2>
+    <p style="font-size: 10pt; color: #6b7280; margin-bottom: 0.75rem; margin-top: -0.25rem;">Follow these steps before the session</p>
     <div class="setup-box">
       <ol>
         <li><a href="https://enchante.hwe.apple.com" style="color: #818cf8;">Install Enchanté</a> on your Mac</li>
         <li>Go through Apple's GenAI <a href="https://genai.apple.com/usage/before-you-begin/" style="color: #818cf8;">Onboarding Wizard</a>.</li>
         <li>Open <strong>Enchanté</strong> on your Mac</li>
-        <li>Select <strong>Claude Sonnet</strong> from the Model dropdown, and start a <strong>new conversation</strong></li>
-        <li>Copy and paste each prompt below, one at a time</li>
-        <li><strong>Personalise the choices</strong> — delete the options you don't want!</li>
+        <li>Select <strong>Claude Sonnet</strong> from the Model dropdown, and you're good to go!</li>
       </ol>
     </div>
     <button class="next-btn" data-reveals="section-2" onclick="revealNext(this)">Next step →</button>
@@ -388,8 +393,10 @@ const html = `<!DOCTYPE html>
   <!-- Prompt 1 -->
   <div class="section section-locked" id="section-2">
     <h2>Prompt 1: Create the Basic Page</h2>
+    <p style="font-size: 10pt; color: #a1a1aa; margin-bottom: 0.75rem;">Start a new conversation, copy and paste each prompt below, one at a time</p>
     <div class="prompt-section">
-      <pre>Build me a single-file HTML page called "AI Decoder" — a personal reference tool for learning AI terminology.
+      <pre><span class="pre-comment"># Personalise the choices — delete the options you don't want!</span>
+Build me a single-file HTML page called "AI Decoder" — a personal reference tool for learning AI terminology.
 
 Include:
 - A header with the title "<span class="placeholder">[YOUR TITLE — e.g. "Decode" / "AI Buddy" / "TermBot" / "Jargon Buster"]</span>" and subtitle "<span class="placeholder">[YOUR SUBTITLE]</span>"
@@ -422,8 +429,8 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
       <div class="teaching-moment">
         💡 Now let's be specific. See the difference!
       </div>
-      <p style="font-size: 10pt; color: #6b7280; margin-bottom: 0.5rem;">👇 <em>Delete the options you don't want from each section:</em></p>
-      <pre>Update the decoder with these style improvements:
+      <pre><span class="pre-comment"># 👇 Delete the options you don't want from each section:</span>
+Update the decoder with these style improvements:
 
 <span class="option-delete">THEME:</span>
 - Dark theme (dark background, light text)
@@ -653,7 +660,8 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
     }
 
     document.querySelectorAll('pre').forEach(pre => {
-      addCopyButton(pre, el => el.textContent.replace(/Copy$/, '').trim());
+      addCopyButton(pre, el => el.textContent.replace(/Copy$/, '').trim()
+        .split('\\n').filter(l => !l.trimStart().startsWith('#')).join('\\n').trim());
     });
 
     document.querySelectorAll('.cli-block').forEach(block => {
