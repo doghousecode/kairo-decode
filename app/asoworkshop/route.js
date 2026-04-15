@@ -444,7 +444,7 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
   <p style="margin-top: 1rem; font-size: 10pt; text-align: center; color: #6b7280;"><strong>The more specific you are, the more control you have!</strong></p>
 
   <footer>
-    Built for Steve's Enchanté Workshop — Apple 2026
+    Built for Steve T's AI Workshop — Apple 2026 (v1.1)
   </footer>
 
 </div>
