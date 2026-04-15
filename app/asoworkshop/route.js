@@ -379,7 +379,7 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
     <p style="font-size: 10pt; color: #6b7280; margin-bottom: 0.5rem;">👇 <em>Choose one or more options below:</em></p>
     <pre><span class="option-delete">ADD A PERSONAL TOUCH:</span>
 
-- Add a footer with my name: "Built by <span class="placeholder">[YOUR NAME]</span> | ASO DCM" and the text "with Enchanté"
+- Add a footer with my name: "Built by <span class="placeholder">[YOUR NAME]</span> | ASO OPS" and the text "with Enchanté"
 - Add a "tip of the day" section at the top that shows a random AI tip
 - Add a dark/light mode toggle
 - Add a "copy definition" button on each card
