@@ -271,16 +271,20 @@ const html = `<!DOCTYPE html>
 <div class="container">
 
   <div class="header">
-    <div class="badge">DCM EMEIA Workshop</div>
+    <div class="badge">ASO Ops | AI Workshop</div>
     <h1>Build Your Own AI Decoder</h1>
     <p class="subtitle">with <span>Enchanté</span> and <span>Claude Code</span></p>
   </div>
 
+  <h2>Session 1: Build Your Own AI Decoder</h2>
+
   <h2>⚡ Setup</h2>
   <div class="setup-box">
     <ol>
+      <li><a href="https://enchante.hwe.apple.com" style="color: #818cf8;">Install Enchanté</a> on your Mac</li>
+      <li>Go through the <a href="https://genai.apple.com/usage/before-you-begin/" style="color: #818cf8;">AI Onboarding Wizard</a></li>
       <li>Open <strong>Enchanté</strong> on your Mac</li>
-      <li>Start a <strong>new conversation</strong></li>
+      <li>Select <strong>Claude Sonnet</strong> from the Model dropdown, and start a new conversation</li>
       <li>Copy and paste each prompt below, one at a time</li>
       <li><strong>Personalise the choices</strong> — delete the options you don't want!</li>
     </ol>
