@@ -117,12 +117,12 @@ const html = `<!DOCTYPE html>
       position: absolute;
       top: 0.5rem;
       right: 0.5rem;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(239, 68, 68, 0.15);
       border: none;
       border-radius: 4px;
-      padding: 0.35rem 0.5rem;
+      padding: 0.35rem 0.85rem;
       cursor: pointer;
-      color: #9ca3af;
+      color: #f87171;
       font-size: 12px;
       transition: background 0.2s, color 0.2s;
       display: flex;
@@ -132,8 +132,8 @@ const html = `<!DOCTYPE html>
     }
 
     .help-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
+      background: rgba(239, 68, 68, 0.28);
+      color: #fca5a5;
     }
 
     .setup-box ol {
