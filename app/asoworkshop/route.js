@@ -518,7 +518,7 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
       <ul class="whats-next-list">
         <li>
           <span class="wn-icon">💬</span>
-          <span>Join the <a href="https://apple.enterprise.slack.com/archives/C0ATE745KHP">ASO Ops AI Slack Channel</a></span>
+          <span>Join the <a href="https://apple.enterprise.slack.com/archives/C0ATE745KHP" target="_blank" rel="noopener noreferrer">ASO Ops AI Slack Channel</a></span>
         </li>
         <li>
           <span class="wn-icon">📋</span>
@@ -530,11 +530,11 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
         </li>
         <li>
           <span class="wn-icon">🎯</span>
-          <span>Ready for Session 2? <a href="/asoworkshop-session2">See you there.</a></span>
+          <span>Ready for Session 2? <a href="/asoworkshop-session2" target="_blank" rel="noopener noreferrer">See you there</a></span>
         </li>
       </ul>
     </div>
-    <button class="next-btn" data-reveals="section-10" onclick="revealNext(this)">Next step →</button>
+    <button class="next-btn" onclick="revealAll(this)">Next step →</button>
   </div>
 
   <!-- Tips for Great Prompts -->
@@ -614,6 +614,13 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
 </div>
 
   <script>
+    function revealAll(btn) {
+      document.querySelectorAll('.section-locked').forEach(s => s.classList.remove('section-locked'));
+      btn.style.display = 'none';
+      const first = document.getElementById('section-10');
+      if (first) setTimeout(() => first.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+
     function revealNext(btn) {
       const targetId = btn.getAttribute('data-reveals');
       const target = document.getElementById(targetId);
