@@ -664,7 +664,7 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
           .join('\\n');
       });
     });
-    fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"page":"asoworkshop"}' }).catch(function() {});
+    fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"page":"asoworkshop-session1"}' }).catch(function() {});
   </script>
 
 </body>

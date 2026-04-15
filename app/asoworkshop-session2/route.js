@@ -71,6 +71,9 @@ const html = `<!DOCTYPE html>
   <p class="coming-soon">Coming soon...</p>
   <footer>Built for Steve T's AI Workshop — Apple 2026</footer>
 </div>
+<script>
+  fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"page":"asoworkshop-session2"}' }).catch(function() {});
+</script>
 </body>
 </html>`
 
