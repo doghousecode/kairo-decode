@@ -3,7 +3,7 @@ const html = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Decoder Workshop Guide</title>
+  <title>AI Jargon Buster Workshop Guide</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -421,7 +421,7 @@ const html = `<!DOCTYPE html>
     <p style="font-size: 10pt; color: #a1a1aa; margin-bottom: 0.75rem;">Start a new conversation, copy and paste each prompt below, one at a time</p>
     <div class="prompt-section">
       <pre><span class="pre-comment"># Personalise the choices — delete the options you don't want!</span>
-Build me a single-file HTML page called "AI Decoder" — a personal reference tool for learning AI terminology.
+Build me a single-file HTML page called "AI Jargon Buster" — a personal reference tool for learning AI terminology.
 
 Include:
 - A header with the title "<span class="placeholder">[YOUR TITLE — e.g. "Decode" / "AI Buddy" / "TermBot" / "Jargon Buster"]</span>" and subtitle "<span class="placeholder">[YOUR SUBTITLE]</span>"
@@ -430,7 +430,7 @@ Include:
 - Each term should be a card with the term name, an emoji, and a one-sentence definition
 
 Save it as index.html in a folder called "ai-decoder" in my Documents folder.</pre>
-      <p style="margin-top: 0.75rem; font-size: 10pt; color: #6b7280;">⏸️ <em>The preview pane will open up with your Decoder page (this may take a minute or two...)</em></p>
+      <p style="margin-top: 0.75rem; font-size: 10pt; color: #6b7280;">⏸️ <em>The preview pane will open up with your brand new Jargon Buster (this may take a minute or two...)</em></p>
     </div>
     <button class="next-btn" data-reveals="section-3" onclick="revealNext(this)">Next step →</button>
   </div>
