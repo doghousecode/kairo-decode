@@ -53,7 +53,7 @@ const html = `<!DOCTYPE html>
     }
 
     h1 {
-      font-size: 36pt;
+      font-size: 28pt;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 0.75rem;
@@ -272,11 +272,9 @@ const html = `<!DOCTYPE html>
 
   <div class="header">
     <div class="badge">ASO Ops | AI Workshop</div>
-    <h1>Build Your Own AI Decoder</h1>
+    <h1>Session 1: Build Your Own AI Decoder</h1>
     <p class="subtitle">with <span>Enchanté</span> and <span>Claude Code</span></p>
   </div>
-
-  <h2>Session 1: Build Your Own AI Decoder</h2>
 
   <h2>⚡ Setup</h2>
   <div class="setup-box">
