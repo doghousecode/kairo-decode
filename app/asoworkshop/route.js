@@ -551,7 +551,7 @@ Update the decoder with these style improvements:
       <p style="font-size: 10pt; margin-bottom: 0.5rem;">If you finish early, try these:</p>
       <ul style="font-size: 10pt; margin-left: 1.25rem;">
         <li><strong>Run it in Safari:</strong> open Finder, go to ~/Documents/ai-decoder/index.html</li>
-        <li><strong>Run it on your phone:</strong> send the HTML file to yourself, or share over iCloud</li>
+        <li><strong>Run it on your iPhone:</strong> send the HTML file to yourself, or share over iCloud</li>
         <li><strong>Export it:</strong> "Create a button that exports all terms as a JSON file"</li>
         <li><strong>Make it a quiz:</strong> "Add a quiz mode that shows definitions and asks me to guess the term"</li>
         <li><strong>Add animations:</strong> "Add a subtle entrance animation when the page loads"</li>
