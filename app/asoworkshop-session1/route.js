@@ -579,7 +579,7 @@ Update the decoder with these style improvements:
         </li>
         <li>
           <span class="wn-icon">🎯</span>
-          <span>Ready for Session 2? <a href="/asoworkshop-session2" target="_blank" rel="noopener noreferrer">See you there</a></span>
+          <span>Ready for Session 2? <a href="/asoworkshop-session2" target="_blank" rel="noopener noreferrer">See you there!</a></span>
         </li>
       </ul>
     </div>
