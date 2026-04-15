@@ -404,7 +404,7 @@ Save it as index.html in a folder called "ai-decoder" in my Documents folder.</p
       <li>Follow the steps on the top half of <a href="https://pages.github.pie.apple.com/AI-for-Devs-Community/AppleClaudeCode/" style="color: #818cf8;">this page</a>, from Prerequisites, down to Launch.</li>
     </ol>
 
-    <p style="font-size: 10pt; margin-bottom: 0.5rem;"><strong>Try it:</strong></p>
+    <p style="font-size: 10pt; margin-bottom: 0.5rem;"><strong>Run Claude:</strong></p>
     <div class="cli-block" style="position: relative; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 0.75rem 1rem; padding-right: 3rem; font-family: 'Fira Code', monospace; font-size: 9pt; margin-bottom: 0.75rem;">
       <div style="color: #86868b; margin-bottom: 0.25rem;"># Open Terminal, then:</div>
       <div style="color: #e2e8f0;">cd ~/Documents/ai-decoder</div>
