@@ -233,12 +233,12 @@ const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", t
 
 const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
-function TagBadge({ tag, isNew }) {
+function TagBadge({ tag, label, isNew }) {
   const c = getTagColor(tag);
   return (
     <span className="text-xs px-2 py-0.5 rounded-full border font-medium"
       style={{ background: c.bg, color: c.text, borderColor: c.border }}>
-      {isNew ? "✨ " : ""}{tag}
+      {isNew ? "✨ " : ""}{label || tag}
     </span>
   );
 }
@@ -329,7 +329,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, preTranslatedDef, preTranslatedSmartLines }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -495,7 +495,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
-              <TagBadge tag={item.tag} isNew={isNew} />
+              <TagBadge tag={item.tag} label={tagLabel} isNew={isNew} />
             </div>
             <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{preTranslatedDef || translated?.definition || item.definition}</p>
           </div>
@@ -642,7 +642,13 @@ export default function AIGlossary() {
     return 'en';
   });
   useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
-  const [batchTranslations, setBatchTranslations] = useState({}); // { langCode: { term: { definition, smartLines } } }
+  const [batchTranslations, setBatchTranslations] = useState(() => {
+    try { const s = localStorage.getItem('kairo-translations'); return s ? JSON.parse(s) : {}; } catch { return {}; }
+  }); // { langCode: { term: { definition, smartLines } } }
+  useEffect(() => {
+    if (Object.keys(batchTranslations).length > 0)
+      try { localStorage.setItem('kairo-translations', JSON.stringify(batchTranslations)); } catch {}
+  }, [batchTranslations]);
   const [batchTranslating, setBatchTranslating] = useState(false);
   const [showLangPicker, setShowLangPicker] = useState(false);
   const langPickerRef = useRef(null);
@@ -694,7 +700,7 @@ export default function AIGlossary() {
     fetch("/api/claude", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514", max_tokens: 4000,
+        model: "claude-haiku-4-5-20251001", max_tokens: 4000,
         system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
         messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
       }),
@@ -1136,6 +1142,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
               lang={lang}
+              tagLabel={strings.tags?.[item.tag] || item.tag}
               preTranslatedDef={batchTranslations[lang]?.[item.term]?.definition}
               preTranslatedSmartLines={batchTranslations[lang]?.[item.term]?.smartLines}
             />
