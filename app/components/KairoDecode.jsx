@@ -774,10 +774,10 @@ export default function AIGlossary() {
           setBatchTranslations(prev => ({ ...prev, [targetLang]: merged }));
       } catch {}
 
-      // Only re-translate if definition is missing — deepDive presence is not a reliable signal
-      // (older Supabase rows may have empty deepDive but valid definition, and checking deepDive
-      // causes an infinite re-translation loop on every language switch)
-      const missing = terms.filter(t => !merged[t.term]?.definition);
+      // Re-translate if definition is missing, or if deepDive is empty (gap-fill for spotty runs).
+      // The loop risk from checking deepDive is gone now that all source terms have 3 deep dives —
+      // a completed translation will have deepDive.length === 3 and won't re-trigger.
+      const missing = terms.filter(t => !merged[t.term]?.definition || !merged[t.term]?.deepDive?.length);
       if (missing.length === 0 || targetLang !== lang) return;
 
       // CJK and Indic scripts use 1.5–3× more tokens per character than Latin.
