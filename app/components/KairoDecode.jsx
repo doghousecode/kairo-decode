@@ -755,10 +755,12 @@ export default function AIGlossary() {
       });
       if (missing.length === 0 || targetLang !== lang) return;
 
-      // CJK and Indic scripts use 1.5–3× more tokens per character than Latin.
-      // 4 terms × ~900 tokens/term = ~3600 tokens — fits safely in 4000 for all scripts.
-      const CHUNK = 4;
+      // Indic scripts (especially Gurmukhi) tokenise poorly with Haiku — use Sonnet
+      // and smaller chunks to avoid truncated/malformed JSON responses.
+      const isIndic = targetLang === 'pa' || targetLang === 'hi';
+      const CHUNK = isIndic ? 2 : 4;
       const MAX_TOKENS = 4000;
+      const translationModel = isIndic ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001";
       const allNew = {};
       for (let i = 0; i < missing.length; i += CHUNK) {
         if (targetLang !== lang) break;
@@ -775,7 +777,7 @@ export default function AIGlossary() {
           const d = await fetch("/api/claude", {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: "claude-haiku-4-5-20251001", max_tokens: MAX_TOKENS,
+              model: translationModel, max_tokens: MAX_TOKENS,
               system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. JSON keys must stay in English. Translate ALL text values (definitions, smart lines, questions) fully into the target language — even when the entry is about a product or acronym. Only the proper name itself (e.g. Claude, ChatGPT, MCP, CI/CD) should remain in English when it appears within the translated text.",
               messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
             }),
