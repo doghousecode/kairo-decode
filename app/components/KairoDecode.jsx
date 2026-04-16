@@ -17,6 +17,161 @@ const SEED_GLOSSARY = [
   { term: "Fine-tuning", emoji: "🎛️", definition: "Further training an existing model on your own data to improve it for a specific task or writing style. It works well, but it's expensive and time-consuming — better prompts or RAG usually get you there first.", examples: [{ label: "OpenAI fine-tuning guide", url: "https://platform.openai.com/docs/guides/fine-tuning" }], deepDive: ["When does fine-tuning actually make sense vs RAG vs prompt engineering? Give me a decision framework with real examples.", "What data quality and quantity do you actually need to make fine-tuning worthwhile — what are the minimums?", "How do you evaluate whether a fine-tuned model is actually better than a well-prompted base model for your use case?"], smartLines: ["We fine-tuned on our support tickets. The model now handles edge cases the base model never got right.", "Fine-tuning makes sense when you have lots of examples and need consistent outputs at scale — otherwise, start with RAG."], tag: "Architecture", seeded: true },
 ];
 
+const LANGUAGES = [
+  { code: "en", flag: "🇬🇧", name: "English" },
+  { code: "fr", flag: "🇫🇷", name: "French" },
+  { code: "de", flag: "🇩🇪", name: "German" },
+  { code: "es", flag: "🇪🇸", name: "Spanish" },
+  { code: "it", flag: "🇮🇹", name: "Italian" },
+  { code: "nl", flag: "🇳🇱", name: "Dutch" },
+  { code: "ko", flag: "🇰🇷", name: "Korean" },
+  { code: "ja", flag: "🇯🇵", name: "Japanese" },
+];
+
+const LANG_NAMES = {
+  en: "English", fr: "French", de: "German", es: "Spanish",
+  it: "Italian", nl: "Dutch", ko: "Korean", ja: "Japanese",
+};
+
+const UI_STRINGS = {
+  en: {
+    placeholder: "Search existing or add new term…",
+    open: "Open ↵", add: "Add ✨", offline: "Offline",
+    makeSmartLabel: "Make me look smart",
+    examplesLabel: "Examples", deepDiveLabel: "Deep dive",
+    runPrompt: "▶ Run this prompt", askingClaude: "Asking Claude...",
+    translating: "Translating…",
+    offlineBanner: "You're offline — browsing cached terms. Adding terms and deep dives are unavailable.",
+    notRelevant: (term) => `"${term}" doesn't look like an AI/tech term — skipping it.`,
+    error: "Something went wrong. Try again?",
+    notInGlossary: (term) => `"${term}" isn't in the glossary yet`,
+    addPrompt: "Press Enter or tap Add to generate an entry",
+    connectToAdd: "Connect to add new terms",
+    discovered: (n) => `+${n} discovered`,
+    generatingEntry: "Generating entry",
+    footer: (total, gen) => `${total} terms · ${gen} auto-discovered · Kairo Decode`,
+  },
+  fr: {
+    placeholder: "Rechercher ou ajouter un terme…",
+    open: "Ouvrir ↵", add: "Ajouter ✨", offline: "Hors ligne",
+    makeSmartLabel: "Impressionnez votre entourage",
+    examplesLabel: "Exemples", deepDiveLabel: "Approfondissement",
+    runPrompt: "▶ Lancer ce prompt", askingClaude: "Demande à Claude...",
+    translating: "Traduction…",
+    offlineBanner: "Vous êtes hors ligne — navigation dans les termes en cache. L'ajout de termes n'est pas disponible.",
+    notRelevant: (term) => `"${term}" ne semble pas être un terme IA/tech — ignoré.`,
+    error: "Une erreur s'est produite. Réessayer ?",
+    notInGlossary: (term) => `"${term}" n'est pas encore dans le glossaire`,
+    addPrompt: "Appuyez sur Entrée ou sur Ajouter pour générer une entrée",
+    connectToAdd: "Connectez-vous pour ajouter des termes",
+    discovered: (n) => `+${n} découverts`,
+    generatingEntry: "Génération en cours",
+    footer: (total, gen) => `${total} termes · ${gen} découverts · Kairo Decode`,
+  },
+  de: {
+    placeholder: "Begriff suchen oder hinzufügen…",
+    open: "Öffnen ↵", add: "Hinzufügen ✨", offline: "Offline",
+    makeSmartLabel: "Überzeuge dein Umfeld",
+    examplesLabel: "Beispiele", deepDiveLabel: "Vertiefung",
+    runPrompt: "▶ Prompt ausführen", askingClaude: "Claude wird gefragt...",
+    translating: "Übersetzen…",
+    offlineBanner: "Sie sind offline — gespeicherte Begriffe werden angezeigt. Hinzufügen nicht verfügbar.",
+    notRelevant: (term) => `"${term}" scheint kein KI/Tech-Begriff zu sein — übersprungen.`,
+    error: "Etwas ist schiefgelaufen. Nochmal versuchen?",
+    notInGlossary: (term) => `"${term}" ist noch nicht im Glossar`,
+    addPrompt: "Enter drücken oder Hinzufügen antippen",
+    connectToAdd: "Verbinden, um Begriffe hinzuzufügen",
+    discovered: (n) => `+${n} entdeckt`,
+    generatingEntry: "Eintrag wird generiert",
+    footer: (total, gen) => `${total} Begriffe · ${gen} entdeckt · Kairo Decode`,
+  },
+  es: {
+    placeholder: "Buscar o añadir un término…",
+    open: "Abrir ↵", add: "Añadir ✨", offline: "Sin conexión",
+    makeSmartLabel: "Impresiona a tu equipo",
+    examplesLabel: "Ejemplos", deepDiveLabel: "Profundización",
+    runPrompt: "▶ Ejecutar este prompt", askingClaude: "Preguntando a Claude...",
+    translating: "Traduciendo…",
+    offlineBanner: "Estás sin conexión — navegando por los términos guardados. Añadir términos no está disponible.",
+    notRelevant: (term) => `"${term}" no parece ser un término de IA/tech — omitido.`,
+    error: "Algo salió mal. ¿Intentar de nuevo?",
+    notInGlossary: (term) => `"${term}" aún no está en el glosario`,
+    addPrompt: "Pulsa Enter o toca Añadir para generar una entrada",
+    connectToAdd: "Conéctate para añadir términos",
+    discovered: (n) => `+${n} descubiertos`,
+    generatingEntry: "Generando entrada",
+    footer: (total, gen) => `${total} términos · ${gen} descubiertos · Kairo Decode`,
+  },
+  it: {
+    placeholder: "Cerca o aggiungi un termine…",
+    open: "Apri ↵", add: "Aggiungi ✨", offline: "Offline",
+    makeSmartLabel: "Fai colpo sul tuo team",
+    examplesLabel: "Esempi", deepDiveLabel: "Approfondimento",
+    runPrompt: "▶ Esegui questo prompt", askingClaude: "Chiedendo a Claude...",
+    translating: "Traduzione…",
+    offlineBanner: "Sei offline — stai navigando i termini salvati. L'aggiunta di termini non è disponibile.",
+    notRelevant: (term) => `"${term}" non sembra un termine AI/tech — ignorato.`,
+    error: "Qualcosa è andato storto. Riprova?",
+    notInGlossary: (term) => `"${term}" non è ancora nel glossario`,
+    addPrompt: "Premi Invio o tocca Aggiungi per generare una voce",
+    connectToAdd: "Connettiti per aggiungere termini",
+    discovered: (n) => `+${n} scoperti`,
+    generatingEntry: "Generazione in corso",
+    footer: (total, gen) => `${total} termini · ${gen} scoperti · Kairo Decode`,
+  },
+  nl: {
+    placeholder: "Zoek of voeg een term toe…",
+    open: "Openen ↵", add: "Toevoegen ✨", offline: "Offline",
+    makeSmartLabel: "Maak indruk op je team",
+    examplesLabel: "Voorbeelden", deepDiveLabel: "Verdieping",
+    runPrompt: "▶ Voer dit prompt uit", askingClaude: "Claude wordt gevraagd...",
+    translating: "Vertalen…",
+    offlineBanner: "Je bent offline — gespeicherde termen worden weergegeven. Termen toevoegen is niet beschikbaar.",
+    notRelevant: (term) => `"${term}" lijkt geen AI/tech-term te zijn — overgeslagen.`,
+    error: "Er is iets misgegaan. Opnieuw proberen?",
+    notInGlossary: (term) => `"${term}" staat nog niet in het woordenboek`,
+    addPrompt: "Druk op Enter of tik op Toevoegen om een vermelding te genereren",
+    connectToAdd: "Verbind om termen toe te voegen",
+    discovered: (n) => `+${n} ontdekt`,
+    generatingEntry: "Vermelding genereren",
+    footer: (total, gen) => `${total} termen · ${gen} ontdekt · Kairo Decode`,
+  },
+  ko: {
+    placeholder: "용어 검색 또는 추가…",
+    open: "열기 ↵", add: "추가 ✨", offline: "오프라인",
+    makeSmartLabel: "팀에게 인상 남기기",
+    examplesLabel: "예시", deepDiveLabel: "심층 분석",
+    runPrompt: "▶ 프롬프트 실행", askingClaude: "Claude에게 질문 중...",
+    translating: "번역 중…",
+    offlineBanner: "오프라인 상태입니다 — 저장된 용어를 탐색 중입니다. 용어 추가는 사용할 수 없습니다.",
+    notRelevant: (term) => `"${term}"은(는) AI/기술 용어가 아닌 것 같아 건너뜁니다.`,
+    error: "문제가 발생했습니다. 다시 시도하세요?",
+    notInGlossary: (term) => `"${term}"은(는) 아직 용어집에 없습니다`,
+    addPrompt: "Enter를 누르거나 추가를 탭하여 항목을 생성하세요",
+    connectToAdd: "용어를 추가하려면 연결하세요",
+    discovered: (n) => `+${n} 발견됨`,
+    generatingEntry: "항목 생성 중",
+    footer: (total, gen) => `${total}개 용어 · ${gen}개 자동 발견 · Kairo Decode`,
+  },
+  ja: {
+    placeholder: "用語を検索または追加…",
+    open: "開く ↵", add: "追加 ✨", offline: "オフライン",
+    makeSmartLabel: "チームに差をつける",
+    examplesLabel: "例", deepDiveLabel: "詳しく見る",
+    runPrompt: "▶ プロンプトを実行", askingClaude: "Claudeに質問中...",
+    translating: "翻訳中…",
+    offlineBanner: "オフラインです — 保存済み用語を閲覧中。用語の追加は利用できません。",
+    notRelevant: (term) => `"${term}"はAI/技術用語ではないようです — スキップします。`,
+    error: "問題が発生しました。もう一度試しますか？",
+    notInGlossary: (term) => `"${term}"はまだ用語集にありません`,
+    addPrompt: "Enterを押すか追加をタップしてエントリを生成",
+    connectToAdd: "用語を追加するには接続してください",
+    discovered: (n) => `+${n} 発見`,
+    generatingEntry: "エントリ生成中",
+    footer: (total, gen) => `${total}用語 · ${gen}自動発見 · Kairo Decode`,
+  },
+};
+
 const TAG_COLORS = {
   "Behaviour":     { bg: "rgba(59,130,246,0.13)",  text: "rgba(147,197,253,1)", border: "rgba(59,130,246,0.3)" },
   "Model":         { bg: "rgba(99,102,241,0.13)",  text: "rgba(165,180,252,1)", border: "rgba(99,102,241,0.3)" },
@@ -127,11 +282,45 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
   const [generatingDeepDives, setGeneratingDeepDives] = useState(false);
+  const [translated, setTranslated] = useState(null);
+  const [translating, setTranslating] = useState(false);
+  const translatedForLang = useRef(null);
+
+  // Reset translation cache when language changes
+  useEffect(() => {
+    if (translatedForLang.current !== lang) {
+      setTranslated(null);
+      translatedForLang.current = lang;
+    }
+  }, [lang]);
+
+  // Lazy-translate content when card opens in non-English mode
+  useEffect(() => {
+    if (!isOpen || lang === 'en' || translated || translating) return;
+    const targetLang = lang;
+    setTranslating(true);
+    fetch("/api/claude", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514", max_tokens: 800,
+        system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keep AI/tech terms, acronyms, and product names in English.",
+        messages: [{ role: "user", content: `Translate to ${LANG_NAMES[targetLang]}:\n${JSON.stringify({ definition: item.definition, smartLines: item.smartLines || [], deepDive: Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive] })}` }],
+      }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (targetLang !== lang) return; // language changed while in-flight, discard
+        const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+        try { setTranslated(JSON.parse(text)); } catch {}
+      })
+      .catch(() => {})
+      .finally(() => setTranslating(false));
+  }, [isOpen, lang]);
 
   useEffect(() => {
     if (!isOpen || item.seeded) return;
@@ -143,7 +332,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 300,
-          system: "You write short example sentences for a tech glossary. Mildly witty is fine, but keep them useful and grounded. Respond ONLY with a raw JSON array — no markdown, no backticks.",
+          system: `You write short example sentences for a tech glossary. Mildly witty is fine, but keep them useful and grounded. Respond ONLY with a raw JSON array — no markdown, no backticks.${lang !== 'en' ? ` Write in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nWrite exactly 2 sentences (max 20 words each) using this term naturally.\nFormat: ["sentence one.","sentence two."]` }],
         }),
       })
@@ -167,7 +356,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 400,
-          system: "You generate deep-dive questions for a tech glossary. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.",
+          system: `You generate deep-dive questions for a tech glossary. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.${lang !== 'en' ? ` Write in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nGenerate exactly 3 distinct, punchy questions a product builder would want answered about this term. Different angles: practical use, trade-offs, real-world implementation.\nFormat: ["question 1?","question 2?","question 3?"]` }],
         }),
       })
@@ -231,7 +420,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514", max_tokens: 1000,
-          system: "You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.",
+          system: `You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.${lang !== 'en' ? ` Respond in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: deepDives[idx] }],
         }),
       });
@@ -396,6 +585,11 @@ export default function AIGlossary() {
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
   const [typingTerm, setTypingTerm] = useState(null);
+  const [lang, setLang] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('kairo-lang') || 'en';
+    return 'en';
+  });
+  useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
 
   useEffect(() => {
     fetch("/api/terms")
@@ -551,7 +745,7 @@ export default function AIGlossary() {
           system: `You maintain a glossary for AI, ML, software dev, and tech entrepreneurship.
 Given a term, decide if it's genuinely relevant to that domain. If yes, generate a glossary entry.
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
-
+${lang !== 'en' ? `Write ALL text fields (definition, smartLines, deepDive) in ${LANG_NAMES[lang]}. Keep the term name and AI/tech acronyms in English.` : ''}
 If relevant:
 {"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["First punchy question a product builder would want answered.","Second distinct angle on the term — practical or comparative.","Third question — edge case, risk, or real-world implementation detail."],"smartLines":["First sentence using the term naturally in a realistic context, with a touch of dry wit.","Second sentence — different angle, equally grounded."],"tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
 
@@ -624,6 +818,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   const isKnown = searchQ && terms.some(t => t.term.toLowerCase() === searchQ.toLowerCase());
   const showAddHint = searchQ.length > 1 && !isKnown && !generating && filtered.length === 0;
   const generatedCount = terms.filter(t => !t.seeded).length;
+
+  const strings = UI_STRINGS[lang] || UI_STRINGS.en;
 
   const surface = isDark ? "#0d0d1c" : "#f5f6ff";
   const fillBg  = surface;
