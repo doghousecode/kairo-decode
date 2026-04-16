@@ -26,11 +26,14 @@ const LANGUAGES = [
   { code: "nl", flag: "🇳🇱", name: "Dutch",    nativeName: "Nederlands" },
   { code: "ko", flag: "🇰🇷", name: "Korean",   nativeName: "한국어"      },
   { code: "ja", flag: "🇯🇵", name: "Japanese", nativeName: "日本語"      },
+  { code: "hi", flag: null,  label: "हि",       name: "Hindi",   nativeName: "हिन्दी"    },
+  { code: "pa", flag: null,  label: "ਪੰ",       name: "Punjabi", nativeName: "ਪੰਜਾਬੀ"   },
 ];
 
 const LANG_NAMES = {
   en: "English", fr: "French", de: "German", es: "Spanish",
   it: "Italian", nl: "Dutch", ko: "Korean", ja: "Japanese",
+  hi: "Hindi", pa: "Punjabi",
 };
 
 const UI_STRINGS = {
@@ -177,6 +180,42 @@ const UI_STRINGS = {
     generatingEntry: "エントリ生成中",
     footer: (total, gen) => `${total}用語 · ${gen}自動発見 · Kairo Decode`,
     tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ" },
+  },
+  hi: {
+    placeholder: "मौजूदा शब्द खोजें या नया जोड़ें…",
+    open: "खोलें ↵", add: "जोड़ें ✨", offline: "ऑफलाइन",
+    makeSmartLabel: "अपनी टीम को प्रभावित करें",
+    examplesLabel: "उदाहरण", deepDiveLabel: "गहराई से जानें",
+    runPrompt: "▶ यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...",
+    translating: "अनुवाद हो रहा है…",
+    offlineBanner: "आप ऑफलाइन हैं — सहेजे गए शब्द देख रहे हैं। शब्द जोड़ना उपलब्ध नहीं है।",
+    notRelevant: (term) => `"${term}" AI/tech शब्द नहीं लगता — छोड़ रहे हैं।`,
+    error: "कुछ गलत हुआ। फिर कोशिश करें?",
+    notInGlossary: (term) => `"${term}" अभी शब्दकोश में नहीं है`,
+    addPrompt: "एंट्री बनाने के लिए Enter दबाएं या जोड़ें टैप करें",
+    connectToAdd: "शब्द जोड़ने के लिए कनेक्ट करें",
+    discovered: (n) => `+${n} खोजे गए`,
+    generatingEntry: "एंट्री बन रही है",
+    footer: (total, gen) => `${total} शब्द · ${gen} स्वचालित खोजे · Kairo Decode`,
+    tags: { "All":"सभी","Model":"मॉडल","Core Concept":"मूल अवधारणा","Dev Tool":"डेव टूल","Risk":"जोखिम","Behaviour":"व्यवहार","Economics":"अर्थशास्त्र","Technique":"तकनीक","Architecture":"आर्किटेक्चर" },
+  },
+  pa: {
+    placeholder: "ਮੌਜੂਦਾ ਸ਼ਬਦ ਖੋਜੋ ਜਾਂ ਨਵਾਂ ਜੋੜੋ…",
+    open: "ਖੋਲ੍ਹੋ ↵", add: "ਜੋੜੋ ✨", offline: "ਆਫਲਾਈਨ",
+    makeSmartLabel: "ਆਪਣੀ ਟੀਮ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰੋ",
+    examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਡੂੰਘਾਈ ਨਾਲ ਜਾਣੋ",
+    runPrompt: "▶ ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...",
+    translating: "ਅਨੁਵਾਦ ਹੋ ਰਿਹਾ ਹੈ…",
+    offlineBanner: "ਤੁਸੀਂ ਆਫਲਾਈਨ ਹੋ — ਸੁਰੱਖਿਅਤ ਸ਼ਬਦ ਦੇਖ ਰਹੇ ਹੋ। ਸ਼ਬਦ ਜੋੜਨਾ ਉਪਲਬਧ ਨਹੀਂ।",
+    notRelevant: (term) => `"${term}" AI/tech ਸ਼ਬਦ ਨਹੀਂ ਲੱਗਦਾ — ਛੱਡ ਰਹੇ ਹਾਂ।`,
+    error: "ਕੁਝ ਗਲਤ ਹੋਇਆ। ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ?",
+    notInGlossary: (term) => `"${term}" ਅਜੇ ਸ਼ਬਦਕੋਸ਼ ਵਿੱਚ ਨਹੀਂ ਹੈ`,
+    addPrompt: "ਐਂਟਰੀ ਬਣਾਉਣ ਲਈ Enter ਦਬਾਓ ਜਾਂ ਜੋੜੋ ਟੈਪ ਕਰੋ",
+    connectToAdd: "ਸ਼ਬਦ ਜੋੜਨ ਲਈ ਕਨੈਕਟ ਕਰੋ",
+    discovered: (n) => `+${n} ਖੋਜੇ ਗਏ`,
+    generatingEntry: "ਐਂਟਰੀ ਬਣ ਰਹੀ ਹੈ",
+    footer: (total, gen) => `${total} ਸ਼ਬਦ · ${gen} ਆਪੋ-ਆਪ ਖੋਜੇ · Kairo Decode`,
+    tags: { "All":"ਸਾਰੇ","Model":"ਮਾਡਲ","Core Concept":"ਮੁੱਖ ਧਾਰਣਾ","Dev Tool":"ਡੈੱਵ ਟੂਲ","Risk":"ਜੋਖ਼ਮ","Behaviour":"ਵਤੀਰਾ","Economics":"ਅਰਥਸ਼ਾਸਤਰ","Technique":"ਤਕਨੀਕ","Architecture":"ਆਰਕੀਟੈਕਚਰ" },
   },
 };
 
@@ -877,7 +916,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   return (
     <div className={`min-h-screen${!isDark ? " light-text-override" : ""}`} style={{
       background: isSpaghetti ? "transparent" : isDark ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)" : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)",
-      fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
+      fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : lang === 'hi' ? "'Noto Sans Devanagari','DM Sans',system-ui,sans-serif" : lang === 'pa' ? "'Noto Sans Gurmukhi','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
       "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : "rgba(var(--rgb),0.04)",
@@ -886,7 +925,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : lang === 'hi' ? '&family=Noto+Sans+Devanagari:wght@400;500;700' : lang === 'pa' ? '&family=Noto+Sans+Gurmukhi:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -904,7 +943,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 <button onClick={() => setShowLangPicker(v => !v)} title="Change language"
                   style={{ background: "none", border: "1.5px solid rgba(99,102,241,0.35)", borderRadius: "7px", cursor: "pointer", fontSize: "1.05rem", lineHeight: 1, padding: "3px 5px", transition: "border-color 0.15s", opacity: batchTranslating ? 0.5 : 1 }}
                   aria-label="Change language">
-                  {LANGUAGES.find(l => l.code === lang)?.flag || '🇬🇧'}
+                  {(() => { const l = LANGUAGES.find(l => l.code === lang); return l?.flag ?? <span style={{ fontSize: "0.8rem", fontWeight: 700 }}>{l?.label}</span>; })()}
                   {batchTranslating && <span style={{ fontSize: "0.5rem", verticalAlign: "super", marginLeft: "1px", opacity: 0.6 }}>…</span>}
                 </button>
                 {showLangPicker && (
@@ -926,7 +965,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                           fontSize: "10pt", fontFamily: "inherit", textAlign: "left",
                           color: lang === l.code ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.65)",
                         }}>
-                        <span style={{ fontSize: "1rem" }}>{l.flag}</span>
+                        <span style={{ fontSize: l.flag ? "1rem" : "0.8rem", fontWeight: l.flag ? undefined : 700, minWidth: "1.2rem", textAlign: "center" }}>{l.flag ?? l.label}</span>
                         <span>{l.nativeName}</span>
                       </button>
                     ))}
