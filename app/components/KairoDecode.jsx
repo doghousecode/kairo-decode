@@ -1074,7 +1074,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               </button>
             </div>
           </div>
-          <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "1rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
+          <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.83rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
             adaptive intelligence jargon buster
           </p>
 
