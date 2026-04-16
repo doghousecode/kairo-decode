@@ -588,10 +588,11 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                   onKeyDown={e => e.key === "Enter" && !loadingCustom && isOnline && runCustomDeepDive()}
                   placeholder="Or ask something else…"
                   disabled={!isOnline || loadingCustom || (isTyping && !typingDone)}
-                  className="flex-1 text-sm rounded-lg px-3 py-2 outline-none"
+                  className="flex-1 rounded-lg px-3 py-2 outline-none"
                   style={{
                     background: "rgba(var(--rgb),0.04)", border: "1px solid rgba(var(--rgb),0.1)",
                     color: "rgba(var(--rgb),0.8)", caretColor: "rgba(99,102,241,0.8)",
+                    fontSize: "16px",
                   }}
                 />
                 <button
