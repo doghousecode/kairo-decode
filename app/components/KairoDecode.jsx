@@ -18,19 +18,22 @@ const SEED_GLOSSARY = [
 ];
 
 const LANGUAGES = [
-  { code: "en", flag: "🇬🇧", name: "English" },
-  { code: "fr", flag: "🇫🇷", name: "French" },
-  { code: "de", flag: "🇩🇪", name: "German" },
-  { code: "es", flag: "🇪🇸", name: "Spanish" },
-  { code: "it", flag: "🇮🇹", name: "Italian" },
-  { code: "nl", flag: "🇳🇱", name: "Dutch" },
-  { code: "ko", flag: "🇰🇷", name: "Korean" },
-  { code: "ja", flag: "🇯🇵", name: "Japanese" },
+  { code: "en", flag: "🇬🇧", name: "English",  nativeName: "English"    },
+  { code: "fr", flag: "🇫🇷", name: "French",   nativeName: "Français"   },
+  { code: "de", flag: "🇩🇪", name: "German",   nativeName: "Deutsch"    },
+  { code: "es", flag: "🇪🇸", name: "Spanish",  nativeName: "Español"    },
+  { code: "it", flag: "🇮🇹", name: "Italian",  nativeName: "Italiano"   },
+  { code: "nl", flag: "🇳🇱", name: "Dutch",    nativeName: "Nederlands" },
+  { code: "ko", flag: "🇰🇷", name: "Korean",   nativeName: "한국어"      },
+  { code: "ja", flag: "🇯🇵", name: "Japanese", nativeName: "日本語"      },
+  { code: "hi", flag: null,  label: "हि",       name: "Hindi",   nativeName: "हिन्दी"    },
+  { code: "pa", flag: null,  label: "ਪੰ",       name: "Punjabi", nativeName: "ਪੰਜਾਬੀ"   },
 ];
 
 const LANG_NAMES = {
   en: "English", fr: "French", de: "German", es: "Spanish",
   it: "Italian", nl: "Dutch", ko: "Korean", ja: "Japanese",
+  hi: "Hindi", pa: "Punjabi",
 };
 
 const UI_STRINGS = {
@@ -50,6 +53,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} discovered`,
     generatingEntry: "Generating entry",
     footer: (total, gen) => `${total} terms · ${gen} auto-discovered · Kairo Decode`,
+    tags: { "All":"All","Model":"Model","Core Concept":"Core Concept","Dev Tool":"Dev Tool","Risk":"Risk","Behaviour":"Behaviour","Economics":"Economics","Technique":"Technique","Architecture":"Architecture" },
   },
   fr: {
     placeholder: "Rechercher ou ajouter un terme…",
@@ -67,6 +71,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} découverts`,
     generatingEntry: "Génération en cours",
     footer: (total, gen) => `${total} termes · ${gen} découverts · Kairo Decode`,
+    tags: { "All":"Tout","Model":"Modèle","Core Concept":"Concept clé","Dev Tool":"Outil dev","Risk":"Risque","Behaviour":"Comportement","Economics":"Économie","Technique":"Technique","Architecture":"Architecture" },
   },
   de: {
     placeholder: "Begriff suchen oder hinzufügen…",
@@ -84,6 +89,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} entdeckt`,
     generatingEntry: "Eintrag wird generiert",
     footer: (total, gen) => `${total} Begriffe · ${gen} entdeckt · Kairo Decode`,
+    tags: { "All":"Alle","Model":"Modell","Core Concept":"Kernkonzept","Dev Tool":"Dev-Tool","Risk":"Risiko","Behaviour":"Verhalten","Economics":"Wirtschaft","Technique":"Technik","Architecture":"Architektur" },
   },
   es: {
     placeholder: "Buscar o añadir un término…",
@@ -101,6 +107,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} descubiertos`,
     generatingEntry: "Generando entrada",
     footer: (total, gen) => `${total} términos · ${gen} descubiertos · Kairo Decode`,
+    tags: { "All":"Todo","Model":"Modelo","Core Concept":"Concepto clave","Dev Tool":"Herramienta dev","Risk":"Riesgo","Behaviour":"Comportamiento","Economics":"Economía","Technique":"Técnica","Architecture":"Arquitectura" },
   },
   it: {
     placeholder: "Cerca o aggiungi un termine…",
@@ -118,6 +125,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} scoperti`,
     generatingEntry: "Generazione in corso",
     footer: (total, gen) => `${total} termini · ${gen} scoperti · Kairo Decode`,
+    tags: { "All":"Tutto","Model":"Modello","Core Concept":"Concetto chiave","Dev Tool":"Strumento dev","Risk":"Rischio","Behaviour":"Comportamento","Economics":"Economia","Technique":"Tecnica","Architecture":"Architettura" },
   },
   nl: {
     placeholder: "Zoek of voeg een term toe…",
@@ -135,6 +143,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} ontdekt`,
     generatingEntry: "Vermelding genereren",
     footer: (total, gen) => `${total} termen · ${gen} ontdekt · Kairo Decode`,
+    tags: { "All":"Alles","Model":"Model","Core Concept":"Kernbegrip","Dev Tool":"Dev-tool","Risk":"Risico","Behaviour":"Gedrag","Economics":"Economie","Technique":"Techniek","Architecture":"Architectuur" },
   },
   ko: {
     placeholder: "용어 검색 또는 추가…",
@@ -152,6 +161,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} 발견됨`,
     generatingEntry: "항목 생성 중",
     footer: (total, gen) => `${total}개 용어 · ${gen}개 자동 발견 · Kairo Decode`,
+    tags: { "All":"전체","Model":"모델","Core Concept":"핵심 개념","Dev Tool":"개발 도구","Risk":"위험","Behaviour":"동작","Economics":"경제","Technique":"기법","Architecture":"아키텍처" },
   },
   ja: {
     placeholder: "用語を検索または追加…",
@@ -169,6 +179,43 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} 発見`,
     generatingEntry: "エントリ生成中",
     footer: (total, gen) => `${total}用語 · ${gen}自動発見 · Kairo Decode`,
+    tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ" },
+  },
+  hi: {
+    placeholder: "मौजूदा शब्द खोजें या नया जोड़ें…",
+    open: "खोलें ↵", add: "जोड़ें ✨", offline: "ऑफलाइन",
+    makeSmartLabel: "अपनी टीम को प्रभावित करें",
+    examplesLabel: "उदाहरण", deepDiveLabel: "गहराई से जानें",
+    runPrompt: "▶ यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...",
+    translating: "अनुवाद हो रहा है…",
+    offlineBanner: "आप ऑफलाइन हैं — सहेजे गए शब्द देख रहे हैं। शब्द जोड़ना उपलब्ध नहीं है।",
+    notRelevant: (term) => `"${term}" AI/tech शब्द नहीं लगता — छोड़ रहे हैं।`,
+    error: "कुछ गलत हुआ। फिर कोशिश करें?",
+    notInGlossary: (term) => `"${term}" अभी शब्दकोश में नहीं है`,
+    addPrompt: "एंट्री बनाने के लिए Enter दबाएं या जोड़ें टैप करें",
+    connectToAdd: "शब्द जोड़ने के लिए कनेक्ट करें",
+    discovered: (n) => `+${n} खोजे गए`,
+    generatingEntry: "एंट्री बन रही है",
+    footer: (total, gen) => `${total} शब्द · ${gen} स्वचालित खोजे · Kairo Decode`,
+    tags: { "All":"सभी","Model":"मॉडल","Core Concept":"मूल अवधारणा","Dev Tool":"डेव टूल","Risk":"जोखिम","Behaviour":"व्यवहार","Economics":"अर्थशास्त्र","Technique":"तकनीक","Architecture":"आर्किटेक्चर" },
+  },
+  pa: {
+    placeholder: "ਮੌਜੂਦਾ ਸ਼ਬਦ ਖੋਜੋ ਜਾਂ ਨਵਾਂ ਜੋੜੋ…",
+    open: "ਖੋਲ੍ਹੋ ↵", add: "ਜੋੜੋ ✨", offline: "ਆਫਲਾਈਨ",
+    makeSmartLabel: "ਆਪਣੀ ਟੀਮ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰੋ",
+    examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਡੂੰਘਾਈ ਨਾਲ ਜਾਣੋ",
+    runPrompt: "▶ ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...",
+    translating: "ਅਨੁਵਾਦ ਹੋ ਰਿਹਾ ਹੈ…",
+    offlineBanner: "ਤੁਸੀਂ ਆਫਲਾਈਨ ਹੋ — ਸੁਰੱਖਿਅਤ ਸ਼ਬਦ ਦੇਖ ਰਹੇ ਹੋ। ਸ਼ਬਦ ਜੋੜਨਾ ਉਪਲਬਧ ਨਹੀਂ।",
+    notRelevant: (term) => `"${term}" AI/tech ਸ਼ਬਦ ਨਹੀਂ ਲੱਗਦਾ — ਛੱਡ ਰਹੇ ਹਾਂ।`,
+    error: "ਕੁਝ ਗਲਤ ਹੋਇਆ। ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ?",
+    notInGlossary: (term) => `"${term}" ਅਜੇ ਸ਼ਬਦਕੋਸ਼ ਵਿੱਚ ਨਹੀਂ ਹੈ`,
+    addPrompt: "ਐਂਟਰੀ ਬਣਾਉਣ ਲਈ Enter ਦਬਾਓ ਜਾਂ ਜੋੜੋ ਟੈਪ ਕਰੋ",
+    connectToAdd: "ਸ਼ਬਦ ਜੋੜਨ ਲਈ ਕਨੈਕਟ ਕਰੋ",
+    discovered: (n) => `+${n} ਖੋਜੇ ਗਏ`,
+    generatingEntry: "ਐਂਟਰੀ ਬਣ ਰਹੀ ਹੈ",
+    footer: (total, gen) => `${total} ਸ਼ਬਦ · ${gen} ਆਪੋ-ਆਪ ਖੋਜੇ · Kairo Decode`,
+    tags: { "All":"ਸਾਰੇ","Model":"ਮਾਡਲ","Core Concept":"ਮੁੱਖ ਧਾਰਣਾ","Dev Tool":"ਡੈੱਵ ਟੂਲ","Risk":"ਜੋਖ਼ਮ","Behaviour":"ਵਤੀਰਾ","Economics":"ਅਰਥਸ਼ਾਸਤਰ","Technique":"ਤਕਨੀਕ","Architecture":"ਆਰਕੀਟੈਕਚਰ" },
   },
 };
 
@@ -282,7 +329,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, preTranslatedDef, preTranslatedSmartLines }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -432,8 +479,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     setLoadingIdx(null);
   };
 
-  const displayDef = (lang !== 'en' && translated?.definition) ? translated.definition : item.definition;
-  const displaySmartLines = (lang !== 'en' && translated?.smartLines?.length) ? translated.smartLines : smartLines;
+  const displayDef = (lang !== 'en' && (preTranslatedDef || translated?.definition)) ? (preTranslatedDef || translated.definition) : item.definition;
+  const displaySmartLines = (lang !== 'en' && (preTranslatedSmartLines?.length || translated?.smartLines?.length)) ? (preTranslatedSmartLines || translated.smartLines) : smartLines;
   const displayDeepDives = (lang !== 'en' && translated?.deepDive?.length) ? translated.deepDive : deepDives;
 
   return (
@@ -450,7 +497,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
               <TagBadge tag={item.tag} isNew={isNew} />
             </div>
-            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{item.definition}</p>
+            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{preTranslatedDef || translated?.definition || item.definition}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -595,6 +642,10 @@ export default function AIGlossary() {
     return 'en';
   });
   useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
+  const [batchTranslations, setBatchTranslations] = useState({}); // { langCode: { term: { definition, smartLines } } }
+  const [batchTranslating, setBatchTranslating] = useState(false);
+  const [showLangPicker, setShowLangPicker] = useState(false);
+  const langPickerRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/terms")
@@ -632,6 +683,39 @@ export default function AIGlossary() {
       window.removeEventListener('offline', goOffline);
     };
   }, []);
+
+  // Batch-translate all definitions + smartLines when language changes
+  useEffect(() => {
+    if (lang === 'en' || batchTranslations[lang] || batchTranslating || !termsLoaded) return;
+    const targetLang = lang;
+    setBatchTranslating(true);
+    const payload = {};
+    terms.forEach(t => { payload[t.term] = { definition: t.definition, smartLines: t.smartLines || [] }; });
+    fetch("/api/claude", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514", max_tokens: 4000,
+        system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
+        messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
+      }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (lang !== targetLang) return;
+        const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+        try { setBatchTranslations(prev => ({ ...prev, [targetLang]: JSON.parse(text) })); } catch {}
+      })
+      .catch(() => {})
+      .finally(() => setBatchTranslating(false));
+  }, [lang, termsLoaded]);
+
+  // Close language picker on outside click
+  useEffect(() => {
+    if (!showLangPicker) return;
+    const handler = (e) => { if (langPickerRef.current && !langPickerRef.current.contains(e.target)) setShowLangPicker(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showLangPicker]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -832,7 +916,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   return (
     <div className={`min-h-screen${!isDark ? " light-text-override" : ""}`} style={{
       background: isSpaghetti ? "transparent" : isDark ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)" : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)",
-      fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
+      fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : lang === 'hi' ? "'Noto Sans Devanagari','DM Sans',system-ui,sans-serif" : lang === 'pa' ? "'Noto Sans Gurmukhi','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
       "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : "rgba(var(--rgb),0.04)",
@@ -841,7 +925,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : lang === 'hi' ? '&family=Noto+Sans+Devanagari:wght@400;500;700' : lang === 'pa' ? '&family=Noto+Sans+Gurmukhi:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -853,19 +937,46 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
             </a>
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
-            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem" }}>
+            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              {/* Language picker */}
+              <div ref={langPickerRef} style={{ position: "relative" }}>
+                <button onClick={() => setShowLangPicker(v => !v)} title="Change language"
+                  style={{ background: "none", border: "1.5px solid rgba(99,102,241,0.35)", borderRadius: "7px", cursor: "pointer", fontSize: "1.05rem", lineHeight: 1, padding: "3px 5px", transition: "border-color 0.15s", opacity: batchTranslating ? 0.5 : 1 }}
+                  aria-label="Change language">
+                  {(() => { const l = LANGUAGES.find(l => l.code === lang); return l?.flag ?? <span style={{ fontSize: "0.8rem", fontWeight: 700 }}>{l?.label}</span>; })()}
+                  {batchTranslating && <span style={{ fontSize: "0.5rem", verticalAlign: "super", marginLeft: "1px", opacity: 0.6 }}>…</span>}
+                </button>
+                {showLangPicker && (
+                  <div style={{
+                    position: "absolute", right: 0, top: "calc(100% + 8px)",
+                    background: isDark ? "#16162a" : "#fff",
+                    border: "1px solid rgba(var(--rgb),0.12)",
+                    borderRadius: "12px", padding: "0.35rem",
+                    boxShadow: "0 12px 40px rgba(0,0,0,0.35)",
+                    zIndex: 200, minWidth: "148px",
+                  }}>
+                    {LANGUAGES.map(l => (
+                      <button key={l.code} onClick={() => { setLang(l.code); setShowLangPicker(false); }}
+                        style={{
+                          display: "flex", alignItems: "center", gap: "0.55rem",
+                          width: "100%", padding: "0.38rem 0.6rem",
+                          background: lang === l.code ? "rgba(99,102,241,0.18)" : "none",
+                          border: "none", borderRadius: "8px", cursor: "pointer",
+                          fontSize: "10pt", fontFamily: "inherit", textAlign: "left",
+                          color: lang === l.code ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.65)",
+                        }}>
+                        <span style={{ fontSize: l.flag ? "1rem" : "0.8rem", fontWeight: l.flag ? undefined : 700, minWidth: "1.2rem", textAlign: "center" }}>{l.flag ?? l.label}</span>
+                        <span>{l.nativeName}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* Theme toggle */}
               <button onClick={() => setThemeMode(m => m === "light" ? "dark" : m === "dark" ? "spaghetti" : "light")} title="Cycle theme: light → dark → spaghetti"
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
                 {themeMode === "dark" ? "🌙" : themeMode === "light" ? "☀️" : "🍝"}
               </button>
-              <div style={{ display: "flex", gap: "0.15rem", flexWrap: "wrap", justifyContent: "flex-end", maxWidth: "120px" }}>
-                {LANGUAGES.map(l => (
-                  <button key={l.code} onClick={() => setLang(l.code)} title={l.name}
-                    style={{ background: "none", border: lang === l.code ? "1.5px solid rgba(99,102,241,0.6)" : "1.5px solid transparent", borderRadius: "5px", padding: "1px 2px", cursor: "pointer", fontSize: "0.82rem", lineHeight: 1, opacity: lang === l.code ? 1 : 0.35, transition: "opacity 0.15s, border-color 0.15s" }}>
-                    {l.flag}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "1rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
@@ -920,7 +1031,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                     background: activeTag === tag ? "rgba(99,102,241,0.18)" : "transparent",
                     color: activeTag === tag ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.38)",
                   }}>
-                  {tag}
+                  {strings.tags?.[tag] || tag}
                 </button>
               ))}
             </div>
@@ -1025,6 +1136,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
               lang={lang}
+              preTranslatedDef={batchTranslations[lang]?.[item.term]?.definition}
+              preTranslatedSmartLines={batchTranslations[lang]?.[item.term]?.smartLines}
             />
           ))}
         </div>
