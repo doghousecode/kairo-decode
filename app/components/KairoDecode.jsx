@@ -755,16 +755,34 @@ export default function AIGlossary() {
       });
       if (missing.length === 0 || targetLang !== lang) return;
 
-      // Indic scripts (especially Gurmukhi) tokenise poorly with Haiku — use Sonnet
-      // and smaller chunks to avoid truncated/malformed JSON responses.
       const isIndic = targetLang === 'pa' || targetLang === 'hi';
       const CHUNK = isIndic ? 2 : 4;
       const MAX_TOKENS = 4000;
-      const translationModel = isIndic ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001";
-      const allNew = {};
-      for (let i = 0; i < missing.length; i += CHUNK) {
-        if (targetLang !== lang) break;
-        const chunk = missing.slice(i, i + CHUNK);
+      const primaryModel = isIndic ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001";
+      const TIMEOUT_MS = 28000;
+
+      const callClaude = async (model, payload) => {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+        try {
+          const d = await fetch("/api/claude", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            signal: ctrl.signal,
+            body: JSON.stringify({
+              model, max_tokens: MAX_TOKENS,
+              system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. JSON keys must stay in English. Translate ALL text values (definitions, smart lines, questions) fully into the target language — even when the entry is about a product or acronym. Only the proper name itself (e.g. Claude, ChatGPT, MCP, CI/CD) should remain in English when it appears within the translated text.",
+              messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
+            }),
+          }).then(r => r.json());
+          clearTimeout(timer);
+          return (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+        } catch {
+          clearTimeout(timer);
+          return "{}";
+        }
+      };
+
+      const translateChunk = async (chunk) => {
         const payload = {};
         chunk.forEach(t => {
           payload[t.term] = {
@@ -773,39 +791,26 @@ export default function AIGlossary() {
             deepDive: Array.isArray(t.deepDive) ? t.deepDive : [t.deepDive].filter(Boolean),
           };
         });
+        const text = await callClaude(primaryModel, payload);
         try {
-          const d = await fetch("/api/claude", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              model: translationModel, max_tokens: MAX_TOKENS,
-              system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. JSON keys must stay in English. Translate ALL text values (definitions, smart lines, questions) fully into the target language — even when the entry is about a product or acronym. Only the proper name itself (e.g. Claude, ChatGPT, MCP, CI/CD) should remain in English when it appears within the translated text.",
-              messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
-            }),
-          }).then(r => r.json());
-          const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
-          try {
-            Object.assign(allNew, JSON.parse(text));
-          } catch {
-            // Haiku produced malformed JSON — retry this chunk with Sonnet
-            const d2 = await fetch("/api/claude", {
-              method: "POST", headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                model: "claude-sonnet-4-6", max_tokens: MAX_TOKENS,
-                system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. JSON keys must stay in English. Translate ALL text values fully into the target language.",
-                messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
-              }),
-            }).then(r => r.json());
-            const text2 = (d2.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
-            try { Object.assign(allNew, JSON.parse(text2)); } catch {}
-          }
-        } catch {}
-        // Apply each chunk immediately so cards update progressively
-        if (Object.keys(allNew).length > 0)
-          setBatchTranslations(prev => ({ ...prev, [targetLang]: { ...merged, ...allNew } }));
-      }
+          return JSON.parse(text);
+        } catch {
+          // Malformed JSON — retry with Sonnet
+          const text2 = await callClaude("claude-sonnet-4-6", payload);
+          try { return JSON.parse(text2); } catch { return {}; }
+        }
+      };
 
-      // Save all new translations to Supabase once — future users get instant results
+      // Fire all chunks in parallel — much faster than sequential, safe at this scale
+      const chunks = [];
+      for (let i = 0; i < missing.length; i += CHUNK) chunks.push(missing.slice(i, i + CHUNK));
+      const results = await Promise.allSettled(chunks.map(translateChunk));
+
+      const allNew = {};
+      results.forEach(r => { if (r.status === 'fulfilled') Object.assign(allNew, r.value); });
+
       if (Object.keys(allNew).length > 0) {
+        setBatchTranslations(prev => ({ ...prev, [targetLang]: { ...merged, ...allNew } }));
         fetch('/api/translations', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ lang: targetLang, translations: allNew }),
