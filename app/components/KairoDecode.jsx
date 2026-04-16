@@ -27,8 +27,8 @@ const UI_STRINGS = {
   en: {
     placeholder: "Search existing or add new term…",
     open: "Open ↵", add: "Add ✨", offline: "Offline",
-    makeSmartLabel: "Make me look smart",
-    examplesLabel: "Examples", deepDiveLabel: "Deep dive",
+    makeSmartLabel: "Make me sound smart",
+    examplesLabel: "Examples", deepDiveLabel: "Go deeper…",
     runPrompt: "▶ Run", askingClaude: "Asking Claude...", askCustom: "▶ Ask", customPlaceholder: "Or ask something else…",
     translating: "Translating…",
     offlineBanner: "You're offline — browsing cached terms. Adding terms and deep dives are unavailable.",
@@ -46,7 +46,7 @@ const UI_STRINGS = {
     placeholder: "Rechercher ou ajouter un terme…",
     open: "Ouvrir ↵", add: "Ajouter ✨", offline: "Hors ligne",
     makeSmartLabel: "Impressionnez votre entourage",
-    examplesLabel: "Exemples", deepDiveLabel: "Approfondissement",
+    examplesLabel: "Exemples", deepDiveLabel: "Aller plus loin…",
     runPrompt: "▶ Lancer", askingClaude: "Demande à Claude...", askCustom: "▶ Demander", customPlaceholder: "Ou posez autre chose…",
     translating: "Traduction…",
     offlineBanner: "Vous êtes hors ligne — navigation dans les termes en cache. L'ajout de termes n'est pas disponible.",
@@ -64,7 +64,7 @@ const UI_STRINGS = {
     placeholder: "Begriff suchen oder hinzufügen…",
     open: "Öffnen ↵", add: "Hinzufügen ✨", offline: "Offline",
     makeSmartLabel: "Überzeuge dein Umfeld",
-    examplesLabel: "Beispiele", deepDiveLabel: "Vertiefung",
+    examplesLabel: "Beispiele", deepDiveLabel: "Tiefer eintauchen…",
     runPrompt: "▶ Ausführen", askingClaude: "Claude wird gefragt...", askCustom: "▶ Fragen", customPlaceholder: "Oder etwas anderes fragen…",
     translating: "Übersetzen…",
     offlineBanner: "Sie sind offline — gespeicherte Begriffe werden angezeigt. Hinzufügen nicht verfügbar.",
@@ -82,7 +82,7 @@ const UI_STRINGS = {
     placeholder: "Buscar o añadir un término…",
     open: "Abrir ↵", add: "Añadir ✨", offline: "Sin conexión",
     makeSmartLabel: "Impresiona a tu equipo",
-    examplesLabel: "Ejemplos", deepDiveLabel: "Profundización",
+    examplesLabel: "Ejemplos", deepDiveLabel: "Ir más a fondo…",
     runPrompt: "▶ Ejecutar", askingClaude: "Preguntando a Claude...", askCustom: "▶ Preguntar", customPlaceholder: "O pregunta algo más…",
     translating: "Traduciendo…",
     offlineBanner: "Estás sin conexión — navegando por los términos guardados. Añadir términos no está disponible.",
@@ -100,7 +100,7 @@ const UI_STRINGS = {
     placeholder: "Cerca o aggiungi un termine…",
     open: "Apri ↵", add: "Aggiungi ✨", offline: "Offline",
     makeSmartLabel: "Fai colpo sul tuo team",
-    examplesLabel: "Esempi", deepDiveLabel: "Approfondimento",
+    examplesLabel: "Esempi", deepDiveLabel: "Approfondire…",
     runPrompt: "▶ Esegui", askingClaude: "Chiedendo a Claude...", askCustom: "▶ Chiedi", customPlaceholder: "O chiedi qualcos'altro…",
     translating: "Traduzione…",
     offlineBanner: "Sei offline — stai navigando i termini salvati. L'aggiunta di termini non è disponibile.",
@@ -118,7 +118,7 @@ const UI_STRINGS = {
     placeholder: "Zoek of voeg een term toe…",
     open: "Openen ↵", add: "Toevoegen ✨", offline: "Offline",
     makeSmartLabel: "Maak indruk op je team",
-    examplesLabel: "Voorbeelden", deepDiveLabel: "Verdieping",
+    examplesLabel: "Voorbeelden", deepDiveLabel: "Verder verkennen…",
     runPrompt: "▶ Uitvoeren", askingClaude: "Claude wordt gevraagd...", askCustom: "▶ Vragen", customPlaceholder: "Of stel iets anders…",
     translating: "Vertalen…",
     offlineBanner: "Je bent offline — gespeicherde termen worden weergegeven. Termen toevoegen is niet beschikbaar.",
@@ -136,7 +136,7 @@ const UI_STRINGS = {
     placeholder: "용어 검색 또는 추가…",
     open: "열기 ↵", add: "추가 ✨", offline: "오프라인",
     makeSmartLabel: "팀에게 인상 남기기",
-    examplesLabel: "예시", deepDiveLabel: "심층 분석",
+    examplesLabel: "예시", deepDiveLabel: "더 알아보기…",
     runPrompt: "▶ 프롬프트 실행", askingClaude: "Claude에게 질문 중...", askCustom: "▶ 질문", customPlaceholder: "다른 것을 물어보세요…",
     translating: "번역 중…",
     offlineBanner: "오프라인 상태입니다 — 저장된 용어를 탐색 중입니다. 용어 추가는 사용할 수 없습니다.",
@@ -154,7 +154,7 @@ const UI_STRINGS = {
     placeholder: "用語を検索または追加…",
     open: "開く ↵", add: "追加 ✨", offline: "オフライン",
     makeSmartLabel: "チームに差をつける",
-    examplesLabel: "例", deepDiveLabel: "詳しく見る",
+    examplesLabel: "例", deepDiveLabel: "もっと詳しく…",
     runPrompt: "▶ プロンプトを実行", askingClaude: "Claudeに質問中...", askCustom: "▶ 質問", customPlaceholder: "他に聞いてみる…",
     translating: "翻訳中…",
     offlineBanner: "オフラインです — 保存済み用語を閲覧中。用語の追加は利用できません。",
@@ -172,7 +172,7 @@ const UI_STRINGS = {
     placeholder: "मौजूदा शब्द खोजें या नया जोड़ें…",
     open: "खोलें ↵", add: "जोड़ें ✨", offline: "ऑफलाइन",
     makeSmartLabel: "अपनी टीम को प्रभावित करें",
-    examplesLabel: "उदाहरण", deepDiveLabel: "गहराई से जानें",
+    examplesLabel: "उदाहरण", deepDiveLabel: "और जानें…",
     runPrompt: "▶ यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...", askCustom: "▶ पूछें", customPlaceholder: "या कुछ और पूछें…",
     translating: "अनुवाद हो रहा है…",
     offlineBanner: "आप ऑफलाइन हैं — सहेजे गए शब्द देख रहे हैं। शब्द जोड़ना उपलब्ध नहीं है।",
@@ -190,7 +190,7 @@ const UI_STRINGS = {
     placeholder: "ਮੌਜੂਦਾ ਸ਼ਬਦ ਖੋਜੋ ਜਾਂ ਨਵਾਂ ਜੋੜੋ…",
     open: "ਖੋਲ੍ਹੋ ↵", add: "ਜੋੜੋ ✨", offline: "ਆਫਲਾਈਨ",
     makeSmartLabel: "ਆਪਣੀ ਟੀਮ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰੋ",
-    examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਡੂੰਘਾਈ ਨਾਲ ਜਾਣੋ",
+    examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਹੋਰ ਜਾਣੋ…",
     runPrompt: "▶ ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...", askCustom: "▶ ਪੁੱਛੋ", customPlaceholder: "ਜਾਂ ਕੁਝ ਹੋਰ ਪੁੱਛੋ…",
     translating: "ਅਨੁਵਾਦ ਹੋ ਰਿਹਾ ਹੈ…",
     offlineBanner: "ਤੁਸੀਂ ਆਫਲਾਈਨ ਹੋ — ਸੁਰੱਖਿਅਤ ਸ਼ਬਦ ਦੇਖ ਰਹੇ ਹੋ। ਸ਼ਬਦ ਜੋੜਨਾ ਉਪਲਬਧ ਨਹੀਂ।",
@@ -550,20 +550,6 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
             </div>
           )}
 
-          {item.examples?.length > 0 && (
-            <div>
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>{(UI_STRINGS[lang] || UI_STRINGS.en).examplesLabel}</p>
-              <div className="flex flex-wrap gap-2">
-                {item.examples.map((ex, i) => (
-                  <a key={i} href={ex.url} target="_blank" rel="noreferrer"
-                    className="text-xs px-3 py-1.5 rounded-lg transition-colors"
-                    style={{ border: "1px solid rgba(var(--rgb),0.1)", color: "rgba(var(--rgb),0.5)" }}>
-                    {ex.label} ↗
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
 
           {(isTyping || typingDone) && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
             <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>{(UI_STRINGS[lang] || UI_STRINGS.en).deepDiveLabel}</p>
