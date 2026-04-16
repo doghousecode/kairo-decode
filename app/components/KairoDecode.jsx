@@ -504,7 +504,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
               <TagBadge tag={item.tag} label={tagLabel} isNew={isNew} />
             </div>
-            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)", overflow: "hidden" }}>{preTranslatedDef || item.definition}</p>
+            <p className="text-sm mt-0.5" style={{ color: "rgba(var(--rgb),0.45)", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical" }}>{preTranslatedDef || item.definition}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -762,7 +762,7 @@ export default function AIGlossary() {
       const CHUNK = targetLang === 'pa' ? 1 : (targetLang === 'hi' ? 2 : 4);
       const MAX_TOKENS = 4000;
       const primaryModel = (targetLang === 'pa' || targetLang === 'hi') ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001";
-      const TIMEOUT_MS = 28000;
+      const TIMEOUT_MS = 55000;
 
       const callClaude = async (model, payload) => {
         const ctrl = new AbortController();
@@ -804,10 +804,12 @@ export default function AIGlossary() {
         }
       };
 
-      // Fire all chunks in parallel — much faster than sequential, safe at this scale
+      // Stagger requests by 400ms to avoid overwhelming Vercel/Anthropic concurrency limits
       const chunks = [];
       for (let i = 0; i < missing.length; i += CHUNK) chunks.push(missing.slice(i, i + CHUNK));
-      const results = await Promise.allSettled(chunks.map(translateChunk));
+      const results = await Promise.allSettled(
+        chunks.map((chunk, i) => new Promise(resolve => setTimeout(() => resolve(translateChunk(chunk)), i * 400)))
+      );
 
       const allNew = {};
       results.forEach(r => { if (r.status === 'fulfilled') Object.assign(allNew, r.value); });
