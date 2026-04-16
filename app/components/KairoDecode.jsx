@@ -432,6 +432,10 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     setLoadingIdx(null);
   };
 
+  const displayDef = (lang !== 'en' && translated?.definition) ? translated.definition : item.definition;
+  const displaySmartLines = (lang !== 'en' && translated?.smartLines?.length) ? translated.smartLines : smartLines;
+  const displayDeepDives = (lang !== 'en' && translated?.deepDive?.length) ? translated.deepDive : deepDives;
+
   return (
     <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
       background: isNew ? "var(--new-card-bg)" : "var(--card-bg)",
@@ -464,19 +468,20 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           <p className="text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
             {isTyping && !typingDone
               ? <>{displayedDef}<span style={{ display: "inline-block", width: "2px", height: "1em", background: "rgba(var(--rgb),0.5)", marginLeft: "1px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} /></>
-              : <LinkedDefinition text={item.definition} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+              : <LinkedDefinition text={displayDef} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
             }
+            {translating && <em style={{ color: "rgba(var(--rgb),0.35)", fontSize: "0.85em" }}> ({(UI_STRINGS[lang] || UI_STRINGS.en).translating})</em>}
           </p>
 
           {(isTyping ? smartLines.length > 0 : (typingDone && (smartLines.length > 0 || generatingSmartLines))) && (
             <div>
               <p className="text-xs uppercase tracking-widest mb-2 flex items-center gap-2" style={{ color: "rgba(var(--rgb),0.3)" }}>
-                Make me look smart
+                {(UI_STRINGS[lang] || UI_STRINGS.en).makeSmartLabel}
                 {generatingSmartLines && <PulsingDots />}
               </p>
-              {smartLines.length > 0 && (
+              {displaySmartLines.length > 0 && (
                 <div className="space-y-2">
-                  {smartLines.map((line, i) => (
+                  {displaySmartLines.map((line, i) => (
                     <p key={i} className="text-sm leading-relaxed italic" style={{ color: "rgba(var(--rgb),0.52)" }}>
                       "{isTyping && !typingDone
                         ? (displayedSmartLines[i] || "")
@@ -491,7 +496,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
           {item.examples?.length > 0 && (
             <div>
-              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>Examples</p>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(var(--rgb),0.3)" }}>{(UI_STRINGS[lang] || UI_STRINGS.en).examplesLabel}</p>
               <div className="flex flex-wrap gap-2">
                 {item.examples.map((ex, i) => (
                   <a key={i} href={ex.url} target="_blank" rel="noreferrer"
@@ -827,7 +832,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   return (
     <div className={`min-h-screen${!isDark ? " light-text-override" : ""}`} style={{
       background: isSpaghetti ? "transparent" : isDark ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)" : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)",
-      fontFamily: "'DM Sans',system-ui,sans-serif",
+      fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
       "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : "rgba(var(--rgb),0.04)",
@@ -836,7 +841,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
@@ -848,10 +853,20 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
             </a>
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
-            <button onClick={() => setThemeMode(m => m === "light" ? "dark" : m === "dark" ? "spaghetti" : "light")} title="Cycle theme: light → dark → spaghetti"
-              style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
-              {themeMode === "dark" ? "🌙" : themeMode === "light" ? "☀️" : "🍝"}
-            </button>
+            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem" }}>
+              <button onClick={() => setThemeMode(m => m === "light" ? "dark" : m === "dark" ? "spaghetti" : "light")} title="Cycle theme: light → dark → spaghetti"
+                style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
+                {themeMode === "dark" ? "🌙" : themeMode === "light" ? "☀️" : "🍝"}
+              </button>
+              <div style={{ display: "flex", gap: "0.15rem", flexWrap: "wrap", justifyContent: "flex-end", maxWidth: "120px" }}>
+                {LANGUAGES.map(l => (
+                  <button key={l.code} onClick={() => setLang(l.code)} title={l.name}
+                    style={{ background: "none", border: lang === l.code ? "1.5px solid rgba(99,102,241,0.6)" : "1.5px solid transparent", borderRadius: "5px", padding: "1px 2px", cursor: "pointer", fontSize: "0.82rem", lineHeight: 1, opacity: lang === l.code ? 1 : 0.35, transition: "opacity 0.15s, border-color 0.15s" }}>
+                    {l.flag}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "1rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
             adaptive intelligence jargon buster
@@ -870,7 +885,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             <div style={{ position: "absolute", inset: 0, borderRadius: "13px", boxShadow: "0 0 22px rgba(139,92,246,0.18), 0 0 8px rgba(236,72,153,0.12)", zIndex: 0, pointerEvents: "none" }} />
             <input
               type="text"
-              placeholder="Search existing or add new term…"
+              placeholder={strings.placeholder}
               value={search}
               onChange={e => { setSearch(e.target.value); setFeedback(null); }}
               onKeyDown={e => e.key === "Enter" && isOnline && tryAdd(search)}
@@ -881,7 +896,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               <button onClick={() => isOnline && tryAdd(search)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-3 py-1.5 rounded-lg font-medium"
                 style={{ zIndex: 3, background: isOnline ? "rgba(99,102,241,0.22)" : "rgba(var(--rgb),0.06)", color: isOnline ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.25)", border: "1px solid rgba(99,102,241,0.18)", cursor: isOnline ? "pointer" : "default" }}>
-                {isKnown ? "Open ↵" : isOnline ? "Add ✨" : "Offline"}
+                {isKnown ? strings.open : isOnline ? strings.add : strings.offline}
               </button>
             )}
             {generating && (
@@ -932,19 +947,19 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         {/* Offline banner */}
         {!isOnline && (
           <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.22)", color: "rgba(252,211,77,0.8)" }}>
-            You're offline — browsing cached terms. Adding terms and deep dives are unavailable.
+            {strings.offlineBanner}
           </div>
         )}
 
         {/* Feedback */}
         {feedback?.type === "notRelevant" && (
           <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", color: "rgba(252,165,165,0.85)" }}>
-            <strong>"{feedback.term}"</strong> doesn't look like an AI/tech term — skipping it.
+            {strings.notRelevant(feedback.term)}
           </div>
         )}
         {feedback?.type === "error" && (
           <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", color: "rgba(252,165,165,0.85)" }}>
-            Something went wrong. Try again?
+            {strings.error}
           </div>
         )}
 
@@ -961,7 +976,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 </p>
               ) : (
                 <p className="text-sm flex items-center gap-1.5" style={{ color: "rgba(20,184,166,0.75)" }}>
-                  Generating entry <PulsingDots />
+                  {strings.generatingEntry} <PulsingDots />
                 </p>
               )}
             </div>
@@ -973,15 +988,15 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           <div className="mb-4 px-5 py-4 rounded-xl flex items-center justify-between gap-3"
             style={{ background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.18)" }}>
             <div>
-              <p className="text-white font-medium">"{searchQ}" isn't in the glossary yet</p>
+              <p className="text-white font-medium">{strings.notInGlossary(searchQ)}</p>
               <p className="text-sm mt-0.5" style={{ color: isOnline ? "rgba(20,184,166,0.65)" : "rgba(245,158,11,0.6)" }}>
-                {isOnline ? "Press Enter or tap Add to generate an entry" : "Connect to add new terms"}
+                {isOnline ? strings.addPrompt : strings.connectToAdd}
               </p>
             </div>
             {isOnline && (
               <button onClick={() => tryAdd(search)} className="text-xs px-4 py-2 rounded-lg font-medium flex-shrink-0"
                 style={{ background: "rgba(20,184,166,0.18)", color: "rgba(94,234,212,1)", border: "1px solid rgba(20,184,166,0.28)" }}>
-                Add ✨
+                {strings.add}
               </button>
             )}
           </div>
@@ -989,7 +1004,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
         {generatedCount > 0 && (
           <div className="mb-3">
-            <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>+{generatedCount} discovered</span>
+            <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>{strings.discovered(generatedCount)}</span>
           </div>
         )}
 
@@ -1009,12 +1024,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onDelete={handleDelete}
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
+              lang={lang}
             />
           ))}
         </div>
 
         <p className="text-center text-xs mt-8" style={{ color: "rgba(var(--rgb),0.13)" }}>
-          {terms.length} terms · {generatedCount} auto-discovered · Kairo Decode
+          {strings.footer(terms.length, generatedCount)}
         </p>
 
         <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
