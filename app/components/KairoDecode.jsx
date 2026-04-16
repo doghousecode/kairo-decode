@@ -369,8 +369,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001", max_tokens: 400,
-          system: `You generate deep-dive questions for a tech glossary. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.`,
-          messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nGenerate exactly 3 distinct, punchy questions a product builder would want answered about this term. Different angles: practical use, trade-offs, real-world implementation.\nFormat: ["question 1?","question 2?","question 3?"]` }],
+          system: `You generate deep-dive questions for a tech glossary aimed at people new to AI. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.`,
+          messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nGenerate exactly 3 questions that someone new to AI would genuinely want answered — not expert-level, but the kind that build real understanding. Cover: (1) what it actually means in plain terms, (2) when or why someone would realistically encounter it, (3) a common misconception or surprising fact about it.\nFormat: ["question 1?","question 2?","question 3?"]` }],
         }),
       })
         .then(r => r.json())
@@ -419,6 +419,31 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
   const [loadingIdx, setLoadingIdx] = useState(null);
   const [responses, setResponses] = useState(Array(3).fill(null));
+  const [customQuestion, setCustomQuestion] = useState("");
+  const [customResponse, setCustomResponse] = useState(null);
+  const [loadingCustom, setLoadingCustom] = useState(false);
+
+  const runCustomDeepDive = async () => {
+    const q = customQuestion.trim();
+    if (!q) return;
+    setLoadingCustom(true);
+    setCustomResponse(null);
+    try {
+      const res = await fetch("/api/claude", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514", max_tokens: 1000,
+          system: `You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.${lang !== 'en' ? ` Respond in ${LANG_NAMES[lang]}.` : ''}`,
+          messages: [{ role: "user", content: q }],
+        }),
+      });
+      const d = await res.json();
+      setCustomResponse(d.content?.[0]?.text || "No response.");
+    } catch {
+      setCustomResponse("Error — try again.");
+    }
+    setLoadingCustom(false);
+  };
   const ref = useRef(null);
 
   useEffect(() => {
@@ -554,6 +579,40 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 </div>
               );
             })}
+            <div className="pt-3" style={{ borderTop: "1px solid rgba(var(--rgb),0.06)" }}>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customQuestion}
+                  onChange={e => setCustomQuestion(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && !loadingCustom && isOnline && runCustomDeepDive()}
+                  placeholder="Or ask something else…"
+                  disabled={!isOnline || loadingCustom || (isTyping && !typingDone)}
+                  className="flex-1 text-sm rounded-lg px-3 py-2 outline-none"
+                  style={{
+                    background: "rgba(var(--rgb),0.04)", border: "1px solid rgba(var(--rgb),0.1)",
+                    color: "rgba(var(--rgb),0.8)", caretColor: "rgba(99,102,241,0.8)",
+                  }}
+                />
+                <button
+                  onClick={runCustomDeepDive}
+                  disabled={!isOnline || loadingCustom || !customQuestion.trim() || (isTyping && !typingDone)}
+                  className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
+                  style={{
+                    background: (!isOnline || !customQuestion.trim() || loadingCustom) ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
+                    color: (!isOnline || !customQuestion.trim() || loadingCustom) ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
+                    border: "1px solid rgba(99,102,241,0.28)",
+                    cursor: (!isOnline || !customQuestion.trim() || loadingCustom) ? "not-allowed" : "pointer",
+                  }}>
+                  {loadingCustom ? (UI_STRINGS[lang] || UI_STRINGS.en).askingClaude : "▶ Ask"}
+                </button>
+              </div>
+              {customResponse && (
+                <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(var(--rgb),0.68)" }}>{customResponse}</p>
+                </div>
+              )}
+            </div>
           </div>}
         </div>
       )}
@@ -852,9 +911,9 @@ export default function AIGlossary() {
           system: `You maintain a glossary for AI, ML, software dev, and tech entrepreneurship.
 Given a term, decide if it's genuinely relevant to that domain. If yes, generate a glossary entry.
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
-${lang !== 'en' ? `Write ALL text fields (definition, smartLines, deepDive) in ${LANG_NAMES[lang]}. Keep the term name and AI/tech acronyms in English.` : ''}
+Always write ALL text fields (definition, smartLines, deepDive) in English, regardless of any other context.
 If relevant:
-{"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["First punchy question a product builder would want answered.","Second distinct angle on the term — practical or comparative.","Third question — edge case, risk, or real-world implementation detail."],"smartLines":["First sentence using the term naturally in a realistic context, with a touch of dry wit.","Second sentence — different angle, equally grounded."],"tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
+{"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["A question someone new to AI would ask to understand what this actually means in plain terms.","A question about when or why someone would realistically encounter or use this.","A question that tackles a common misconception or surprising aspect of this term."],"smartLines":["First sentence using the term naturally in a realistic context, with a touch of dry wit.","Second sentence — different angle, equally grounded."],"tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
 
 IMPORTANT: AI model names and products (Claude, GPT-4, Gemini, Llama, Mistral, Grok, Copilot, etc.) and developer tools are ALWAYS relevant — do not reject them as "just names".
 
