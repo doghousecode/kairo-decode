@@ -937,7 +937,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
             </a>
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
-            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "0.5rem", zIndex: showLangPicker ? 9999 : "auto" }}>
               {/* Language picker */}
               <div ref={langPickerRef} style={{ position: "relative" }}>
                 <button onClick={() => setShowLangPicker(v => !v)} title="Change language"
