@@ -1,21 +1,6 @@
 import { NextResponse } from 'next/server'
 
-export function middleware(request) {
-  if (process.env.DISABLE_AUTH === 'true') return NextResponse.next()
-
-  const { pathname } = request.nextUrl
-
-  if (pathname.startsWith('/password') || pathname.startsWith('/api/password') || pathname.startsWith('/asoworkshop') || pathname.startsWith('/api/track') || pathname.startsWith('/api/gallery') || pathname.startsWith('/api/translations')) {
-    return NextResponse.next()
-  }
-
-  const auth = request.cookies.get('kairo-auth')
-  if (!auth || auth.value !== 'granted') {
-    const url = request.nextUrl.clone()
-    url.pathname = '/password'
-    return NextResponse.redirect(url)
-  }
-
+export function middleware(_request) {
   return NextResponse.next()
 }
 
