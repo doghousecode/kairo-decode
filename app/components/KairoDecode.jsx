@@ -504,7 +504,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
               <TagBadge tag={item.tag} label={tagLabel} isNew={isNew} />
             </div>
-            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{preTranslatedDef || item.definition}</p>
+            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)", overflow: "hidden" }}>{preTranslatedDef || item.definition}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -755,10 +755,9 @@ export default function AIGlossary() {
       });
       if (missing.length === 0 || targetLang !== lang) return;
 
-      const isIndic = targetLang === 'pa' || targetLang === 'hi';
-      const CHUNK = isIndic ? 2 : 4;
+      const CHUNK = targetLang === 'pa' ? 1 : (targetLang === 'hi' ? 2 : 4);
       const MAX_TOKENS = 4000;
-      const primaryModel = isIndic ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001";
+      const primaryModel = (targetLang === 'pa' || targetLang === 'hi') ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001";
       const TIMEOUT_MS = 28000;
 
       const callClaude = async (model, payload) => {
