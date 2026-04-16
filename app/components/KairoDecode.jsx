@@ -18,14 +18,14 @@ const SEED_GLOSSARY = [
 ];
 
 const LANGUAGES = [
-  { code: "en", flag: "🇬🇧", name: "English" },
-  { code: "fr", flag: "🇫🇷", name: "French" },
-  { code: "de", flag: "🇩🇪", name: "German" },
-  { code: "es", flag: "🇪🇸", name: "Spanish" },
-  { code: "it", flag: "🇮🇹", name: "Italian" },
-  { code: "nl", flag: "🇳🇱", name: "Dutch" },
-  { code: "ko", flag: "🇰🇷", name: "Korean" },
-  { code: "ja", flag: "🇯🇵", name: "Japanese" },
+  { code: "en", flag: "🇬🇧", name: "English",  nativeName: "English"    },
+  { code: "fr", flag: "🇫🇷", name: "French",   nativeName: "Français"   },
+  { code: "de", flag: "🇩🇪", name: "German",   nativeName: "Deutsch"    },
+  { code: "es", flag: "🇪🇸", name: "Spanish",  nativeName: "Español"    },
+  { code: "it", flag: "🇮🇹", name: "Italian",  nativeName: "Italiano"   },
+  { code: "nl", flag: "🇳🇱", name: "Dutch",    nativeName: "Nederlands" },
+  { code: "ko", flag: "🇰🇷", name: "Korean",   nativeName: "한국어"      },
+  { code: "ja", flag: "🇯🇵", name: "Japanese", nativeName: "日本語"      },
 ];
 
 const LANG_NAMES = {
@@ -50,6 +50,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} discovered`,
     generatingEntry: "Generating entry",
     footer: (total, gen) => `${total} terms · ${gen} auto-discovered · Kairo Decode`,
+    tags: { "All":"All","Model":"Model","Core Concept":"Core Concept","Dev Tool":"Dev Tool","Risk":"Risk","Behaviour":"Behaviour","Economics":"Economics","Technique":"Technique","Architecture":"Architecture" },
   },
   fr: {
     placeholder: "Rechercher ou ajouter un terme…",
@@ -67,6 +68,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} découverts`,
     generatingEntry: "Génération en cours",
     footer: (total, gen) => `${total} termes · ${gen} découverts · Kairo Decode`,
+    tags: { "All":"Tout","Model":"Modèle","Core Concept":"Concept clé","Dev Tool":"Outil dev","Risk":"Risque","Behaviour":"Comportement","Economics":"Économie","Technique":"Technique","Architecture":"Architecture" },
   },
   de: {
     placeholder: "Begriff suchen oder hinzufügen…",
@@ -84,6 +86,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} entdeckt`,
     generatingEntry: "Eintrag wird generiert",
     footer: (total, gen) => `${total} Begriffe · ${gen} entdeckt · Kairo Decode`,
+    tags: { "All":"Alle","Model":"Modell","Core Concept":"Kernkonzept","Dev Tool":"Dev-Tool","Risk":"Risiko","Behaviour":"Verhalten","Economics":"Wirtschaft","Technique":"Technik","Architecture":"Architektur" },
   },
   es: {
     placeholder: "Buscar o añadir un término…",
@@ -101,6 +104,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} descubiertos`,
     generatingEntry: "Generando entrada",
     footer: (total, gen) => `${total} términos · ${gen} descubiertos · Kairo Decode`,
+    tags: { "All":"Todo","Model":"Modelo","Core Concept":"Concepto clave","Dev Tool":"Herramienta dev","Risk":"Riesgo","Behaviour":"Comportamiento","Economics":"Economía","Technique":"Técnica","Architecture":"Arquitectura" },
   },
   it: {
     placeholder: "Cerca o aggiungi un termine…",
@@ -118,6 +122,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} scoperti`,
     generatingEntry: "Generazione in corso",
     footer: (total, gen) => `${total} termini · ${gen} scoperti · Kairo Decode`,
+    tags: { "All":"Tutto","Model":"Modello","Core Concept":"Concetto chiave","Dev Tool":"Strumento dev","Risk":"Rischio","Behaviour":"Comportamento","Economics":"Economia","Technique":"Tecnica","Architecture":"Architettura" },
   },
   nl: {
     placeholder: "Zoek of voeg een term toe…",
@@ -135,6 +140,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} ontdekt`,
     generatingEntry: "Vermelding genereren",
     footer: (total, gen) => `${total} termen · ${gen} ontdekt · Kairo Decode`,
+    tags: { "All":"Alles","Model":"Model","Core Concept":"Kernbegrip","Dev Tool":"Dev-tool","Risk":"Risico","Behaviour":"Gedrag","Economics":"Economie","Technique":"Techniek","Architecture":"Architectuur" },
   },
   ko: {
     placeholder: "용어 검색 또는 추가…",
@@ -152,6 +158,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} 발견됨`,
     generatingEntry: "항목 생성 중",
     footer: (total, gen) => `${total}개 용어 · ${gen}개 자동 발견 · Kairo Decode`,
+    tags: { "All":"전체","Model":"모델","Core Concept":"핵심 개념","Dev Tool":"개발 도구","Risk":"위험","Behaviour":"동작","Economics":"경제","Technique":"기법","Architecture":"아키텍처" },
   },
   ja: {
     placeholder: "用語を検索または追加…",
@@ -169,6 +176,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} 発見`,
     generatingEntry: "エントリ生成中",
     footer: (total, gen) => `${total}用語 · ${gen}自動発見 · Kairo Decode`,
+    tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ" },
   },
 };
 
@@ -282,7 +290,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, preTranslatedDef, preTranslatedSmartLines }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -432,8 +440,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     setLoadingIdx(null);
   };
 
-  const displayDef = (lang !== 'en' && translated?.definition) ? translated.definition : item.definition;
-  const displaySmartLines = (lang !== 'en' && translated?.smartLines?.length) ? translated.smartLines : smartLines;
+  const displayDef = (lang !== 'en' && (preTranslatedDef || translated?.definition)) ? (preTranslatedDef || translated.definition) : item.definition;
+  const displaySmartLines = (lang !== 'en' && (preTranslatedSmartLines?.length || translated?.smartLines?.length)) ? (preTranslatedSmartLines || translated.smartLines) : smartLines;
   const displayDeepDives = (lang !== 'en' && translated?.deepDive?.length) ? translated.deepDive : deepDives;
 
   return (
@@ -450,7 +458,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
               <TagBadge tag={item.tag} isNew={isNew} />
             </div>
-            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{item.definition}</p>
+            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{preTranslatedDef || translated?.definition || item.definition}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -595,6 +603,10 @@ export default function AIGlossary() {
     return 'en';
   });
   useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
+  const [batchTranslations, setBatchTranslations] = useState({}); // { langCode: { term: { definition, smartLines } } }
+  const [batchTranslating, setBatchTranslating] = useState(false);
+  const [showLangPicker, setShowLangPicker] = useState(false);
+  const langPickerRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/terms")
@@ -632,6 +644,39 @@ export default function AIGlossary() {
       window.removeEventListener('offline', goOffline);
     };
   }, []);
+
+  // Batch-translate all definitions + smartLines when language changes
+  useEffect(() => {
+    if (lang === 'en' || batchTranslations[lang] || batchTranslating || !termsLoaded) return;
+    const targetLang = lang;
+    setBatchTranslating(true);
+    const payload = {};
+    terms.forEach(t => { payload[t.term] = { definition: t.definition, smartLines: t.smartLines || [] }; });
+    fetch("/api/claude", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514", max_tokens: 4000,
+        system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
+        messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
+      }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (lang !== targetLang) return;
+        const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+        try { setBatchTranslations(prev => ({ ...prev, [targetLang]: JSON.parse(text) })); } catch {}
+      })
+      .catch(() => {})
+      .finally(() => setBatchTranslating(false));
+  }, [lang, termsLoaded]);
+
+  // Close language picker on outside click
+  useEffect(() => {
+    if (!showLangPicker) return;
+    const handler = (e) => { if (langPickerRef.current && !langPickerRef.current.contains(e.target)) setShowLangPicker(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showLangPicker]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -853,19 +898,46 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
             </a>
             <span style={{ fontFamily: "'Jost',system-ui,sans-serif", fontWeight: 700, fontStyle: "italic", fontSize: "2.2rem", textTransform: "lowercase", color: "#5b80e8", lineHeight: 1 }}>decode</span>
-            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem" }}>
+            <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              {/* Language picker */}
+              <div ref={langPickerRef} style={{ position: "relative" }}>
+                <button onClick={() => setShowLangPicker(v => !v)} title="Change language"
+                  style={{ background: "none", border: "1.5px solid rgba(99,102,241,0.35)", borderRadius: "7px", cursor: "pointer", fontSize: "1.05rem", lineHeight: 1, padding: "3px 5px", transition: "border-color 0.15s", opacity: batchTranslating ? 0.5 : 1 }}
+                  aria-label="Change language">
+                  {LANGUAGES.find(l => l.code === lang)?.flag || '🇬🇧'}
+                  {batchTranslating && <span style={{ fontSize: "0.5rem", verticalAlign: "super", marginLeft: "1px", opacity: 0.6 }}>…</span>}
+                </button>
+                {showLangPicker && (
+                  <div style={{
+                    position: "absolute", right: 0, top: "calc(100% + 8px)",
+                    background: isDark ? "#16162a" : "#fff",
+                    border: "1px solid rgba(var(--rgb),0.12)",
+                    borderRadius: "12px", padding: "0.35rem",
+                    boxShadow: "0 12px 40px rgba(0,0,0,0.35)",
+                    zIndex: 200, minWidth: "148px",
+                  }}>
+                    {LANGUAGES.map(l => (
+                      <button key={l.code} onClick={() => { setLang(l.code); setShowLangPicker(false); }}
+                        style={{
+                          display: "flex", alignItems: "center", gap: "0.55rem",
+                          width: "100%", padding: "0.38rem 0.6rem",
+                          background: lang === l.code ? "rgba(99,102,241,0.18)" : "none",
+                          border: "none", borderRadius: "8px", cursor: "pointer",
+                          fontSize: "10pt", fontFamily: "inherit", textAlign: "left",
+                          color: lang === l.code ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.65)",
+                        }}>
+                        <span style={{ fontSize: "1rem" }}>{l.flag}</span>
+                        <span>{l.nativeName}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* Theme toggle */}
               <button onClick={() => setThemeMode(m => m === "light" ? "dark" : m === "dark" ? "spaghetti" : "light")} title="Cycle theme: light → dark → spaghetti"
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
                 {themeMode === "dark" ? "🌙" : themeMode === "light" ? "☀️" : "🍝"}
               </button>
-              <div style={{ display: "flex", gap: "0.15rem", flexWrap: "wrap", justifyContent: "flex-end", maxWidth: "120px" }}>
-                {LANGUAGES.map(l => (
-                  <button key={l.code} onClick={() => setLang(l.code)} title={l.name}
-                    style={{ background: "none", border: lang === l.code ? "1.5px solid rgba(99,102,241,0.6)" : "1.5px solid transparent", borderRadius: "5px", padding: "1px 2px", cursor: "pointer", fontSize: "0.82rem", lineHeight: 1, opacity: lang === l.code ? 1 : 0.35, transition: "opacity 0.15s, border-color 0.15s" }}>
-                    {l.flag}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "1rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
@@ -920,7 +992,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                     background: activeTag === tag ? "rgba(99,102,241,0.18)" : "transparent",
                     color: activeTag === tag ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.38)",
                   }}>
-                  {tag}
+                  {strings.tags?.[tag] || tag}
                 </button>
               ))}
             </div>
@@ -1025,6 +1097,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
               lang={lang}
+              preTranslatedDef={batchTranslations[lang]?.[item.term]?.definition}
+              preTranslatedSmartLines={batchTranslations[lang]?.[item.term]?.smartLines}
             />
           ))}
         </div>
