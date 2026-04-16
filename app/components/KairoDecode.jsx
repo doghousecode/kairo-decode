@@ -676,15 +676,16 @@ export default function AIGlossary() {
           setBatchTranslations(prev => ({ ...prev, [targetLang]: merged }));
       } catch {}
 
-      // Include terms with no deepDive yet (e.g. rows added before deep_dive column existed)
-      const missing = terms.filter(t => !merged[t.term] || !merged[t.term].deepDive?.length);
+      // Only re-translate if definition is missing — deepDive presence is not a reliable signal
+      // (older Supabase rows may have empty deepDive but valid definition, and checking deepDive
+      // causes an infinite re-translation loop on every language switch)
+      const missing = terms.filter(t => !merged[t.term]?.definition);
       if (missing.length === 0 || targetLang !== lang) return;
 
-      // Indic scripts (Devanagari/Gurmukhi) use ~3× more tokens per char than Latin,
-      // so use smaller chunks and a higher token ceiling for those languages.
-      const isIndic = ['hi', 'pa'].includes(targetLang);
-      const CHUNK = isIndic ? 4 : 8;
-      const MAX_TOKENS = isIndic ? 4000 : 2500;
+      // CJK and Indic scripts use 1.5–3× more tokens per character than Latin.
+      // 4 terms × ~900 tokens/term = ~3600 tokens — fits safely in 4000 for all scripts.
+      const CHUNK = 4;
+      const MAX_TOKENS = 4000;
       const allNew = {};
       for (let i = 0; i < missing.length; i += CHUNK) {
         if (targetLang !== lang) break;
