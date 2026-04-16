@@ -676,7 +676,8 @@ export default function AIGlossary() {
           setBatchTranslations(prev => ({ ...prev, [targetLang]: merged }));
       } catch {}
 
-      const missing = terms.filter(t => !merged[t.term]);
+      // Include terms with no deepDive yet (e.g. rows added before deep_dive column existed)
+      const missing = terms.filter(t => !merged[t.term] || !merged[t.term].deepDive?.length);
       if (missing.length === 0 || targetLang !== lang) return;
 
       // Translate in chunks of 8 — keeps each request fast and within token limits
