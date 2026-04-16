@@ -769,9 +769,11 @@ export default function AIGlossary() {
       try {
         const serverCache = await fetch(`/api/translations?lang=${targetLang}`).then(r => r.json());
         if (targetLang !== lang) return;
-        merged = { ...merged, ...serverCache };
-        if (Object.keys(serverCache).length > 0)
+        if (Object.keys(serverCache).length > 0) {
+          // Supabase is source of truth — don't let stale localStorage override deletions
+          merged = { ...serverCache };
           setBatchTranslations(prev => ({ ...prev, [targetLang]: merged }));
+        }
       } catch {}
 
       // Re-translate if definition is missing, or if deepDive is empty (gap-fill for spotty runs).
