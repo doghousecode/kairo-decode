@@ -760,7 +760,6 @@ export default function AIGlossary() {
     if (lang === 'en' || batchTranslating || !termsLoaded) return;
     const targetLang = lang;
     const cached = batchTranslations[targetLang] || {};
-    if (Object.keys(cached).length > 0 && terms.every(t => cached[t.term])) return;
 
     setBatchTranslating(true);
 
