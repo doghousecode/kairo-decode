@@ -8,12 +8,16 @@ import { createClient } from "@supabase/supabase-js";
     lang text not null,
     definition text,
     smart_lines jsonb,
+    deep_dive jsonb,
     primary key (term, lang)
   );
   alter table translations enable row level security;
   create policy "allow_select" on translations for select using (true);
   create policy "allow_insert" on translations for insert with check (true);
   create policy "allow_update" on translations for update using (true);
+
+  -- If table already exists, just add the column:
+  -- alter table translations add column if not exists deep_dive jsonb;
 */
 
 const supabase = () => createClient(
@@ -27,14 +31,18 @@ export async function GET(request) {
 
   const { data, error } = await supabase()
     .from('translations')
-    .select('term, definition, smart_lines')
+    .select('term, definition, smart_lines, deep_dive')
     .eq('lang', lang);
 
   if (error) return Response.json({}, { status: 500 });
 
   const result = {};
   (data || []).forEach(row => {
-    result[row.term] = { definition: row.definition, smartLines: row.smart_lines || [] };
+    result[row.term] = {
+      definition: row.definition,
+      smartLines: row.smart_lines || [],
+      deepDive: row.deep_dive || [],
+    };
   });
 
   return Response.json(result);
@@ -49,6 +57,7 @@ export async function POST(request) {
     lang,
     definition: data.definition,
     smart_lines: data.smartLines || [],
+    deep_dive: data.deepDive || [],
   }));
 
   const { error } = await supabase()

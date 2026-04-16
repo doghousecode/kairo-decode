@@ -329,52 +329,11 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
   const [generatingDeepDives, setGeneratingDeepDives] = useState(false);
-  const [translated, setTranslated] = useState(null);
-  const [translating, setTranslating] = useState(false);
-  const translatedForLang = useRef(null);
-
-  // Reset translation cache when language changes
-  useEffect(() => {
-    if (translatedForLang.current !== lang) {
-      setTranslated(null);
-      translatedForLang.current = lang;
-    }
-  }, [lang]);
-
-  // Lazy-translate deep dives when card opens in non-English mode.
-  // Skip entirely if batch translation already covers definition + smartLines.
-  useEffect(() => {
-    if (!isOpen || lang === 'en' || translated || translating) return;
-    // If batch already gave us the definition, only need to translate deepDive
-    const skipFullTranslation = !!preTranslatedDef;
-    const targetLang = lang;
-    setTranslating(true);
-    const payload = skipFullTranslation
-      ? { deepDive: Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive] }
-      : { definition: item.definition, smartLines: item.smartLines || [], deepDive: Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive] };
-    fetch("/api/claude", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001", max_tokens: 600,
-        system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keep AI/tech terms, acronyms, and product names in English.",
-        messages: [{ role: "user", content: `Translate to ${LANG_NAMES[targetLang]}:\n${JSON.stringify(payload)}` }],
-      }),
-    })
-      .then(r => r.json())
-      .then(d => {
-        if (targetLang !== lang) return; // language changed while in-flight, discard
-        const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
-        try { setTranslated(JSON.parse(text)); } catch {}
-      })
-      .catch(() => {})
-      .finally(() => setTranslating(false));
-  }, [isOpen, lang, preTranslatedDef]);
-
   useEffect(() => {
     if (!isOpen || item.seeded) return;
 
@@ -384,7 +343,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
       fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 300,
+          model: "claude-haiku-4-5-20251001", max_tokens: 300,
           system: `You write short example sentences for a tech glossary. Mildly witty is fine, but keep them useful and grounded. Respond ONLY with a raw JSON array — no markdown, no backticks.${lang !== 'en' ? ` Write in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nWrite exactly 2 sentences (max 20 words each) using this term naturally.\nFormat: ["sentence one.","sentence two."]` }],
         }),
@@ -408,7 +367,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
       fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 400,
+          model: "claude-haiku-4-5-20251001", max_tokens: 400,
           system: `You generate deep-dive questions for a tech glossary. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.${lang !== 'en' ? ` Write in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nGenerate exactly 3 distinct, punchy questions a product builder would want answered about this term. Different angles: practical use, trade-offs, real-world implementation.\nFormat: ["question 1?","question 2?","question 3?"]` }],
         }),
@@ -485,9 +444,9 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     setLoadingIdx(null);
   };
 
-  const displayDef = (lang !== 'en' && (preTranslatedDef || translated?.definition)) ? (preTranslatedDef || translated.definition) : item.definition;
-  const displaySmartLines = (lang !== 'en' && (preTranslatedSmartLines?.length || translated?.smartLines?.length)) ? (preTranslatedSmartLines || translated.smartLines) : smartLines;
-  const displayDeepDives = (lang !== 'en' && translated?.deepDive?.length) ? translated.deepDive : deepDives;
+  const displayDef = (lang !== 'en' && preTranslatedDef) ? preTranslatedDef : item.definition;
+  const displaySmartLines = (lang !== 'en' && preTranslatedSmartLines?.length) ? preTranslatedSmartLines : smartLines;
+  const displayDeepDives = (lang !== 'en' && preTranslatedDeepDive?.length) ? preTranslatedDeepDive : deepDives;
 
   return (
     <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
@@ -503,7 +462,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
               <TagBadge tag={item.tag} label={tagLabel} isNew={isNew} />
             </div>
-            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{preTranslatedDef || translated?.definition || item.definition}</p>
+            <p className="text-sm mt-0.5 line-clamp-1" style={{ color: "rgba(var(--rgb),0.45)" }}>{preTranslatedDef || item.definition}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -720,19 +679,26 @@ export default function AIGlossary() {
       const missing = terms.filter(t => !merged[t.term]);
       if (missing.length === 0 || targetLang !== lang) return;
 
-      // Translate in chunks of 12 — keeps each request fast and within token limits
-      const CHUNK = 12;
+      // Translate in chunks of 8 — keeps each request fast and within token limits
+      // Includes deepDive so card expansions need no extra API calls
+      const CHUNK = 8;
       const allNew = {};
       for (let i = 0; i < missing.length; i += CHUNK) {
         if (targetLang !== lang) break;
         const chunk = missing.slice(i, i + CHUNK);
         const payload = {};
-        chunk.forEach(t => { payload[t.term] = { definition: t.definition, smartLines: t.smartLines || [] }; });
+        chunk.forEach(t => {
+          payload[t.term] = {
+            definition: t.definition,
+            smartLines: t.smartLines || [],
+            deepDive: Array.isArray(t.deepDive) ? t.deepDive : [t.deepDive].filter(Boolean),
+          };
+        });
         try {
           const d = await fetch("/api/claude", {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: "claude-haiku-4-5-20251001", max_tokens: 2000,
+              model: "claude-haiku-4-5-20251001", max_tokens: 2500,
               system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
               messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
             }),
@@ -1187,6 +1153,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               tagLabel={strings.tags?.[item.tag] || item.tag}
               preTranslatedDef={batchTranslations[lang]?.[item.term]?.definition}
               preTranslatedSmartLines={batchTranslations[lang]?.[item.term]?.smartLines}
+              preTranslatedDeepDive={batchTranslations[lang]?.[item.term]?.deepDive}
             />
           ))}
         </div>
