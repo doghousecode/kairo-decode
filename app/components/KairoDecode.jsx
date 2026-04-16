@@ -332,10 +332,11 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {});
+    const plain = new Blob([text], { type: 'text/plain' });
+    const item = new ClipboardItem({ 'text/plain': plain });
+    navigator.clipboard.write([item])
+      .catch(() => navigator.clipboard.writeText(text))
+      .then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); });
   };
   return (
     <button onClick={copy} title="Copy" style={{
@@ -537,7 +538,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 : <LinkedDefinition text={displayDef} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
               }
             </p>
-            {(!isTyping || typingDone) && <CopyButton text={displayDef} />}
+            {(!isTyping || typingDone) && <CopyButton text={`${item.term.toUpperCase()}\n\n${displayDef}`} />}
           </div>
 
           {(isTyping ? smartLines.length > 0 : (typingDone && (smartLines.length > 0 || generatingSmartLines))) && (
