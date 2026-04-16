@@ -696,29 +696,67 @@ export default function AIGlossary() {
     };
   }, []);
 
-  // Batch-translate all definitions + smartLines when language changes
+  // Batch-translate all definitions + smartLines when language changes.
+  // Strategy: hit Supabase first (instant shared cache), then only call Claude for
+  // any terms not yet in Supabase, and save those back so future users are also instant.
   useEffect(() => {
-    if (lang === 'en' || batchTranslations[lang] || batchTranslating || !termsLoaded) return;
+    if (lang === 'en' || batchTranslating || !termsLoaded) return;
     const targetLang = lang;
+    const cached = batchTranslations[targetLang] || {};
+    const allTermKeys = new Set(terms.map(t => t.term));
+
+    // If localStorage already covers every current term, nothing to do
+    if (Object.keys(cached).length > 0 && terms.every(t => cached[t.term])) return;
+
     setBatchTranslating(true);
-    const payload = {};
-    terms.forEach(t => { payload[t.term] = { definition: t.definition, smartLines: t.smartLines || [] }; });
-    fetch("/api/claude", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001", max_tokens: 4000,
-        system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
-        messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
-      }),
-    })
+
+    fetch(`/api/translations?lang=${targetLang}`)
       .then(r => r.json())
-      .then(d => {
-        if (lang !== targetLang) return;
-        const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
-        try { setBatchTranslations(prev => ({ ...prev, [targetLang]: JSON.parse(text) })); } catch {}
+      .then(serverCache => {
+        if (targetLang !== lang) { setBatchTranslating(false); return; }
+
+        // Merge: localStorage + Supabase
+        const merged = { ...cached, ...serverCache };
+
+        // Apply Supabase translations immediately — no waiting for Claude
+        if (Object.keys(serverCache).length > 0) {
+          setBatchTranslations(prev => ({ ...prev, [targetLang]: merged }));
+        }
+
+        // Find terms still missing from both caches
+        const missing = terms.filter(t => !merged[t.term]);
+        if (missing.length === 0) { setBatchTranslating(false); return; }
+
+        // Translate only the missing terms with Claude
+        const payload = {};
+        missing.forEach(t => { payload[t.term] = { definition: t.definition, smartLines: t.smartLines || [] }; });
+
+        fetch("/api/claude", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-haiku-4-5-20251001", max_tokens: 4000,
+            system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
+            messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
+          }),
+        })
+          .then(r => r.json())
+          .then(d => {
+            if (targetLang !== lang) return;
+            const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+            try {
+              const newTranslations = JSON.parse(text);
+              setBatchTranslations(prev => ({ ...prev, [targetLang]: { ...merged, ...newTranslations } }));
+              // Save new translations to Supabase for all future users
+              fetch('/api/translations', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ lang: targetLang, translations: newTranslations }),
+              }).catch(() => {});
+            } catch {}
+          })
+          .catch(() => {})
+          .finally(() => setBatchTranslating(false));
       })
-      .catch(() => {})
-      .finally(() => setBatchTranslating(false));
+      .catch(() => setBatchTranslating(false));
   }, [lang, termsLoaded]);
 
   // Close language picker on outside click

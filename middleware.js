@@ -5,7 +5,7 @@ export function middleware(request) {
 
   const { pathname } = request.nextUrl
 
-  if (pathname.startsWith('/password') || pathname.startsWith('/api/password') || pathname.startsWith('/asoworkshop') || pathname.startsWith('/api/track') || pathname.startsWith('/api/gallery')) {
+  if (pathname.startsWith('/password') || pathname.startsWith('/api/password') || pathname.startsWith('/asoworkshop') || pathname.startsWith('/api/track') || pathname.startsWith('/api/gallery') || pathname.startsWith('/api/translations')) {
     return NextResponse.next()
   }
 
