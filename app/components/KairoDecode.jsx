@@ -812,7 +812,7 @@ export default function AIGlossary() {
     };
 
     run().catch(() => {}).finally(() => setBatchTranslating(false));
-  }, [lang, termsLoaded]);
+  }, [lang, termsLoaded, terms.length]);
 
   // Close language picker on outside click
   useEffect(() => {
