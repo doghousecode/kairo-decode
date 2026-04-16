@@ -510,8 +510,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           )}
 
           {(isTyping || typingDone) && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
-            <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>Deep dive</p>
-            {deepDives.map((prompt, idx) => {
+            <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>{(UI_STRINGS[lang] || UI_STRINGS.en).deepDiveLabel}</p>
+            {displayDeepDives.map((prompt, idx) => {
               const isLoading = loadingIdx === idx;
               const response = responses[idx];
               const stillTyping = isTyping && !typingDone;
@@ -532,7 +532,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                       border: "1px solid rgba(99,102,241,0.28)",
                       cursor: (!isOnline || stillTyping || loadingIdx !== null) ? "not-allowed" : "pointer",
                     }}>
-                    {isLoading ? "Asking Claude..." : (!isOnline) ? "Offline" : "▶ Run this prompt"}
+                    {isLoading ? (UI_STRINGS[lang] || UI_STRINGS.en).askingClaude : (!isOnline) ? (UI_STRINGS[lang] || UI_STRINGS.en).offline : (UI_STRINGS[lang] || UI_STRINGS.en).runPrompt}
                   </button>
                   {response && (
                     <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
