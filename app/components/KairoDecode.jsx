@@ -726,7 +726,7 @@ export default function AIGlossary() {
           emoji: t.emoji,
           definition: t.definition,
           examples: t.examples || [],
-          deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : [t.deep_dive],
+          deepDive: Array.isArray(t.deep_dive) ? t.deep_dive : (t.deep_dive ? [t.deep_dive] : []),
           smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
           tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
           seeded: false,
