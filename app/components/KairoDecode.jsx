@@ -446,7 +446,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 1000,
+          model: "claude-sonnet-4-6", max_tokens: 1000,
           system: `You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.${lang !== 'en' ? ` Respond in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: q }],
         }),
@@ -474,7 +474,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 1000,
+          model: "claude-sonnet-4-6", max_tokens: 1000,
           system: `You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.${lang !== 'en' ? ` Respond in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: deepDives[idx] }],
         }),
@@ -940,6 +940,13 @@ export default function AIGlossary() {
     });
   };
 
+  // Scroll to top whenever the user starts/changes a search so results aren't hidden behind the header
+  useEffect(() => {
+    if (search.trim().length > 0) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [search]);
+
   const allTermNames = terms.map(t => t.term.toLowerCase());
 
   const tryAdd = async (raw) => {
@@ -949,7 +956,13 @@ export default function AIGlossary() {
     setFeedback(null);
 
     const exact = terms.find(t => t.term.toLowerCase() === query.toLowerCase());
-    if (exact) { setOpenTerm(exact.term); setSearch(""); return; }
+    if (exact) {
+      setOpenTerm(exact.term);
+      setScrollToTerm(exact.term);
+      setTimeout(() => setScrollToTerm(null), 600);
+      setSearch("");
+      return;
+    }
 
     setGenerating(query);
     setStreamingPreview("");
