@@ -483,7 +483,6 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               ? <>{displayedDef}<span style={{ display: "inline-block", width: "2px", height: "1em", background: "rgba(var(--rgb),0.5)", marginLeft: "1px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} /></>
               : <LinkedDefinition text={displayDef} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
             }
-            {translating && <em style={{ color: "rgba(var(--rgb),0.35)", fontSize: "0.85em" }}> ({(UI_STRINGS[lang] || UI_STRINGS.en).translating})</em>}
           </p>
 
           {(isTyping ? smartLines.length > 0 : (typingDone && (smartLines.length > 0 || generatingSmartLines))) && (
