@@ -335,7 +335,8 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
   const [generatingDeepDives, setGeneratingDeepDives] = useState(false);
   useEffect(() => {
-    if (!isOpen || item.seeded) return;
+    // Only generate in English — non-English card opens must not fire API calls
+    if (!isOpen || item.seeded || lang !== 'en') return;
 
     // Lazy-generate smartLines for DB terms that don't have them
     if (smartLines.length === 0 && !generatingSmartLines) {
@@ -680,9 +681,11 @@ export default function AIGlossary() {
       const missing = terms.filter(t => !merged[t.term] || !merged[t.term].deepDive?.length);
       if (missing.length === 0 || targetLang !== lang) return;
 
-      // Translate in chunks of 8 — keeps each request fast and within token limits
-      // Includes deepDive so card expansions need no extra API calls
-      const CHUNK = 8;
+      // Indic scripts (Devanagari/Gurmukhi) use ~3× more tokens per char than Latin,
+      // so use smaller chunks and a higher token ceiling for those languages.
+      const isIndic = ['hi', 'pa'].includes(targetLang);
+      const CHUNK = isIndic ? 4 : 8;
+      const MAX_TOKENS = isIndic ? 4000 : 2500;
       const allNew = {};
       for (let i = 0; i < missing.length; i += CHUNK) {
         if (targetLang !== lang) break;
@@ -699,7 +702,7 @@ export default function AIGlossary() {
           const d = await fetch("/api/claude", {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: "claude-haiku-4-5-20251001", max_tokens: 2500,
+              model: "claude-haiku-4-5-20251001", max_tokens: MAX_TOKENS,
               system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
               messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
             }),
