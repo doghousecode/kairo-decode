@@ -339,7 +339,7 @@ function CopyButton({ text }) {
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -462,7 +462,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
   useEffect(() => {
     if ((isNew || shouldScrollTo) && ref.current) setTimeout(() => {
-      const top = ref.current.getBoundingClientRect().top + window.scrollY - 96;
+      const top = ref.current.getBoundingClientRect().top + window.scrollY - (headerHeight || 96) - 16;
       window.scrollTo({ top, behavior: "smooth" });
     }, 150);
   }, [isNew, shouldScrollTo]);
@@ -1264,6 +1264,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               preTranslatedDef={batchTranslations[lang]?.[item.term]?.definition}
               preTranslatedSmartLines={batchTranslations[lang]?.[item.term]?.smartLines}
               preTranslatedDeepDive={batchTranslations[lang]?.[item.term]?.deepDive}
+              headerHeight={headerHeight}
             />
           ))}
         </div>
