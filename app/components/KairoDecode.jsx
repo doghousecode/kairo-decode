@@ -742,17 +742,21 @@ export default function AIGlossary() {
         }
       } catch {}
 
-      // Re-translate if any field is missing OR if definition/deepDive[0] still matches
-      // the English source (i.e. was saved untranslated by a previous buggy run).
-      const missing = terms.filter(t => {
-        const cached = merged[t.term];
+      // For scripts that are visually distinct from Latin, check the cached text
+      // actually contains target-script characters — more reliable than === comparison
+      // since a bad translation run may have stored subtly different English.
+      const scriptRe = { pa: /[\u0A00-\u0A7F]/, hi: /[\u0900-\u097F]/, ko: /[\uAC00-\uD7AF]/, ja: /[\u3040-\u30FF\u4E00-\u9FAF]/ };
+      const needsRetranslation = (cached, t) => {
         if (!cached?.definition) return true;
         if (!cached?.deepDive?.length) return true;
+        const re = scriptRe[targetLang];
+        if (re) return !re.test(cached.definition);
         if (cached.definition === t.definition) return true;
         const srcDive = Array.isArray(t.deepDive) ? t.deepDive : [];
         if (srcDive.length > 0 && cached.deepDive[0] === srcDive[0]) return true;
         return false;
-      });
+      };
+      const missing = terms.filter(t => needsRetranslation(merged[t.term], t));
       if (missing.length === 0 || targetLang !== lang) return;
 
       const CHUNK = targetLang === 'pa' ? 1 : (targetLang === 'hi' ? 2 : 4);
