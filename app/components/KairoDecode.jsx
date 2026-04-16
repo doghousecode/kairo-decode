@@ -346,17 +346,23 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     }
   }, [lang]);
 
-  // Lazy-translate content when card opens in non-English mode
+  // Lazy-translate deep dives when card opens in non-English mode.
+  // Skip entirely if batch translation already covers definition + smartLines.
   useEffect(() => {
     if (!isOpen || lang === 'en' || translated || translating) return;
+    // If batch already gave us the definition, only need to translate deepDive
+    const skipFullTranslation = !!preTranslatedDef;
     const targetLang = lang;
     setTranslating(true);
+    const payload = skipFullTranslation
+      ? { deepDive: Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive] }
+      : { definition: item.definition, smartLines: item.smartLines || [], deepDive: Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive] };
     fetch("/api/claude", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514", max_tokens: 800,
+        model: "claude-haiku-4-5-20251001", max_tokens: 600,
         system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keep AI/tech terms, acronyms, and product names in English.",
-        messages: [{ role: "user", content: `Translate to ${LANG_NAMES[targetLang]}:\n${JSON.stringify({ definition: item.definition, smartLines: item.smartLines || [], deepDive: Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive] })}` }],
+        messages: [{ role: "user", content: `Translate to ${LANG_NAMES[targetLang]}:\n${JSON.stringify(payload)}` }],
       }),
     })
       .then(r => r.json())
@@ -367,7 +373,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
       })
       .catch(() => {})
       .finally(() => setTranslating(false));
-  }, [isOpen, lang]);
+  }, [isOpen, lang, preTranslatedDef]);
 
   useEffect(() => {
     if (!isOpen || item.seeded) return;
