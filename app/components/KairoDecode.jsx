@@ -42,7 +42,7 @@ const UI_STRINGS = {
     open: "Open ↵", add: "Add ✨", offline: "Offline",
     makeSmartLabel: "Make me look smart",
     examplesLabel: "Examples", deepDiveLabel: "Deep dive",
-    runPrompt: "▶ Run", askingClaude: "Asking Claude...",
+    runPrompt: "▶ Run", askingClaude: "Asking Claude...", askCustom: "▶ Ask", customPlaceholder: "Or ask something else…",
     translating: "Translating…",
     offlineBanner: "You're offline — browsing cached terms. Adding terms and deep dives are unavailable.",
     notRelevant: (term) => `"${term}" doesn't look like an AI/tech term — skipping it.`,
@@ -60,7 +60,7 @@ const UI_STRINGS = {
     open: "Ouvrir ↵", add: "Ajouter ✨", offline: "Hors ligne",
     makeSmartLabel: "Impressionnez votre entourage",
     examplesLabel: "Exemples", deepDiveLabel: "Approfondissement",
-    runPrompt: "▶ Lancer", askingClaude: "Demande à Claude...",
+    runPrompt: "▶ Lancer", askingClaude: "Demande à Claude...", askCustom: "▶ Demander", customPlaceholder: "Ou posez autre chose…",
     translating: "Traduction…",
     offlineBanner: "Vous êtes hors ligne — navigation dans les termes en cache. L'ajout de termes n'est pas disponible.",
     notRelevant: (term) => `"${term}" ne semble pas être un terme IA/tech — ignoré.`,
@@ -78,7 +78,7 @@ const UI_STRINGS = {
     open: "Öffnen ↵", add: "Hinzufügen ✨", offline: "Offline",
     makeSmartLabel: "Überzeuge dein Umfeld",
     examplesLabel: "Beispiele", deepDiveLabel: "Vertiefung",
-    runPrompt: "▶ Ausführen", askingClaude: "Claude wird gefragt...",
+    runPrompt: "▶ Ausführen", askingClaude: "Claude wird gefragt...", askCustom: "▶ Fragen", customPlaceholder: "Oder etwas anderes fragen…",
     translating: "Übersetzen…",
     offlineBanner: "Sie sind offline — gespeicherte Begriffe werden angezeigt. Hinzufügen nicht verfügbar.",
     notRelevant: (term) => `"${term}" scheint kein KI/Tech-Begriff zu sein — übersprungen.`,
@@ -96,7 +96,7 @@ const UI_STRINGS = {
     open: "Abrir ↵", add: "Añadir ✨", offline: "Sin conexión",
     makeSmartLabel: "Impresiona a tu equipo",
     examplesLabel: "Ejemplos", deepDiveLabel: "Profundización",
-    runPrompt: "▶ Ejecutar", askingClaude: "Preguntando a Claude...",
+    runPrompt: "▶ Ejecutar", askingClaude: "Preguntando a Claude...", askCustom: "▶ Preguntar", customPlaceholder: "O pregunta algo más…",
     translating: "Traduciendo…",
     offlineBanner: "Estás sin conexión — navegando por los términos guardados. Añadir términos no está disponible.",
     notRelevant: (term) => `"${term}" no parece ser un término de IA/tech — omitido.`,
@@ -114,7 +114,7 @@ const UI_STRINGS = {
     open: "Apri ↵", add: "Aggiungi ✨", offline: "Offline",
     makeSmartLabel: "Fai colpo sul tuo team",
     examplesLabel: "Esempi", deepDiveLabel: "Approfondimento",
-    runPrompt: "▶ Esegui", askingClaude: "Chiedendo a Claude...",
+    runPrompt: "▶ Esegui", askingClaude: "Chiedendo a Claude...", askCustom: "▶ Chiedi", customPlaceholder: "O chiedi qualcos'altro…",
     translating: "Traduzione…",
     offlineBanner: "Sei offline — stai navigando i termini salvati. L'aggiunta di termini non è disponibile.",
     notRelevant: (term) => `"${term}" non sembra un termine AI/tech — ignorato.`,
@@ -132,7 +132,7 @@ const UI_STRINGS = {
     open: "Openen ↵", add: "Toevoegen ✨", offline: "Offline",
     makeSmartLabel: "Maak indruk op je team",
     examplesLabel: "Voorbeelden", deepDiveLabel: "Verdieping",
-    runPrompt: "▶ Uitvoeren", askingClaude: "Claude wordt gevraagd...",
+    runPrompt: "▶ Uitvoeren", askingClaude: "Claude wordt gevraagd...", askCustom: "▶ Vragen", customPlaceholder: "Of stel iets anders…",
     translating: "Vertalen…",
     offlineBanner: "Je bent offline — gespeicherde termen worden weergegeven. Termen toevoegen is niet beschikbaar.",
     notRelevant: (term) => `"${term}" lijkt geen AI/tech-term te zijn — overgeslagen.`,
@@ -150,7 +150,7 @@ const UI_STRINGS = {
     open: "열기 ↵", add: "추가 ✨", offline: "오프라인",
     makeSmartLabel: "팀에게 인상 남기기",
     examplesLabel: "예시", deepDiveLabel: "심층 분석",
-    runPrompt: "▶ 프롬프트 실행", askingClaude: "Claude에게 질문 중...",
+    runPrompt: "▶ 프롬프트 실행", askingClaude: "Claude에게 질문 중...", askCustom: "▶ 질문", customPlaceholder: "다른 것을 물어보세요…",
     translating: "번역 중…",
     offlineBanner: "오프라인 상태입니다 — 저장된 용어를 탐색 중입니다. 용어 추가는 사용할 수 없습니다.",
     notRelevant: (term) => `"${term}"은(는) AI/기술 용어가 아닌 것 같아 건너뜁니다.`,
@@ -168,7 +168,7 @@ const UI_STRINGS = {
     open: "開く ↵", add: "追加 ✨", offline: "オフライン",
     makeSmartLabel: "チームに差をつける",
     examplesLabel: "例", deepDiveLabel: "詳しく見る",
-    runPrompt: "▶ プロンプトを実行", askingClaude: "Claudeに質問中...",
+    runPrompt: "▶ プロンプトを実行", askingClaude: "Claudeに質問中...", askCustom: "▶ 質問", customPlaceholder: "他に聞いてみる…",
     translating: "翻訳中…",
     offlineBanner: "オフラインです — 保存済み用語を閲覧中。用語の追加は利用できません。",
     notRelevant: (term) => `"${term}"はAI/技術用語ではないようです — スキップします。`,
@@ -186,7 +186,7 @@ const UI_STRINGS = {
     open: "खोलें ↵", add: "जोड़ें ✨", offline: "ऑफलाइन",
     makeSmartLabel: "अपनी टीम को प्रभावित करें",
     examplesLabel: "उदाहरण", deepDiveLabel: "गहराई से जानें",
-    runPrompt: "▶ यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...",
+    runPrompt: "▶ यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...", askCustom: "▶ पूछें", customPlaceholder: "या कुछ और पूछें…",
     translating: "अनुवाद हो रहा है…",
     offlineBanner: "आप ऑफलाइन हैं — सहेजे गए शब्द देख रहे हैं। शब्द जोड़ना उपलब्ध नहीं है।",
     notRelevant: (term) => `"${term}" AI/tech शब्द नहीं लगता — छोड़ रहे हैं।`,
@@ -204,7 +204,7 @@ const UI_STRINGS = {
     open: "ਖੋਲ੍ਹੋ ↵", add: "ਜੋੜੋ ✨", offline: "ਆਫਲਾਈਨ",
     makeSmartLabel: "ਆਪਣੀ ਟੀਮ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰੋ",
     examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਡੂੰਘਾਈ ਨਾਲ ਜਾਣੋ",
-    runPrompt: "▶ ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...",
+    runPrompt: "▶ ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...", askCustom: "▶ ਪੁੱਛੋ", customPlaceholder: "ਜਾਂ ਕੁਝ ਹੋਰ ਪੁੱਛੋ…",
     translating: "ਅਨੁਵਾਦ ਹੋ ਰਿਹਾ ਹੈ…",
     offlineBanner: "ਤੁਸੀਂ ਆਫਲਾਈਨ ਹੋ — ਸੁਰੱਖਿਅਤ ਸ਼ਬਦ ਦੇਖ ਰਹੇ ਹੋ। ਸ਼ਬਦ ਜੋੜਨਾ ਉਪਲਬਧ ਨਹੀਂ।",
     notRelevant: (term) => `"${term}" AI/tech ਸ਼ਬਦ ਨਹੀਂ ਲੱਗਦਾ — ਛੱਡ ਰਹੇ ਹਾਂ।`,
@@ -351,7 +351,7 @@ function CopyButton({ text }) {
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -377,6 +377,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           const lines = JSON.parse(text);
           if (Array.isArray(lines) && lines.length > 0) {
             setSmartLines(lines);
+            onTermUpdate?.(item.term, { smartLines: lines });
             fetch("/api/terms", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ term: item.term, smartLines: lines }) }).catch(() => {});
           }
         })
@@ -401,6 +402,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           const dives = JSON.parse(text);
           if (Array.isArray(dives) && dives.length === 3) {
             setDeepDives(dives);
+            onTermUpdate?.(item.term, { deepDive: dives });
             fetch("/api/terms", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ term: item.term, deepDive: dives }) }).catch(() => {});
           }
         })
@@ -617,7 +619,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                   value={customQuestion}
                   onChange={e => setCustomQuestion(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && !loadingCustom && isOnline && runCustomDeepDive()}
-                  placeholder="Or ask something else…"
+                  placeholder={(UI_STRINGS[lang] || UI_STRINGS.en).customPlaceholder}
                   disabled={!isOnline || loadingCustom || (isTyping && !typingDone)}
                   className="flex-1 rounded-lg px-3 py-2 outline-none"
                   style={{
@@ -636,7 +638,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                     border: "1px solid rgba(99,102,241,0.28)",
                     cursor: (!isOnline || !customQuestion.trim() || loadingCustom) ? "not-allowed" : "pointer",
                   }}>
-                  {loadingCustom ? (UI_STRINGS[lang] || UI_STRINGS.en).askingClaude : "▶ Ask"}
+                  {loadingCustom ? (UI_STRINGS[lang] || UI_STRINGS.en).askingClaude : (UI_STRINGS[lang] || UI_STRINGS.en).askCustom}
                 </button>
               </div>
               {customResponse && (
@@ -882,6 +884,10 @@ export default function AIGlossary() {
   const handleAddTerm = (term) => {
     setSearch(term);
     tryAdd(term);
+  };
+
+  const handleTermUpdate = (termName, updates) => {
+    setTerms(prev => prev.map(t => t.term === termName ? { ...t, ...updates } : t));
   };
 
   const handleDelete = async (termName) => {
@@ -1245,6 +1251,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               onTermClick={handleTermClick}
               onAddTerm={handleAddTerm}
               onDelete={handleDelete}
+              onTermUpdate={handleTermUpdate}
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
               lang={lang}
