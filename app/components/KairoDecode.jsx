@@ -461,7 +461,10 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   const ref = useRef(null);
 
   useEffect(() => {
-    if ((isNew || shouldScrollTo) && ref.current) setTimeout(() => ref.current.scrollIntoView({ behavior: "smooth", block: "center" }), 150);
+    if ((isNew || shouldScrollTo) && ref.current) setTimeout(() => {
+      const top = ref.current.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top, behavior: "smooth" });
+    }, 150);
   }, [isNew, shouldScrollTo]);
 
   const runDeepDive = async (idx) => {
