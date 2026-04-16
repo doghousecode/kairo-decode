@@ -42,7 +42,7 @@ const UI_STRINGS = {
     open: "Open ↵", add: "Add ✨", offline: "Offline",
     makeSmartLabel: "Make me look smart",
     examplesLabel: "Examples", deepDiveLabel: "Deep dive",
-    runPrompt: "▶ Run this prompt", askingClaude: "Asking Claude...",
+    runPrompt: "▶ Run", askingClaude: "Asking Claude...",
     translating: "Translating…",
     offlineBanner: "You're offline — browsing cached terms. Adding terms and deep dives are unavailable.",
     notRelevant: (term) => `"${term}" doesn't look like an AI/tech term — skipping it.`,
@@ -60,7 +60,7 @@ const UI_STRINGS = {
     open: "Ouvrir ↵", add: "Ajouter ✨", offline: "Hors ligne",
     makeSmartLabel: "Impressionnez votre entourage",
     examplesLabel: "Exemples", deepDiveLabel: "Approfondissement",
-    runPrompt: "▶ Lancer ce prompt", askingClaude: "Demande à Claude...",
+    runPrompt: "▶ Lancer", askingClaude: "Demande à Claude...",
     translating: "Traduction…",
     offlineBanner: "Vous êtes hors ligne — navigation dans les termes en cache. L'ajout de termes n'est pas disponible.",
     notRelevant: (term) => `"${term}" ne semble pas être un terme IA/tech — ignoré.`,
@@ -78,7 +78,7 @@ const UI_STRINGS = {
     open: "Öffnen ↵", add: "Hinzufügen ✨", offline: "Offline",
     makeSmartLabel: "Überzeuge dein Umfeld",
     examplesLabel: "Beispiele", deepDiveLabel: "Vertiefung",
-    runPrompt: "▶ Prompt ausführen", askingClaude: "Claude wird gefragt...",
+    runPrompt: "▶ Ausführen", askingClaude: "Claude wird gefragt...",
     translating: "Übersetzen…",
     offlineBanner: "Sie sind offline — gespeicherte Begriffe werden angezeigt. Hinzufügen nicht verfügbar.",
     notRelevant: (term) => `"${term}" scheint kein KI/Tech-Begriff zu sein — übersprungen.`,
@@ -96,7 +96,7 @@ const UI_STRINGS = {
     open: "Abrir ↵", add: "Añadir ✨", offline: "Sin conexión",
     makeSmartLabel: "Impresiona a tu equipo",
     examplesLabel: "Ejemplos", deepDiveLabel: "Profundización",
-    runPrompt: "▶ Ejecutar este prompt", askingClaude: "Preguntando a Claude...",
+    runPrompt: "▶ Ejecutar", askingClaude: "Preguntando a Claude...",
     translating: "Traduciendo…",
     offlineBanner: "Estás sin conexión — navegando por los términos guardados. Añadir términos no está disponible.",
     notRelevant: (term) => `"${term}" no parece ser un término de IA/tech — omitido.`,
@@ -114,7 +114,7 @@ const UI_STRINGS = {
     open: "Apri ↵", add: "Aggiungi ✨", offline: "Offline",
     makeSmartLabel: "Fai colpo sul tuo team",
     examplesLabel: "Esempi", deepDiveLabel: "Approfondimento",
-    runPrompt: "▶ Esegui questo prompt", askingClaude: "Chiedendo a Claude...",
+    runPrompt: "▶ Esegui", askingClaude: "Chiedendo a Claude...",
     translating: "Traduzione…",
     offlineBanner: "Sei offline — stai navigando i termini salvati. L'aggiunta di termini non è disponibile.",
     notRelevant: (term) => `"${term}" non sembra un termine AI/tech — ignorato.`,
@@ -132,7 +132,7 @@ const UI_STRINGS = {
     open: "Openen ↵", add: "Toevoegen ✨", offline: "Offline",
     makeSmartLabel: "Maak indruk op je team",
     examplesLabel: "Voorbeelden", deepDiveLabel: "Verdieping",
-    runPrompt: "▶ Voer dit prompt uit", askingClaude: "Claude wordt gevraagd...",
+    runPrompt: "▶ Uitvoeren", askingClaude: "Claude wordt gevraagd...",
     translating: "Vertalen…",
     offlineBanner: "Je bent offline — gespeicherde termen worden weergegeven. Termen toevoegen is niet beschikbaar.",
     notRelevant: (term) => `"${term}" lijkt geen AI/tech-term te zijn — overgeslagen.`,
@@ -329,6 +329,28 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
+function CopyButton({ text }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {});
+  };
+  return (
+    <button onClick={copy} title="Copy" style={{
+      background: "none", border: "none", cursor: "pointer", padding: "2px", flexShrink: 0,
+      color: copied ? "rgba(20,184,166,0.8)" : "rgba(var(--rgb),0.22)",
+      display: "inline-flex", alignItems: "center", transition: "color 0.15s",
+    }}>
+      {copied
+        ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2v1"/></svg>
+      }
+    </button>
+  );
+}
+
 function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
@@ -417,6 +439,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     return () => clearInterval(iv);
   }, [isTyping, item.definition]);
 
+  const [hovered, setHovered] = useState(false);
   const [loadingIdx, setLoadingIdx] = useState(null);
   const [responses, setResponses] = useState(Array(3).fill(null));
   const [customQuestion, setCustomQuestion] = useState("");
@@ -475,11 +498,13 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   const displayDeepDives = (lang !== 'en' && preTranslatedDeepDive?.length) ? preTranslatedDeepDive : deepDives;
 
   return (
-    <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300" style={{
-      background: isNew ? "var(--new-card-bg)" : "var(--card-bg)",
-      border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid var(--card-border)",
-      boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
-    }}>
+    <div ref={ref} data-kairo-term={item.term} className="rounded-xl overflow-hidden transition-all duration-300"
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{
+        background: isNew ? "var(--new-card-bg)" : "var(--card-bg)",
+        border: isNew ? "1px solid rgba(20,184,166,0.3)" : "1px solid var(--card-border)",
+        boxShadow: isNew ? "0 0 24px rgba(20,184,166,0.08)" : "none",
+      }}>
       <button onClick={onToggle} className="w-full text-left px-5 py-4 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors">
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-2xl flex-shrink-0">{item.emoji}</span>
@@ -492,7 +517,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          {onDelete && (
+          {onDelete && hovered && (
             <button onClick={e => { e.stopPropagation(); if (confirm(`Delete "${item.term}"?`)) onDelete(item.term); }}
               style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(var(--rgb),0.18)", fontSize: "0.85rem", padding: "2px 4px", lineHeight: 1 }}
               title="Delete term">✕</button>
@@ -503,12 +528,15 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
       {isOpen && (
         <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
-          <p className="text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
-            {isTyping && !typingDone
-              ? <>{displayedDef}<span style={{ display: "inline-block", width: "2px", height: "1em", background: "rgba(var(--rgb),0.5)", marginLeft: "1px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} /></>
-              : <LinkedDefinition text={displayDef} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
-            }
-          </p>
+          <div className="flex items-start gap-1.5">
+            <p className="flex-1 text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
+              {isTyping && !typingDone
+                ? <>{displayedDef}<span style={{ display: "inline-block", width: "2px", height: "1em", background: "rgba(var(--rgb),0.5)", marginLeft: "1px", verticalAlign: "text-bottom", animation: "cursor-blink 0.7s step-end infinite" }} /></>
+                : <LinkedDefinition text={displayDef} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
+              }
+            </p>
+            {(!isTyping || typingDone) && <CopyButton text={displayDef} />}
+          </div>
 
           {(isTyping ? smartLines.length > 0 : (typingDone && (smartLines.length > 0 || generatingSmartLines))) && (
             <div>
@@ -573,7 +601,10 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                   </button>
                   {response && (
                     <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(var(--rgb),0.68)" }}>{response}</p>
+                      <div className="flex items-start gap-1.5">
+                        <p className="flex-1 text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(var(--rgb),0.68)" }}>{response}</p>
+                        <CopyButton text={`Q: ${displayDeepDives[idx]}\n\nA: ${response}`} />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -610,7 +641,10 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
               </div>
               {customResponse && (
                 <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(var(--rgb),0.68)" }}>{customResponse}</p>
+                  <div className="flex items-start gap-1.5">
+                    <p className="flex-1 text-sm leading-relaxed whitespace-pre-wrap" style={{ color: "rgba(var(--rgb),0.68)" }}>{customResponse}</p>
+                    <CopyButton text={`Q: ${customQuestion}\n\nA: ${customResponse}`} />
+                  </div>
                 </div>
               )}
             </div>
