@@ -20,7 +20,7 @@ const LANGUAGES = [
 const LANG_NAMES = {
   en: "English", fr: "French", de: "German", es: "Spanish",
   it: "Italian", nl: "Dutch", ko: "Korean", ja: "Japanese",
-  hi: "Hindi", pa: "Punjabi",
+  hi: "Hindi", pa: "Punjabi (Gurmukhi script)",
 };
 
 const UI_STRINGS = {
@@ -781,7 +781,21 @@ export default function AIGlossary() {
             }),
           }).then(r => r.json());
           const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
-          Object.assign(allNew, JSON.parse(text));
+          try {
+            Object.assign(allNew, JSON.parse(text));
+          } catch {
+            // Haiku produced malformed JSON — retry this chunk with Sonnet
+            const d2 = await fetch("/api/claude", {
+              method: "POST", headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                model: "claude-sonnet-4-6", max_tokens: MAX_TOKENS,
+                system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. JSON keys must stay in English. Translate ALL text values fully into the target language.",
+                messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
+              }),
+            }).then(r => r.json());
+            const text2 = (d2.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
+            try { Object.assign(allNew, JSON.parse(text2)); } catch {}
+          }
         } catch {}
         // Apply each chunk immediately so cards update progressively
         if (Object.keys(allNew).length > 0)
