@@ -769,10 +769,16 @@ export default function AIGlossary() {
         }
       } catch {}
 
-      // Re-translate if definition is missing, or if deepDive is empty (gap-fill for spotty runs).
-      // The loop risk from checking deepDive is gone now that all source terms have 3 deep dives —
-      // a completed translation will have deepDive.length === 3 and won't re-trigger.
-      const missing = terms.filter(t => !merged[t.term]?.definition || !merged[t.term]?.deepDive?.length);
+      // Re-translate if: definition missing, deepDive empty, or deepDive[0] still matches
+      // English source (means a previous run translated definition/smartLines but left deepDive untranslated).
+      const missing = terms.filter(t => {
+        const cached = merged[t.term];
+        if (!cached?.definition) return true;
+        if (!cached?.deepDive?.length) return true;
+        const srcDive = Array.isArray(t.deepDive) ? t.deepDive : [];
+        if (srcDive.length > 0 && cached.deepDive[0] === srcDive[0]) return true;
+        return false;
+      });
       if (missing.length === 0 || targetLang !== lang) return;
 
       // CJK and Indic scripts use 1.5–3× more tokens per character than Latin.
@@ -797,7 +803,7 @@ export default function AIGlossary() {
             body: JSON.stringify({
               model: "claude-haiku-4-5-20251001", max_tokens: MAX_TOKENS,
               system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. Keys must stay in English. Keep AI/tech terms, acronyms, and product names in English.",
-              messages: [{ role: "user", content: `Translate all definition and smartLines values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
+              messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
             }),
           }).then(r => r.json());
           const text = (d.content?.[0]?.text || "{}").replace(/```json|```/g, "").trim();
