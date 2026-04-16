@@ -1,4 +1,4 @@
-const CACHE = 'kairo-decode-v1';
+const CACHE = 'kairo-decode-v2';
 
 self.addEventListener('install', event => {
   // Don't pre-cache anything at install — avoids caching auth-redirect responses
