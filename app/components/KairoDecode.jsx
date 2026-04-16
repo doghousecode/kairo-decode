@@ -951,7 +951,7 @@ export default function AIGlossary() {
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 1000, stream: true,
+          model: "claude-sonnet-4-6", max_tokens: 1000, stream: true,
           system: `You maintain a glossary for AI, ML, software dev, and tech entrepreneurship.
 Given a term, decide if it's genuinely relevant to that domain. If yes, generate a glossary entry.
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
