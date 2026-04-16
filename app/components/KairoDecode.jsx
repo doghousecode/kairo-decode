@@ -705,13 +705,7 @@ export default function AIGlossary() {
     return 'en';
   });
   useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
-  const [batchTranslations, setBatchTranslations] = useState(() => {
-    try { const s = localStorage.getItem('kairo-translations'); return s ? JSON.parse(s) : {}; } catch { return {}; }
-  }); // { langCode: { term: { definition, smartLines } } }
-  useEffect(() => {
-    if (Object.keys(batchTranslations).length > 0)
-      try { localStorage.setItem('kairo-translations', JSON.stringify(batchTranslations)); } catch {}
-  }, [batchTranslations]);
+  const [batchTranslations, setBatchTranslations] = useState({}); // Supabase is source of truth — no localStorage
   const [batchTranslating, setBatchTranslating] = useState(false);
   const [showLangPicker, setShowLangPicker] = useState(false);
   const langPickerRef = useRef(null);
