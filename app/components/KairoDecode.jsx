@@ -335,17 +335,17 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
   const [generatingDeepDives, setGeneratingDeepDives] = useState(false);
   useEffect(() => {
-    // Only generate in English — non-English card opens must not fire API calls
-    if (!isOpen || item.seeded || lang !== 'en') return;
+    if (!isOpen || item.seeded) return;
 
-    // Lazy-generate smartLines for DB terms that don't have them
+    // Lazy-generate smartLines for DB terms that don't have them — always in English
+    // so batch translation can localise them for all languages
     if (smartLines.length === 0 && !generatingSmartLines) {
       setGeneratingSmartLines(true);
       fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001", max_tokens: 300,
-          system: `You write short example sentences for a tech glossary. Mildly witty is fine, but keep them useful and grounded. Respond ONLY with a raw JSON array — no markdown, no backticks.${lang !== 'en' ? ` Write in ${LANG_NAMES[lang]}.` : ''}`,
+          system: `You write short example sentences for a tech glossary. Mildly witty is fine, but keep them useful and grounded. Respond ONLY with a raw JSON array — no markdown, no backticks.`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nWrite exactly 2 sentences (max 20 words each) using this term naturally.\nFormat: ["sentence one.","sentence two."]` }],
         }),
       })
@@ -362,14 +362,14 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         .finally(() => setGeneratingSmartLines(false));
     }
 
-    // Lazy-generate 3 deep dives for DB terms that only have 1 (old format)
+    // Lazy-generate 3 deep dives for DB terms that only have 1 (old format) — always English
     if (deepDives.length < 3 && !generatingDeepDives) {
       setGeneratingDeepDives(true);
       fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001", max_tokens: 400,
-          system: `You generate deep-dive questions for a tech glossary. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.${lang !== 'en' ? ` Write in ${LANG_NAMES[lang]}.` : ''}`,
+          system: `You generate deep-dive questions for a tech glossary. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nGenerate exactly 3 distinct, punchy questions a product builder would want answered about this term. Different angles: practical use, trade-offs, real-world implementation.\nFormat: ["question 1?","question 2?","question 3?"]` }],
         }),
       })
