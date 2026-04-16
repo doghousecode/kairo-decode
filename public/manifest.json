@@ -1,0 +1,17 @@
+{
+  "name": "Kairo Decode",
+  "short_name": "Decode",
+  "description": "Adaptive intelligence jargon buster",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "icons": [
+    {
+      "src": "/kairo-wordmark-cropped.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-import KairoDecode from "./components/KairoDecode";
+import ClientApp from "./components/ClientApp";
 
 export default function Page() {
-  return <KairoDecode />;
+  return <ClientApp />;
 }
