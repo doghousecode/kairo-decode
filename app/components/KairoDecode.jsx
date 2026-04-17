@@ -217,6 +217,7 @@ const TAG_COLORS = {
   "Core Concept":  { bg: "rgba(20,184,166,0.13)",  text: "rgba(94,234,212,1)",  border: "rgba(20,184,166,0.3)" },
   "Training":      { bg: "rgba(249,115,22,0.13)",  text: "rgba(253,186,116,1)", border: "rgba(249,115,22,0.3)" },
   "Inference":     { bg: "rgba(168,85,247,0.13)",  text: "rgba(216,180,254,1)", border: "rgba(168,85,247,0.3)" },
+  "Craft":         { bg: "rgba(132,204,22,0.13)",  text: "rgba(217,249,157,1)", border: "rgba(132,204,22,0.3)" },
 };
 const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)" };
 
@@ -1164,17 +1165,21 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             transition: "max-height 0.32s cubic-bezier(0.4,0,0.2,1), opacity 0.22s ease",
           }}>
             <div ref={categoriesRef} className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "6px" }}>
-              {tags.map(tag => (
-                <button key={tag} onClick={() => setActiveTag(tag)}
-                  className="text-xs px-3 py-1.5 rounded-full border transition-all"
-                  style={{
-                    border: activeTag === tag ? "1px solid rgba(99,102,241,0.55)" : "1px solid rgba(var(--rgb),0.09)",
-                    background: activeTag === tag ? "rgba(99,102,241,0.18)" : "transparent",
-                    color: activeTag === tag ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.38)",
-                  }}>
-                  {strings.tags?.[tag] || tag}
-                </button>
-              ))}
+              {tags.map(tag => {
+                const isActive = activeTag === tag;
+                const tc = tag === "All" ? null : getTagColor(tag);
+                return (
+                  <button key={tag} onClick={() => setActiveTag(tag)}
+                    className="text-xs px-3 py-1.5 rounded-full border transition-all"
+                    style={{
+                      border: isActive ? (tc ? `1px solid ${tc.border}` : "1px solid rgba(99,102,241,0.55)") : "1px solid rgba(var(--rgb),0.09)",
+                      background: isActive ? (tc ? tc.bg : "rgba(99,102,241,0.18)") : "transparent",
+                      color: isActive ? (tc ? tc.text : "rgba(199,210,254,1)") : "rgba(var(--rgb),0.38)",
+                    }}>
+                    {strings.tags?.[tag] || tag}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
