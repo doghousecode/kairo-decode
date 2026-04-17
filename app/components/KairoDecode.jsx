@@ -25,7 +25,7 @@ const LANG_NAMES = {
 
 const UI_STRINGS = {
   en: {
-    placeholder: "Search existing or add new term…",
+    placeholder: "Search terms, or add a new one…",
     open: "Open ↵", add: "Add ✨", offline: "Offline",
     makeSmartLabel: "Make me sound smart",
     examplesLabel: "Examples", deepDiveLabel: "Go deeper…",
@@ -43,7 +43,7 @@ const UI_STRINGS = {
     tags: { "All":"All","Model":"Model","Core Concept":"Core Concept","Training":"Training","Inference":"Inference","Dev Tool":"Dev Tool","Risk":"Risk","Behaviour":"Behaviour","Economics":"Economics","Technique":"Technique","Architecture":"Architecture","Craft":"Craft" },
   },
   fr: {
-    placeholder: "Rechercher ou ajouter un terme…",
+    placeholder: "Chercher un terme, ou en ajouter un…",
     open: "Ouvrir ↵", add: "Ajouter ✨", offline: "Hors ligne",
     makeSmartLabel: "Impressionnez votre entourage",
     examplesLabel: "Exemples", deepDiveLabel: "Aller plus loin…",
@@ -61,7 +61,7 @@ const UI_STRINGS = {
     tags: { "All":"Tout","Model":"Modèle","Core Concept":"Concept clé","Training":"Entraînement","Inference":"Inférence","Dev Tool":"Outil dev","Risk":"Risque","Behaviour":"Comportement","Economics":"Économie","Technique":"Technique","Architecture":"Architecture","Craft":"Artisanat" },
   },
   de: {
-    placeholder: "Begriff suchen oder hinzufügen…",
+    placeholder: "Begriffe suchen oder einen neuen hinzufügen…",
     open: "Öffnen ↵", add: "Hinzufügen ✨", offline: "Offline",
     makeSmartLabel: "Überzeuge dein Umfeld",
     examplesLabel: "Beispiele", deepDiveLabel: "Tiefer eintauchen…",
@@ -79,7 +79,7 @@ const UI_STRINGS = {
     tags: { "All":"Alle","Model":"Modell","Core Concept":"Kernkonzept","Training":"Training","Inference":"Inferenz","Dev Tool":"Dev-Tool","Risk":"Risiko","Behaviour":"Verhalten","Economics":"Wirtschaft","Technique":"Technik","Architecture":"Architektur","Craft":"Handwerk" },
   },
   es: {
-    placeholder: "Buscar o añadir un término…",
+    placeholder: "Buscar un término, o añadir uno nuevo…",
     open: "Abrir ↵", add: "Añadir ✨", offline: "Sin conexión",
     makeSmartLabel: "Impresiona a tu equipo",
     examplesLabel: "Ejemplos", deepDiveLabel: "Ir más a fondo…",
@@ -97,7 +97,7 @@ const UI_STRINGS = {
     tags: { "All":"Todo","Model":"Modelo","Core Concept":"Concepto clave","Training":"Entrenamiento","Inference":"Inferencia","Dev Tool":"Herramienta dev","Risk":"Riesgo","Behaviour":"Comportamiento","Economics":"Economía","Technique":"Técnica","Architecture":"Arquitectura","Craft":"Oficio" },
   },
   it: {
-    placeholder: "Cerca o aggiungi un termine…",
+    placeholder: "Cerca un termine, o aggiungine uno nuovo…",
     open: "Apri ↵", add: "Aggiungi ✨", offline: "Offline",
     makeSmartLabel: "Fai colpo sul tuo team",
     examplesLabel: "Esempi", deepDiveLabel: "Approfondire…",
@@ -115,7 +115,7 @@ const UI_STRINGS = {
     tags: { "All":"Tutto","Model":"Modello","Core Concept":"Concetto chiave","Training":"Addestramento","Inference":"Inferenza","Dev Tool":"Strumento dev","Risk":"Rischio","Behaviour":"Comportamento","Economics":"Economia","Technique":"Tecnica","Architecture":"Architettura","Craft":"Artigianato" },
   },
   nl: {
-    placeholder: "Zoek of voeg een term toe…",
+    placeholder: "Zoek een term, of voeg een nieuwe toe…",
     open: "Openen ↵", add: "Toevoegen ✨", offline: "Offline",
     makeSmartLabel: "Maak indruk op je team",
     examplesLabel: "Voorbeelden", deepDiveLabel: "Verder verkennen…",
@@ -133,7 +133,7 @@ const UI_STRINGS = {
     tags: { "All":"Alles","Model":"Model","Core Concept":"Kernbegrip","Training":"Training","Inference":"Inferentie","Dev Tool":"Dev-tool","Risk":"Risico","Behaviour":"Gedrag","Economics":"Economie","Technique":"Techniek","Architecture":"Architectuur","Craft":"Vakmanschap" },
   },
   ko: {
-    placeholder: "용어 검색 또는 추가…",
+    placeholder: "용어를 검색하거나 새로 추가하세요…",
     open: "열기 ↵", add: "추가 ✨", offline: "오프라인",
     makeSmartLabel: "팀에게 인상 남기기",
     examplesLabel: "예시", deepDiveLabel: "더 알아보기…",
@@ -151,7 +151,7 @@ const UI_STRINGS = {
     tags: { "All":"전체","Model":"모델","Core Concept":"핵심 개념","Training":"학습","Inference":"추론","Dev Tool":"개발 도구","Risk":"위험","Behaviour":"동작","Economics":"경제","Technique":"기법","Architecture":"아키텍처","Craft":"기술" },
   },
   ja: {
-    placeholder: "用語を検索または追加…",
+    placeholder: "用語を検索、または新規追加…",
     open: "開く ↵", add: "追加 ✨", offline: "オフライン",
     makeSmartLabel: "チームに差をつける",
     examplesLabel: "例", deepDiveLabel: "もっと詳しく…",
@@ -169,7 +169,7 @@ const UI_STRINGS = {
     tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Training":"学習","Inference":"推論","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ","Craft":"クラフト" },
   },
   hi: {
-    placeholder: "मौजूदा शब्द खोजें या नया जोड़ें…",
+    placeholder: "शब्द खोजें, या नया जोड़ें…",
     open: "खोलें ↵", add: "जोड़ें ✨", offline: "ऑफलाइन",
     makeSmartLabel: "अपनी टीम को प्रभावित करें",
     examplesLabel: "उदाहरण", deepDiveLabel: "और जानें…",
@@ -187,7 +187,7 @@ const UI_STRINGS = {
     tags: { "All":"सभी","Model":"मॉडल","Core Concept":"मूल अवधारणा","Training":"प्रशिक्षण","Inference":"अनुमान","Dev Tool":"डेव टूल","Risk":"जोखिम","Behaviour":"व्यवहार","Economics":"अर्थशास्त्र","Technique":"तकनीक","Architecture":"आर्किटेक्चर","Craft":"शिल्प" },
   },
   pa: {
-    placeholder: "ਮੌਜੂਦਾ ਸ਼ਬਦ ਖੋਜੋ ਜਾਂ ਨਵਾਂ ਜੋੜੋ…",
+    placeholder: "ਸ਼ਬਦ ਖੋਜੋ, ਜਾਂ ਨਵਾਂ ਜੋੜੋ…",
     open: "ਖੋਲ੍ਹੋ ↵", add: "ਜੋੜੋ ✨", offline: "ਆਫਲਾਈਨ",
     makeSmartLabel: "ਆਪਣੀ ਟੀਮ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰੋ",
     examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਹੋਰ ਜਾਣੋ…",
