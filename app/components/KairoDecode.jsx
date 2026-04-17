@@ -1144,7 +1144,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       const matchSearch = !q || item.term.toLowerCase().includes(q) || item.definition.toLowerCase().includes(q);
       return matchSearch && (activeTag === "All" || item.tag === activeTag);
     })
-    .sort((a, b) => a.term.localeCompare(b.term));
+    .sort((a, b) => {
+      const q = search.trim().toLowerCase();
+      if (!q) return a.term.localeCompare(b.term);
+      const at = a.term.toLowerCase(), bt = b.term.toLowerCase();
+      const rank = t => t === q ? 0 : t.startsWith(q) ? 1 : t.includes(q) ? 2 : 3;
+      return rank(at) - rank(bt) || a.term.localeCompare(b.term);
+    });
 
   const searchQ = search.trim();
   const isKnown = searchQ && terms.some(t => t.term.toLowerCase() === searchQ.toLowerCase());
