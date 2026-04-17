@@ -29,7 +29,7 @@ const UI_STRINGS = {
     open: "Open ↵", add: "Add ✨", offline: "Offline",
     makeSmartLabel: "Make me sound smart",
     examplesLabel: "Examples", deepDiveLabel: "Go deeper…",
-    runPrompt: "▶ Run", askingClaude: "Asking Claude...", askCustom: "▶ Ask", customPlaceholder: "Or ask something else…",
+    runPrompt: "✨Run", askingClaude: "Asking Claude...", askCustom: "✨Ask", customPlaceholder: "Or ask something else…",
     translating: "Translating…",
     offlineBanner: "You're offline — browsing cached terms. Adding terms and deep dives are unavailable.",
     notRelevant: (term) => `"${term}" doesn't look like an AI/tech term — skipping it.`,
@@ -47,7 +47,7 @@ const UI_STRINGS = {
     open: "Ouvrir ↵", add: "Ajouter ✨", offline: "Hors ligne",
     makeSmartLabel: "Impressionnez votre entourage",
     examplesLabel: "Exemples", deepDiveLabel: "Aller plus loin…",
-    runPrompt: "▶ Lancer", askingClaude: "Demande à Claude...", askCustom: "▶ Demander", customPlaceholder: "Ou posez autre chose…",
+    runPrompt: "✨Lancer", askingClaude: "Demande à Claude...", askCustom: "✨Demander", customPlaceholder: "Ou posez autre chose…",
     translating: "Traduction…",
     offlineBanner: "Vous êtes hors ligne — navigation dans les termes en cache. L'ajout de termes n'est pas disponible.",
     notRelevant: (term) => `"${term}" ne semble pas être un terme IA/tech — ignoré.`,
@@ -65,7 +65,7 @@ const UI_STRINGS = {
     open: "Öffnen ↵", add: "Hinzufügen ✨", offline: "Offline",
     makeSmartLabel: "Überzeuge dein Umfeld",
     examplesLabel: "Beispiele", deepDiveLabel: "Tiefer eintauchen…",
-    runPrompt: "▶ Ausführen", askingClaude: "Claude wird gefragt...", askCustom: "▶ Fragen", customPlaceholder: "Oder etwas anderes fragen…",
+    runPrompt: "✨Ausführen", askingClaude: "Claude wird gefragt...", askCustom: "✨Fragen", customPlaceholder: "Oder etwas anderes fragen…",
     translating: "Übersetzen…",
     offlineBanner: "Sie sind offline — gespeicherte Begriffe werden angezeigt. Hinzufügen nicht verfügbar.",
     notRelevant: (term) => `"${term}" scheint kein KI/Tech-Begriff zu sein — übersprungen.`,
@@ -83,7 +83,7 @@ const UI_STRINGS = {
     open: "Abrir ↵", add: "Añadir ✨", offline: "Sin conexión",
     makeSmartLabel: "Impresiona a tu equipo",
     examplesLabel: "Ejemplos", deepDiveLabel: "Ir más a fondo…",
-    runPrompt: "▶ Ejecutar", askingClaude: "Preguntando a Claude...", askCustom: "▶ Preguntar", customPlaceholder: "O pregunta algo más…",
+    runPrompt: "✨Ejecutar", askingClaude: "Preguntando a Claude...", askCustom: "✨Preguntar", customPlaceholder: "O pregunta algo más…",
     translating: "Traduciendo…",
     offlineBanner: "Estás sin conexión — navegando por los términos guardados. Añadir términos no está disponible.",
     notRelevant: (term) => `"${term}" no parece ser un término de IA/tech — omitido.`,
@@ -101,7 +101,7 @@ const UI_STRINGS = {
     open: "Apri ↵", add: "Aggiungi ✨", offline: "Offline",
     makeSmartLabel: "Fai colpo sul tuo team",
     examplesLabel: "Esempi", deepDiveLabel: "Approfondire…",
-    runPrompt: "▶ Esegui", askingClaude: "Chiedendo a Claude...", askCustom: "▶ Chiedi", customPlaceholder: "O chiedi qualcos'altro…",
+    runPrompt: "✨Esegui", askingClaude: "Chiedendo a Claude...", askCustom: "✨Chiedi", customPlaceholder: "O chiedi qualcos'altro…",
     translating: "Traduzione…",
     offlineBanner: "Sei offline — stai navigando i termini salvati. L'aggiunta di termini non è disponibile.",
     notRelevant: (term) => `"${term}" non sembra un termine AI/tech — ignorato.`,
@@ -119,7 +119,7 @@ const UI_STRINGS = {
     open: "Openen ↵", add: "Toevoegen ✨", offline: "Offline",
     makeSmartLabel: "Maak indruk op je team",
     examplesLabel: "Voorbeelden", deepDiveLabel: "Verder verkennen…",
-    runPrompt: "▶ Uitvoeren", askingClaude: "Claude wordt gevraagd...", askCustom: "▶ Vragen", customPlaceholder: "Of stel iets anders…",
+    runPrompt: "✨Uitvoeren", askingClaude: "Claude wordt gevraagd...", askCustom: "✨Vragen", customPlaceholder: "Of stel iets anders…",
     translating: "Vertalen…",
     offlineBanner: "Je bent offline — gespeicherde termen worden weergegeven. Termen toevoegen is niet beschikbaar.",
     notRelevant: (term) => `"${term}" lijkt geen AI/tech-term te zijn — overgeslagen.`,
@@ -137,7 +137,7 @@ const UI_STRINGS = {
     open: "열기 ↵", add: "추가 ✨", offline: "오프라인",
     makeSmartLabel: "팀에게 인상 남기기",
     examplesLabel: "예시", deepDiveLabel: "더 알아보기…",
-    runPrompt: "▶ 프롬프트 실행", askingClaude: "Claude에게 질문 중...", askCustom: "▶ 질문", customPlaceholder: "다른 것을 물어보세요…",
+    runPrompt: "✨프롬프트 실행", askingClaude: "Claude에게 질문 중...", askCustom: "✨질문", customPlaceholder: "다른 것을 물어보세요…",
     translating: "번역 중…",
     offlineBanner: "오프라인 상태입니다 — 저장된 용어를 탐색 중입니다. 용어 추가는 사용할 수 없습니다.",
     notRelevant: (term) => `"${term}"은(는) AI/기술 용어가 아닌 것 같아 건너뜁니다.`,
@@ -155,7 +155,7 @@ const UI_STRINGS = {
     open: "開く ↵", add: "追加 ✨", offline: "オフライン",
     makeSmartLabel: "チームに差をつける",
     examplesLabel: "例", deepDiveLabel: "もっと詳しく…",
-    runPrompt: "▶ プロンプトを実行", askingClaude: "Claudeに質問中...", askCustom: "▶ 質問", customPlaceholder: "他に聞いてみる…",
+    runPrompt: "✨プロンプトを実行", askingClaude: "Claudeに質問中...", askCustom: "✨質問", customPlaceholder: "他に聞いてみる…",
     translating: "翻訳中…",
     offlineBanner: "オフラインです — 保存済み用語を閲覧中。用語の追加は利用できません。",
     notRelevant: (term) => `"${term}"はAI/技術用語ではないようです — スキップします。`,
@@ -173,7 +173,7 @@ const UI_STRINGS = {
     open: "खोलें ↵", add: "जोड़ें ✨", offline: "ऑफलाइन",
     makeSmartLabel: "अपनी टीम को प्रभावित करें",
     examplesLabel: "उदाहरण", deepDiveLabel: "और जानें…",
-    runPrompt: "▶ यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...", askCustom: "▶ पूछें", customPlaceholder: "या कुछ और पूछें…",
+    runPrompt: "✨यह प्रॉम्प्ट चलाएं", askingClaude: "Claude से पूछ रहे हैं...", askCustom: "✨पूछें", customPlaceholder: "या कुछ और पूछें…",
     translating: "अनुवाद हो रहा है…",
     offlineBanner: "आप ऑफलाइन हैं — सहेजे गए शब्द देख रहे हैं। शब्द जोड़ना उपलब्ध नहीं है।",
     notRelevant: (term) => `"${term}" AI/tech शब्द नहीं लगता — छोड़ रहे हैं।`,
@@ -191,7 +191,7 @@ const UI_STRINGS = {
     open: "ਖੋਲ੍ਹੋ ↵", add: "ਜੋੜੋ ✨", offline: "ਆਫਲਾਈਨ",
     makeSmartLabel: "ਆਪਣੀ ਟੀਮ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰੋ",
     examplesLabel: "ਉਦਾਹਰਣਾਂ", deepDiveLabel: "ਹੋਰ ਜਾਣੋ…",
-    runPrompt: "▶ ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...", askCustom: "▶ ਪੁੱਛੋ", customPlaceholder: "ਜਾਂ ਕੁਝ ਹੋਰ ਪੁੱਛੋ…",
+    runPrompt: "✨ਇਹ ਪ੍ਰੋਂਪਟ ਚਲਾਓ", askingClaude: "Claude ਤੋਂ ਪੁੱਛ ਰਹੇ ਹਾਂ...", askCustom: "✨ਪੁੱਛੋ", customPlaceholder: "ਜਾਂ ਕੁਝ ਹੋਰ ਪੁੱਛੋ…",
     translating: "ਅਨੁਵਾਦ ਹੋ ਰਿਹਾ ਹੈ…",
     offlineBanner: "ਤੁਸੀਂ ਆਫਲਾਈਨ ਹੋ — ਸੁਰੱਖਿਅਤ ਸ਼ਬਦ ਦੇਖ ਰਹੇ ਹੋ। ਸ਼ਬਦ ਜੋੜਨਾ ਉਪਲਬਧ ਨਹੀਂ।",
     notRelevant: (term) => `"${term}" AI/tech ਸ਼ਬਦ ਨਹੀਂ ਲੱਗਦਾ — ਛੱਡ ਰਹੇ ਹਾਂ।`,
@@ -232,12 +232,14 @@ const getAvatarColor = (initials) => {
   return AVATAR_COLORS[hash % AVATAR_COLORS.length];
 };
 
-function AvatarCircle({ initials, size = 26 }) {
+function AvatarCircle({ initials, size = 26, isMint = false }) {
+  const color = isMint ? "rgba(42,58,106,0.75)" : getAvatarColor(initials);
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%",
-      background: getAvatarColor(initials),
-      color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+      background: "transparent",
+      border: `1.5px solid ${color}`,
+      color, display: "flex", alignItems: "center", justifyContent: "center",
       fontSize: size * 0.38, fontWeight: 700, letterSpacing: "0.03em",
       flexShrink: 0, userSelect: "none",
     }}>
@@ -252,18 +254,17 @@ function InitialsOverlay({ onSave }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
       <div style={{ background: "#0d0d1c", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "18px", padding: "2rem 1.75rem", maxWidth: "300px", width: "100%", textAlign: "center" }}>
-        <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>👋</div>
-        <p style={{ color: "rgba(255,255,255,0.9)", fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.4rem" }}>What should we call you?</p>
+        <p style={{ color: "rgba(255,255,255,0.9)", fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.4rem" }}>Hey! What should we call you?</p>
         <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.82rem", marginBottom: "1.5rem", lineHeight: 1.5 }}>Your initials will appear on terms you add to the glossary.</p>
         <input
           autoFocus maxLength={3}
           value={value}
           onChange={e => setValue(e.target.value.toUpperCase())}
           onKeyDown={e => e.key === "Enter" && ready && onSave(value.trim())}
-          placeholder="e.g. ST"
+          placeholder="initials"
           style={{
-            width: "100%", textAlign: "center", fontSize: "1.8rem", fontWeight: 700,
-            letterSpacing: "0.2em", padding: "0.65rem", borderRadius: "10px",
+            width: "100%", textAlign: "center", fontSize: "1rem", fontWeight: 600,
+            letterSpacing: "0.15em", padding: "0.55rem 0.65rem", borderRadius: "10px",
             background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
             color: "#fff", outline: "none", marginBottom: "1rem", fontFamily: "inherit",
           }}
@@ -292,7 +293,7 @@ function TagBadge({ tag, label, isNew, isDark = true }) {
   return (
     <span className="text-xs px-2 py-0.5 rounded-full border font-medium"
       style={{ background: c.bg, color: c.text, borderColor: c.border }}>
-      {isNew ? "✨ " : ""}{label || tag}
+      {label || tag}
     </span>
   );
 }
@@ -592,7 +593,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           {contributor && (
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
               <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.38)" }}>contributed by</span>
-              <AvatarCircle initials={contributor} size={18} />
+              <AvatarCircle initials={contributor} size={18} isMint={!isDark} />
             </div>
           )}
           <div className="flex items-start gap-1.5">
@@ -1225,7 +1226,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               {/* User avatar */}
               {userInitials && (
                 <button onClick={() => setShowInitialsOverlay(true)} title="Change initials" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
-                  <AvatarCircle initials={userInitials} size={26} />
+                  <AvatarCircle initials={userInitials} size={26} isMint={isMint} />
                 </button>
               )}
             </div>
