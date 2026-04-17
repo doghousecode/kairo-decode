@@ -254,7 +254,7 @@ function InitialsOverlay({ onSave }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
       <div style={{ background: "#0d0d1c", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "18px", padding: "2rem 1.75rem", maxWidth: "300px", width: "100%", textAlign: "center" }}>
-        <p style={{ color: "rgba(255,255,255,0.9)", fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.4rem" }}>Hey! What should we call you?</p>
+        <p style={{ color: "rgba(255,255,255,0.9)", fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.4rem" }}>Hey!<br />What should we call you?</p>
         <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.82rem", marginBottom: "1.5rem", lineHeight: 1.5 }}>Your initials will appear on terms you add to the glossary.</p>
         <input
           autoFocus maxLength={3}
