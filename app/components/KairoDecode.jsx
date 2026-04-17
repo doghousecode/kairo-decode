@@ -1128,9 +1128,9 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 )}
               </div>
               {/* Theme toggle */}
-              <button onClick={() => setThemeMode(m => m === "mint" ? "dark" : m === "dark" ? "spaghetti" : "mint")} title="Cycle theme: mint → dark → spaghetti"
+              <button onClick={() => setThemeMode(m => m === "dark" ? "mint" : "dark")} title="Toggle theme"
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
-                {themeMode === "dark" ? "🌙" : themeMode === "mint" ? "🌿" : "🍝"}
+                {themeMode === "dark" ? "🌙" : "🌿"}
               </button>
             </div>
           </div>
