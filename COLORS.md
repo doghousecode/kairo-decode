@@ -18,10 +18,15 @@
 | Hex | Tag |
 |-----|-----|
 | `#3b82f6` | Behaviour (blue) |
+| `#6366f1` | Model (indigo) |
+| `#0ea5e9` | Dev Tool (sky) |
 | `#8b5cf6` | Architecture (violet) |
+| `#a855f7` | Inference (purple) |
 | `#ec4899` | Technique (pink) |
 | `#f59e0b` | Economics (amber) |
-| `#f97316` | *(reserved / orange)* |
+| `#f97316` | Training (orange) |
+| `#ef4444` | Risk (red) |
+| `#14b8a6` | Core Concept (teal) |
 
 ## App Shell (globals.css / layout.js)
 

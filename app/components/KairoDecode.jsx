@@ -40,7 +40,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} discovered`,
     generatingEntry: "Generating entry",
     footer: (total, gen) => `${total} terms · ${gen} auto-discovered · Kairo Decode`,
-    tags: { "All":"All","Model":"Model","Core Concept":"Core Concept","Dev Tool":"Dev Tool","Risk":"Risk","Behaviour":"Behaviour","Economics":"Economics","Technique":"Technique","Architecture":"Architecture","Craft":"Craft" },
+    tags: { "All":"All","Model":"Model","Core Concept":"Core Concept","Training":"Training","Inference":"Inference","Dev Tool":"Dev Tool","Risk":"Risk","Behaviour":"Behaviour","Economics":"Economics","Technique":"Technique","Architecture":"Architecture","Craft":"Craft" },
   },
   fr: {
     placeholder: "Rechercher ou ajouter un terme…",
@@ -58,7 +58,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} découverts`,
     generatingEntry: "Génération en cours",
     footer: (total, gen) => `${total} termes · ${gen} découverts · Kairo Decode`,
-    tags: { "All":"Tout","Model":"Modèle","Core Concept":"Concept clé","Dev Tool":"Outil dev","Risk":"Risque","Behaviour":"Comportement","Economics":"Économie","Technique":"Technique","Architecture":"Architecture","Craft":"Artisanat" },
+    tags: { "All":"Tout","Model":"Modèle","Core Concept":"Concept clé","Training":"Entraînement","Inference":"Inférence","Dev Tool":"Outil dev","Risk":"Risque","Behaviour":"Comportement","Economics":"Économie","Technique":"Technique","Architecture":"Architecture","Craft":"Artisanat" },
   },
   de: {
     placeholder: "Begriff suchen oder hinzufügen…",
@@ -76,7 +76,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} entdeckt`,
     generatingEntry: "Eintrag wird generiert",
     footer: (total, gen) => `${total} Begriffe · ${gen} entdeckt · Kairo Decode`,
-    tags: { "All":"Alle","Model":"Modell","Core Concept":"Kernkonzept","Dev Tool":"Dev-Tool","Risk":"Risiko","Behaviour":"Verhalten","Economics":"Wirtschaft","Technique":"Technik","Architecture":"Architektur","Craft":"Handwerk" },
+    tags: { "All":"Alle","Model":"Modell","Core Concept":"Kernkonzept","Training":"Training","Inference":"Inferenz","Dev Tool":"Dev-Tool","Risk":"Risiko","Behaviour":"Verhalten","Economics":"Wirtschaft","Technique":"Technik","Architecture":"Architektur","Craft":"Handwerk" },
   },
   es: {
     placeholder: "Buscar o añadir un término…",
@@ -94,7 +94,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} descubiertos`,
     generatingEntry: "Generando entrada",
     footer: (total, gen) => `${total} términos · ${gen} descubiertos · Kairo Decode`,
-    tags: { "All":"Todo","Model":"Modelo","Core Concept":"Concepto clave","Dev Tool":"Herramienta dev","Risk":"Riesgo","Behaviour":"Comportamiento","Economics":"Economía","Technique":"Técnica","Architecture":"Arquitectura","Craft":"Oficio" },
+    tags: { "All":"Todo","Model":"Modelo","Core Concept":"Concepto clave","Training":"Entrenamiento","Inference":"Inferencia","Dev Tool":"Herramienta dev","Risk":"Riesgo","Behaviour":"Comportamiento","Economics":"Economía","Technique":"Técnica","Architecture":"Arquitectura","Craft":"Oficio" },
   },
   it: {
     placeholder: "Cerca o aggiungi un termine…",
@@ -112,7 +112,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} scoperti`,
     generatingEntry: "Generazione in corso",
     footer: (total, gen) => `${total} termini · ${gen} scoperti · Kairo Decode`,
-    tags: { "All":"Tutto","Model":"Modello","Core Concept":"Concetto chiave","Dev Tool":"Strumento dev","Risk":"Rischio","Behaviour":"Comportamento","Economics":"Economia","Technique":"Tecnica","Architecture":"Architettura","Craft":"Artigianato" },
+    tags: { "All":"Tutto","Model":"Modello","Core Concept":"Concetto chiave","Training":"Addestramento","Inference":"Inferenza","Dev Tool":"Strumento dev","Risk":"Rischio","Behaviour":"Comportamento","Economics":"Economia","Technique":"Tecnica","Architecture":"Architettura","Craft":"Artigianato" },
   },
   nl: {
     placeholder: "Zoek of voeg een term toe…",
@@ -130,7 +130,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} ontdekt`,
     generatingEntry: "Vermelding genereren",
     footer: (total, gen) => `${total} termen · ${gen} ontdekt · Kairo Decode`,
-    tags: { "All":"Alles","Model":"Model","Core Concept":"Kernbegrip","Dev Tool":"Dev-tool","Risk":"Risico","Behaviour":"Gedrag","Economics":"Economie","Technique":"Techniek","Architecture":"Architectuur","Craft":"Vakmanschap" },
+    tags: { "All":"Alles","Model":"Model","Core Concept":"Kernbegrip","Training":"Training","Inference":"Inferentie","Dev Tool":"Dev-tool","Risk":"Risico","Behaviour":"Gedrag","Economics":"Economie","Technique":"Techniek","Architecture":"Architectuur","Craft":"Vakmanschap" },
   },
   ko: {
     placeholder: "용어 검색 또는 추가…",
@@ -148,7 +148,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} 발견됨`,
     generatingEntry: "항목 생성 중",
     footer: (total, gen) => `${total}개 용어 · ${gen}개 자동 발견 · Kairo Decode`,
-    tags: { "All":"전체","Model":"모델","Core Concept":"핵심 개념","Dev Tool":"개발 도구","Risk":"위험","Behaviour":"동작","Economics":"경제","Technique":"기법","Architecture":"아키텍처","Craft":"기술" },
+    tags: { "All":"전체","Model":"모델","Core Concept":"핵심 개념","Training":"학습","Inference":"추론","Dev Tool":"개발 도구","Risk":"위험","Behaviour":"동작","Economics":"경제","Technique":"기법","Architecture":"아키텍처","Craft":"기술" },
   },
   ja: {
     placeholder: "用語を検索または追加…",
@@ -166,7 +166,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} 発見`,
     generatingEntry: "エントリ生成中",
     footer: (total, gen) => `${total}用語 · ${gen}自動発見 · Kairo Decode`,
-    tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ","Craft":"クラフト" },
+    tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Training":"学習","Inference":"推論","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ","Craft":"クラフト" },
   },
   hi: {
     placeholder: "मौजूदा शब्द खोजें या नया जोड़ें…",
@@ -184,7 +184,7 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} खोजे गए`,
     generatingEntry: "एंट्री बन रही है",
     footer: (total, gen) => `${total} शब्द · ${gen} स्वचालित खोजे · Kairo Decode`,
-    tags: { "All":"सभी","Model":"मॉडल","Core Concept":"मूल अवधारणा","Dev Tool":"डेव टूल","Risk":"जोखिम","Behaviour":"व्यवहार","Economics":"अर्थशास्त्र","Technique":"तकनीक","Architecture":"आर्किटेक्चर","Craft":"शिल्प" },
+    tags: { "All":"सभी","Model":"मॉडल","Core Concept":"मूल अवधारणा","Training":"प्रशिक्षण","Inference":"अनुमान","Dev Tool":"डेव टूल","Risk":"जोखिम","Behaviour":"व्यवहार","Economics":"अर्थशास्त्र","Technique":"तकनीक","Architecture":"आर्किटेक्चर","Craft":"शिल्प" },
   },
   pa: {
     placeholder: "ਮੌਜੂਦਾ ਸ਼ਬਦ ਖੋਜੋ ਜਾਂ ਨਵਾਂ ਜੋੜੋ…",
@@ -202,19 +202,21 @@ const UI_STRINGS = {
     discovered: (n) => `+${n} ਖੋਜੇ ਗਏ`,
     generatingEntry: "ਐਂਟਰੀ ਬਣ ਰਹੀ ਹੈ",
     footer: (total, gen) => `${total} ਸ਼ਬਦ · ${gen} ਆਪੋ-ਆਪ ਖੋਜੇ · Kairo Decode`,
-    tags: { "All":"ਸਾਰੇ","Model":"ਮਾਡਲ","Core Concept":"ਮੁੱਖ ਧਾਰਣਾ","Dev Tool":"ਡੈੱਵ ਟੂਲ","Risk":"ਜੋਖ਼ਮ","Behaviour":"ਵਤੀਰਾ","Economics":"ਅਰਥਸ਼ਾਸਤਰ","Technique":"ਤਕਨੀਕ","Architecture":"ਆਰਕੀਟੈਕਚਰ","Craft":"ਕਾਰੀਗਰੀ" },
+    tags: { "All":"ਸਾਰੇ","Model":"ਮਾਡਲ","Core Concept":"ਮੁੱਖ ਧਾਰਣਾ","Training":"ਸਿਖਲਾਈ","Inference":"ਅਨੁਮਾਨ","Dev Tool":"ਡੈੱਵ ਟੂਲ","Risk":"ਜੋਖ਼ਮ","Behaviour":"ਵਤੀਰਾ","Economics":"ਅਰਥਸ਼ਾਸਤਰ","Technique":"ਤਕਨੀਕ","Architecture":"ਆਰਕੀਟੈਕਚਰ","Craft":"ਕਾਰੀਗਰੀ" },
   },
 };
 
 const TAG_COLORS = {
   "Behaviour":     { bg: "rgba(59,130,246,0.13)",  text: "rgba(147,197,253,1)", border: "rgba(59,130,246,0.3)" },
   "Model":         { bg: "rgba(99,102,241,0.13)",  text: "rgba(165,180,252,1)", border: "rgba(99,102,241,0.3)" },
-  "Dev Tool":      { bg: "rgba(16,185,129,0.13)",  text: "rgba(110,231,183,1)", border: "rgba(16,185,129,0.3)" },
+  "Dev Tool":      { bg: "rgba(14,165,233,0.13)",  text: "rgba(125,211,252,1)", border: "rgba(14,165,233,0.3)" },
   "Economics":     { bg: "rgba(245,158,11,0.13)",  text: "rgba(252,211,77,1)",  border: "rgba(245,158,11,0.3)" },
   "Architecture":  { bg: "rgba(139,92,246,0.13)",  text: "rgba(196,181,253,1)", border: "rgba(139,92,246,0.3)" },
   "Technique":     { bg: "rgba(236,72,153,0.13)",  text: "rgba(249,168,212,1)", border: "rgba(236,72,153,0.3)" },
   "Risk":          { bg: "rgba(239,68,68,0.13)",   text: "rgba(252,165,165,1)", border: "rgba(239,68,68,0.3)" },
   "Core Concept":  { bg: "rgba(20,184,166,0.13)",  text: "rgba(94,234,212,1)",  border: "rgba(20,184,166,0.3)" },
+  "Training":      { bg: "rgba(249,115,22,0.13)",  text: "rgba(253,186,116,1)", border: "rgba(249,115,22,0.3)" },
+  "Inference":     { bg: "rgba(168,85,247,0.13)",  text: "rgba(216,180,254,1)", border: "rgba(168,85,247,0.3)" },
 };
 const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)" };
 
@@ -650,7 +652,7 @@ function PulsingDots() {
   );
 }
 
-const TAG_ORDER = ["All", "Model", "Core Concept", "Dev Tool", "Risk", "Behaviour", "Economics", "Technique", "Architecture"];
+const TAG_ORDER = ["All", "Model", "Core Concept", "Training", "Inference", "Dev Tool", "Architecture", "Technique", "Behaviour", "Economics", "Risk", "Craft"];
 
 export default function AIGlossary() {
   const [terms, setTerms] = useState(SEED_GLOSSARY);
@@ -976,7 +978,7 @@ Given a term, decide if it's genuinely relevant to that domain. If yes, generate
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
 Always write ALL text fields (definition, smartLines, deepDive) in English, regardless of any other context.
 If relevant:
-{"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["A question someone new to AI would ask to understand what this actually means in plain terms.","A question about when or why someone would realistically encounter or use this.","A question that tackles a common misconception or surprising aspect of this term."],"smartLines":["First sentence using the term naturally in a realistic context, with a touch of dry wit.","Second sentence — different angle, equally grounded."],"tag":"Core Concept|Dev Tool|Economics|Architecture|Craft|Risk|or a new precise tag"}
+{"relevant":true,"term":"Canonical Name","emoji":"single emoji","definition":"One crisp sentence.","examples":[{"label":"short label","url":"https://real-url.com"}],"deepDive":["A question someone new to AI would ask to understand what this actually means in plain terms.","A question about when or why someone would realistically encounter or use this.","A question that tackles a common misconception or surprising aspect of this term."],"smartLines":["First sentence using the term naturally in a realistic context, with a touch of dry wit.","Second sentence — different angle, equally grounded."],"tag":"pick the single best tag from this list — do NOT default to Core Concept unless the term is a foundational theoretical concept (token, embedding, attention, transformer): Model=AI model or product, Training=how models are trained (fine-tuning, RLHF, LoRA, SFT, DPO, pretraining), Inference=how models run at serve time (quantization, KV cache, batching, latency), Architecture=structural design pattern (RAG, mixture of experts, multi-agent), Dev Tool=software tool or framework, Technique=a prompt or workflow technique, Behaviour=how a model acts or misbehaves, Economics=cost, pricing, compute, business model, Risk=safety, alignment, misuse, Craft=product/design/writing skill, Core Concept=fundamental AI/ML theory only, or invent a new precise tag if none fit"}
 
 IMPORTANT: AI model names and products (Claude, GPT-4, Gemini, Llama, Mistral, Grok, Copilot, etc.) and developer tools are ALWAYS relevant — do not reject them as "just names".
 
