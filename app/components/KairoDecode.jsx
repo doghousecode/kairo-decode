@@ -688,7 +688,10 @@ export default function AIGlossary() {
     return 'en';
   });
   useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
-  const [batchTranslations, setBatchTranslations] = useState({}); // Supabase is source of truth — no localStorage
+  const [batchTranslations, setBatchTranslations] = useState(() => {
+    if (typeof window === 'undefined') return {};
+    try { const s = localStorage.getItem('kairo-translations'); return s ? JSON.parse(s) : {}; } catch { return {}; }
+  });
   const [batchTranslating, setBatchTranslating] = useState(false);
   const [showLangPicker, setShowLangPicker] = useState(false);
   const langPickerRef = useRef(null);
@@ -749,9 +752,13 @@ export default function AIGlossary() {
         const serverCache = await fetch(`/api/translations?lang=${targetLang}`).then(r => r.json());
         if (targetLang !== lang) return;
         if (Object.keys(serverCache).length > 0) {
-          // Supabase is source of truth — don't let stale localStorage override deletions
+          // Supabase is source of truth — replaces localStorage cache entirely for this lang
           merged = { ...serverCache };
-          setBatchTranslations(prev => ({ ...prev, [targetLang]: merged }));
+          setBatchTranslations(prev => {
+            const next = { ...prev, [targetLang]: merged };
+            try { localStorage.setItem('kairo-translations', JSON.stringify(next)); } catch {}
+            return next;
+          });
         }
       } catch {}
 
@@ -828,7 +835,11 @@ export default function AIGlossary() {
       results.forEach(r => { if (r.status === 'fulfilled') Object.assign(allNew, r.value); });
 
       if (Object.keys(allNew).length > 0) {
-        setBatchTranslations(prev => ({ ...prev, [targetLang]: { ...merged, ...allNew } }));
+        setBatchTranslations(prev => {
+          const next = { ...prev, [targetLang]: { ...merged, ...allNew } };
+          try { localStorage.setItem('kairo-translations', JSON.stringify(next)); } catch {}
+          return next;
+        });
         fetch('/api/translations', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ lang: targetLang, translations: allNew }),
