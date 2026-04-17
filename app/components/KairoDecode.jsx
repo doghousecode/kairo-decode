@@ -226,6 +226,67 @@ const getTagColor = (tag, dark = true) => {
 
 const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
+const AVATAR_COLORS = ["#0d9488","#4f46e5","#e11d48","#d97706","#059669","#7c3aed","#0284c7","#ea580c"];
+const getAvatarColor = (initials) => {
+  const hash = (initials || "?").split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+};
+
+function AvatarCircle({ initials, size = 26 }) {
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: "50%",
+      background: getAvatarColor(initials),
+      color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: size * 0.38, fontWeight: 700, letterSpacing: "0.03em",
+      flexShrink: 0, userSelect: "none",
+    }}>
+      {initials}
+    </div>
+  );
+}
+
+function InitialsOverlay({ onSave }) {
+  const [value, setValue] = useState("");
+  const ready = value.trim().length > 0;
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 10000, background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+      <div style={{ background: "#0d0d1c", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "18px", padding: "2rem 1.75rem", maxWidth: "300px", width: "100%", textAlign: "center" }}>
+        <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>👋</div>
+        <p style={{ color: "rgba(255,255,255,0.9)", fontWeight: 700, fontSize: "1.1rem", marginBottom: "0.4rem" }}>What should we call you?</p>
+        <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.82rem", marginBottom: "1.5rem", lineHeight: 1.5 }}>Your initials will appear on terms you add to the glossary.</p>
+        <input
+          autoFocus maxLength={3}
+          value={value}
+          onChange={e => setValue(e.target.value.toUpperCase())}
+          onKeyDown={e => e.key === "Enter" && ready && onSave(value.trim())}
+          placeholder="e.g. ST"
+          style={{
+            width: "100%", textAlign: "center", fontSize: "1.8rem", fontWeight: 700,
+            letterSpacing: "0.2em", padding: "0.65rem", borderRadius: "10px",
+            background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
+            color: "#fff", outline: "none", marginBottom: "1rem", fontFamily: "inherit",
+          }}
+        />
+        <button
+          onClick={() => ready && onSave(value.trim())}
+          disabled={!ready}
+          style={{
+            width: "100%", padding: "0.72rem", borderRadius: "10px", fontWeight: 700,
+            fontSize: "0.95rem", fontFamily: "inherit",
+            cursor: ready ? "pointer" : "not-allowed",
+            background: ready ? "rgba(20,184,166,0.22)" : "rgba(255,255,255,0.05)",
+            color: ready ? "rgba(94,234,212,1)" : "rgba(255,255,255,0.2)",
+            border: `1px solid ${ready ? "rgba(20,184,166,0.45)" : "rgba(255,255,255,0.08)"}`,
+            transition: "all 0.15s",
+          }}>
+          Let's go →
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function TagBadge({ tag, label, isNew, isDark = true }) {
   const c = getTagColor(tag, isDark);
   return (
@@ -345,7 +406,7 @@ function CopyButton({ text }) {
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight, isDark }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight, isDark, contributor }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -528,6 +589,12 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
 
       {isOpen && (
         <div className="px-5 pb-5 pt-4 space-y-4" style={{ borderTop: "1px solid rgba(var(--rgb),0.07)" }}>
+          {contributor && (
+            <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+              <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.38)" }}>contributed by</span>
+              <AvatarCircle initials={contributor} size={18} />
+            </div>
+          )}
           <div className="flex items-start gap-1.5">
             <p className="flex-1 text-sm leading-relaxed" style={{ color: "rgba(var(--rgb),0.78)" }}>
               {isTyping && !typingDone
@@ -695,6 +762,16 @@ export default function AIGlossary() {
   const [batchTranslating, setBatchTranslating] = useState(false);
   const [showLangPicker, setShowLangPicker] = useState(false);
   const langPickerRef = useRef(null);
+  const [userInitials, setUserInitials] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('kairo-initials') || '') : '');
+  const [showInitialsOverlay, setShowInitialsOverlay] = useState(false);
+  useEffect(() => {
+    if (!localStorage.getItem('kairo-initials')) setTimeout(() => setShowInitialsOverlay(true), 900);
+  }, []);
+  const saveInitials = (v) => {
+    localStorage.setItem('kairo-initials', v);
+    setUserInitials(v);
+    setShowInitialsOverlay(false);
+  };
 
   const loadTerms = () => fetch("/api/terms")
     .then(r => r.json())
@@ -708,6 +785,7 @@ export default function AIGlossary() {
         deepDive: (() => { if (Array.isArray(t.deep_dive)) return t.deep_dive; if (typeof t.deep_dive === 'string') { try { const p = JSON.parse(t.deep_dive); if (Array.isArray(p)) return p; } catch {} } return []; })(),
         smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
         tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
+        contributor: t.contributor || null,
         seeded: false,
       }));
       const remoteNames = new Set(remote.map(t => t.term.toLowerCase()));
@@ -1036,7 +1114,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
       if (!parsed.relevant) { setFeedback({ type: "notRelevant", term: query }); }
       else if (parsed.term) {
-        const entry = { ...parsed, seeded: false };
+        const entry = { ...parsed, seeded: false, contributor: userInitials || null };
         delete entry.relevant;
         setTerms(prev => [...prev, entry]);
         setNewKeys(prev => new Set([...prev, entry.term.toLowerCase()]));
@@ -1091,6 +1169,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       "--highlight-text": isDark ? "rgba(199,210,254,1)" : isMint ? "rgba(42,58,106,1)" : "rgba(55,48,163,1)",
       position: "relative",
     }}>
+      {showInitialsOverlay && <InitialsOverlay onSave={saveInitials} />}
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : lang === 'hi' ? '&family=Noto+Sans+Devanagari:wght@400;500;700' : lang === 'pa' ? '&family=Noto+Sans+Gurmukhi:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}${isMint ? "@keyframes ph-shimmer{0%,100%{color:rgba(15,118,110,0.5)}33%{color:rgba(4,120,87,0.5)}66%{color:rgba(20,184,166,0.5)}}" : "@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}"}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
@@ -1143,6 +1222,12 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
                 {themeMode === "dark" ? "🌙" : "🌿"}
               </button>
+              {/* User avatar */}
+              {userInitials && (
+                <button onClick={() => setShowInitialsOverlay(true)} title="Change initials" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                  <AvatarCircle initials={userInitials} size={26} />
+                </button>
+              )}
             </div>
           </div>
           <p style={{ fontFamily: "'DM Sans',system-ui,sans-serif", fontSize: "0.83rem", color: "rgba(var(--rgb),0.32)", marginTop: "8px", letterSpacing: 0 }}>
@@ -1318,6 +1403,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               preTranslatedDeepDive={batchTranslations[lang]?.[item.term]?.deepDive}
               headerHeight={headerHeight}
               isDark={isDark}
+              contributor={item.contributor}
             />
           ))}
         </div>
