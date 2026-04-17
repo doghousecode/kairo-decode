@@ -207,24 +207,27 @@ const UI_STRINGS = {
 };
 
 const TAG_COLORS = {
-  "Behaviour":     { bg: "rgba(59,130,246,0.13)",  text: "rgba(147,197,253,1)", border: "rgba(59,130,246,0.3)" },
-  "Model":         { bg: "rgba(99,102,241,0.13)",  text: "rgba(165,180,252,1)", border: "rgba(99,102,241,0.3)" },
-  "Dev Tool":      { bg: "rgba(14,165,233,0.13)",  text: "rgba(125,211,252,1)", border: "rgba(14,165,233,0.3)" },
-  "Economics":     { bg: "rgba(245,158,11,0.13)",  text: "rgba(252,211,77,1)",  border: "rgba(245,158,11,0.3)" },
-  "Architecture":  { bg: "rgba(139,92,246,0.13)",  text: "rgba(196,181,253,1)", border: "rgba(139,92,246,0.3)" },
-  "Technique":     { bg: "rgba(236,72,153,0.13)",  text: "rgba(249,168,212,1)", border: "rgba(236,72,153,0.3)" },
-  "Risk":          { bg: "rgba(239,68,68,0.13)",   text: "rgba(252,165,165,1)", border: "rgba(239,68,68,0.3)" },
-  "Core Concept":  { bg: "rgba(20,184,166,0.13)",  text: "rgba(94,234,212,1)",  border: "rgba(20,184,166,0.3)" },
-  "Training":      { bg: "rgba(249,115,22,0.13)",  text: "rgba(253,186,116,1)", border: "rgba(249,115,22,0.3)" },
-  "Inference":     { bg: "rgba(168,85,247,0.13)",  text: "rgba(216,180,254,1)", border: "rgba(168,85,247,0.3)" },
-  "Craft":         { bg: "rgba(132,204,22,0.13)",  text: "rgba(217,249,157,1)", border: "rgba(132,204,22,0.3)" },
+  "Behaviour":     { bg: "rgba(59,130,246,0.13)",  text: "rgba(147,197,253,1)", border: "rgba(59,130,246,0.3)",  lightText: "rgba(29,78,216,1)",   lightBg: "rgba(59,130,246,0.1)",  lightBorder: "rgba(59,130,246,0.35)" },
+  "Model":         { bg: "rgba(99,102,241,0.13)",  text: "rgba(165,180,252,1)", border: "rgba(99,102,241,0.3)",  lightText: "rgba(67,56,202,1)",   lightBg: "rgba(99,102,241,0.1)",  lightBorder: "rgba(99,102,241,0.35)" },
+  "Dev Tool":      { bg: "rgba(14,165,233,0.13)",  text: "rgba(125,211,252,1)", border: "rgba(14,165,233,0.3)",  lightText: "rgba(3,105,161,1)",   lightBg: "rgba(14,165,233,0.1)",  lightBorder: "rgba(14,165,233,0.35)" },
+  "Economics":     { bg: "rgba(245,158,11,0.13)",  text: "rgba(252,211,77,1)",  border: "rgba(245,158,11,0.3)",  lightText: "rgba(146,64,14,1)",   lightBg: "rgba(245,158,11,0.1)",  lightBorder: "rgba(245,158,11,0.35)" },
+  "Architecture":  { bg: "rgba(139,92,246,0.13)",  text: "rgba(196,181,253,1)", border: "rgba(139,92,246,0.3)",  lightText: "rgba(109,40,217,1)",  lightBg: "rgba(139,92,246,0.1)",  lightBorder: "rgba(139,92,246,0.35)" },
+  "Technique":     { bg: "rgba(236,72,153,0.13)",  text: "rgba(249,168,212,1)", border: "rgba(236,72,153,0.3)",  lightText: "rgba(157,23,77,1)",   lightBg: "rgba(236,72,153,0.1)",  lightBorder: "rgba(236,72,153,0.35)" },
+  "Risk":          { bg: "rgba(239,68,68,0.13)",   text: "rgba(252,165,165,1)", border: "rgba(239,68,68,0.3)",   lightText: "rgba(185,28,28,1)",   lightBg: "rgba(239,68,68,0.1)",   lightBorder: "rgba(239,68,68,0.35)" },
+  "Core Concept":  { bg: "rgba(20,184,166,0.13)",  text: "rgba(94,234,212,1)",  border: "rgba(20,184,166,0.3)",  lightText: "rgba(15,118,110,1)",  lightBg: "rgba(20,184,166,0.1)",  lightBorder: "rgba(20,184,166,0.35)" },
+  "Training":      { bg: "rgba(249,115,22,0.13)",  text: "rgba(253,186,116,1)", border: "rgba(249,115,22,0.3)",  lightText: "rgba(154,52,18,1)",   lightBg: "rgba(249,115,22,0.1)",  lightBorder: "rgba(249,115,22,0.35)" },
+  "Inference":     { bg: "rgba(168,85,247,0.13)",  text: "rgba(216,180,254,1)", border: "rgba(168,85,247,0.3)",  lightText: "rgba(109,40,217,1)",  lightBg: "rgba(168,85,247,0.1)",  lightBorder: "rgba(168,85,247,0.35)" },
+  "Craft":         { bg: "rgba(132,204,22,0.13)",  text: "rgba(217,249,157,1)", border: "rgba(132,204,22,0.3)",  lightText: "rgba(63,98,18,1)",    lightBg: "rgba(132,204,22,0.12)", lightBorder: "rgba(101,163,13,0.4)" },
 };
-const getTagColor = (tag) => TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)" };
+const getTagColor = (tag, dark = true) => {
+  const c = TAG_COLORS[tag] || { bg: "rgba(20,184,166,0.13)", text: "rgba(94,234,212,1)", border: "rgba(20,184,166,0.3)", lightText: "rgba(15,118,110,1)", lightBg: "rgba(20,184,166,0.1)", lightBorder: "rgba(20,184,166,0.35)" };
+  return dark ? { bg: c.bg, text: c.text, border: c.border } : { bg: c.lightBg, text: c.lightText, border: c.lightBorder };
+};
 
 const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
-function TagBadge({ tag, label, isNew }) {
-  const c = getTagColor(tag);
+function TagBadge({ tag, label, isNew, isDark = true }) {
+  const c = getTagColor(tag, isDark);
   return (
     <span className="text-xs px-2 py-0.5 rounded-full border font-medium"
       style={{ background: c.bg, color: c.text, borderColor: c.border }}>
@@ -342,7 +345,7 @@ function CopyButton({ text }) {
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight, isDark }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -508,7 +511,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-bold text-white text-lg tracking-tight">{item.term}</span>
-              <TagBadge tag={item.tag} label={tagLabel} isNew={isNew} />
+              <TagBadge tag={item.tag} label={tagLabel} isNew={isNew} isDark={isDark} />
             </div>
             <p className="text-sm mt-0.5" style={{ color: "rgba(var(--rgb),0.45)", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical" }}>{preTranslatedDef || item.definition}</p>
           </div>
@@ -1063,8 +1066,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : lang === 'hi' ? "'Noto Sans Devanagari','DM Sans',system-ui,sans-serif" : lang === 'pa' ? "'Noto Sans Gurmukhi','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
       "--rgb": isDark ? "255,255,255" : isMint ? "15,35,45" : "15,15,30",
       "--surface": surface,
-      "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.82)",
-      "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : isDark ? "rgba(255,255,255,0.09)" : "rgba(15,15,30,0.13)",
+      "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : isDark ? "rgba(255,255,255,0.04)" : isMint ? "rgba(240,252,246,0.82)" : "rgba(255,255,255,0.82)",
+      "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : isDark ? "rgba(255,255,255,0.09)" : isMint ? "rgba(15,80,50,0.15)" : "rgba(15,15,30,0.13)",
       "--new-card-bg": isSpaghetti ? "rgba(5,35,30,0.88)" : isMint ? "rgba(20,184,166,0.1)" : "rgba(20,184,166,0.05)",
       "--btn-accent": isDark ? "rgba(199,210,254,1)" : isMint ? "rgba(10,90,70,1)" : "rgba(55,48,163,1)",
       "--btn-accent-bg": isDark ? "rgba(99,102,241,0.22)" : isMint ? "rgba(20,184,166,0.18)" : "rgba(99,102,241,0.14)",
@@ -1078,7 +1081,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : lang === 'hi' ? '&family=Noto+Sans+Devanagari:wght@400;500;700' : lang === 'pa' ? '&family=Noto+Sans+Gurmukhi:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : lang === 'hi' ? '&family=Noto+Sans+Devanagari:wght@400;500;700' : lang === 'pa' ? '&family=Noto+Sans+Gurmukhi:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}${isMint ? "@keyframes ph-shimmer{0%,100%{color:rgba(15,118,110,0.5)}33%{color:rgba(4,120,87,0.5)}66%{color:rgba(20,184,166,0.5)}}" : "@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}"}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
       <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid var(--deep-border)" }}>
@@ -1177,14 +1180,19 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             <div ref={categoriesRef} className="flex flex-wrap gap-2" style={{ paddingTop: "10px", paddingBottom: "6px" }}>
               {tags.map(tag => {
                 const isActive = activeTag === tag;
-                const tc = tag === "All" ? null : getTagColor(tag);
+                const tc = tag === "All" ? null : getTagColor(tag, isDark);
+                const inactiveBorder = isDark ? "rgba(var(--rgb),0.09)" : "rgba(var(--rgb),0.18)";
+                const inactiveColor = isDark ? "rgba(var(--rgb),0.38)" : "rgba(var(--rgb),0.6)";
+                const allActiveBg = isDark ? "rgba(99,102,241,0.18)" : "rgba(99,102,241,0.12)";
+                const allActiveBorder = isDark ? "rgba(99,102,241,0.55)" : "rgba(99,102,241,0.45)";
+                const allActiveText = isDark ? "rgba(199,210,254,1)" : "rgba(67,56,202,1)";
                 return (
                   <button key={tag} onClick={() => setActiveTag(tag)}
                     className="text-xs px-3 py-1.5 rounded-full border transition-all"
                     style={{
-                      border: isActive ? (tc ? `1px solid ${tc.border}` : "1px solid rgba(99,102,241,0.55)") : "1px solid rgba(var(--rgb),0.09)",
-                      background: isActive ? (tc ? tc.bg : "rgba(99,102,241,0.18)") : "transparent",
-                      color: isActive ? (tc ? tc.text : "rgba(199,210,254,1)") : "rgba(var(--rgb),0.38)",
+                      border: isActive ? (tc ? `1px solid ${tc.border}` : `1px solid ${allActiveBorder}`) : `1px solid ${inactiveBorder}`,
+                      background: isActive ? (tc ? tc.bg : allActiveBg) : "transparent",
+                      color: isActive ? (tc ? tc.text : allActiveText) : inactiveColor,
                     }}>
                     {strings.tags?.[tag] || tag}
                   </button>
@@ -1298,6 +1306,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               preTranslatedSmartLines={batchTranslations[lang]?.[item.term]?.smartLines}
               preTranslatedDeepDive={batchTranslations[lang]?.[item.term]?.deepDive}
               headerHeight={headerHeight}
+              isDark={isDark}
             />
           ))}
         </div>
