@@ -28,6 +28,7 @@ export async function POST(request) {
       deep_dive: body.deepDive,
       smart_lines: body.smartLines ?? null,
       tag: body.tag,
+      contributor: body.contributor ?? null,
     })
     .select()
     .single();
