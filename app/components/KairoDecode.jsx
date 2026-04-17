@@ -1090,7 +1090,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           {/* Logo row */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", position: "relative" }}>
             <a href="https://meetkairo.ai" style={{ display: "block", lineHeight: 0 }}>
-              <img src="/kairo-decode-wordmark-cropped.png" alt="Kairo Decode" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
+              <img src={isMint ? "/kairo-decode-wordmark-forest-cropped.png" : "/kairo-decode-wordmark-cropped.png"} alt="Kairo Decode" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
             </a>
             <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "0.5rem", zIndex: showLangPicker ? 9999 : "auto" }}>
               {/* Language picker */}
