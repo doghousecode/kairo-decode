@@ -290,7 +290,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
       {final.map((seg, i) => {
         if (seg.type === "highlight") {
           return (
-            <strong key={i} style={{ color: "rgba(199,210,254,1)", background: "rgba(99,102,241,0.2)", borderRadius: "3px", padding: "0 3px" }}>
+            <strong key={i} style={{ color: "var(--highlight-text)", background: "var(--highlight-bg)", borderRadius: "3px", padding: "0 3px" }}>
               {seg.content}
             </strong>
           );
@@ -298,7 +298,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
         if (seg.type === "known") {
           return (
             <button key={i} onClick={() => onTermClick(seg.term)}
-              style={{ color: "rgba(147,197,253,1)", fontWeight: 600, background: "none", border: "none", padding: 0, font: "inherit", cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted", textUnderlineOffset: "2px" }}>
+              style={{ color: "var(--link-known)", fontWeight: 600, background: "none", border: "none", padding: 0, font: "inherit", cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted", textUnderlineOffset: "2px" }}>
               {seg.content}
             </button>
           );
@@ -308,7 +308,7 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
             ? seg.content.slice(0, -1) : seg.content;
           return (
             <button key={i} onClick={() => onAddTerm(termToAdd)}
-              style={{ color: "rgba(110,231,183,0.8)", background: "none", border: "none", padding: 0, font: "inherit", cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted", textUnderlineOffset: "2px" }}>
+              style={{ color: "var(--link-unknown)", background: "none", border: "none", padding: 0, font: "inherit", cursor: "pointer", textDecoration: "underline", textDecorationStyle: "dotted", textUnderlineOffset: "2px" }}>
               {seg.content}
             </button>
           );
@@ -557,7 +557,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           )}
 
 
-          {(isTyping || typingDone) && <div className="rounded-lg p-3 space-y-3" style={{ background: "rgba(var(--rgb),0.025)", border: "1px solid rgba(var(--rgb),0.07)" }}>
+          {(isTyping || typingDone) && <div className="rounded-lg p-3 space-y-3" style={{ background: "var(--deep-bg)", border: "1px solid var(--deep-border)" }}>
             <p className="text-xs uppercase tracking-widest" style={{ color: "rgba(var(--rgb),0.3)" }}>{(UI_STRINGS[lang] || UI_STRINGS.en).deepDiveLabel}</p>
             {displayDeepDives.map((prompt, idx) => {
               const isLoading = loadingIdx === idx;
@@ -575,9 +575,9 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                     disabled={!isOnline || stillTyping || loadingIdx !== null}
                     className="text-xs px-4 py-2 rounded-lg font-medium transition-all"
                     style={{
-                      background: (!isOnline || stillTyping || isLoading) ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
-                      color: (!isOnline || stillTyping) ? "rgba(var(--rgb),0.2)" : (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
-                      border: "1px solid rgba(99,102,241,0.28)",
+                      background: (!isOnline || stillTyping || isLoading) ? "rgba(var(--rgb),0.04)" : "var(--btn-accent-bg)",
+                      color: (!isOnline || stillTyping) ? "rgba(var(--rgb),0.2)" : (loadingIdx !== null && !isLoading) ? "rgba(var(--rgb),0.15)" : isLoading ? "rgba(var(--rgb),0.2)" : "var(--btn-accent)",
+                      border: "1px solid var(--btn-accent-border)",
                       cursor: (!isOnline || stillTyping || loadingIdx !== null) ? "not-allowed" : "pointer",
                     }}>
                     {isLoading ? (UI_STRINGS[lang] || UI_STRINGS.en).askingClaude : (!isOnline) ? (UI_STRINGS[lang] || UI_STRINGS.en).offline : (UI_STRINGS[lang] || UI_STRINGS.en).runPrompt}
@@ -614,9 +614,9 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                   disabled={!isOnline || loadingCustom || !customQuestion.trim() || (isTyping && !typingDone)}
                   className="text-xs px-4 py-2 rounded-lg font-medium transition-all flex-shrink-0 whitespace-nowrap"
                   style={{
-                    background: (!isOnline || !customQuestion.trim() || loadingCustom) ? "rgba(var(--rgb),0.04)" : "rgba(99,102,241,0.22)",
-                    color: (!isOnline || !customQuestion.trim() || loadingCustom) ? "rgba(var(--rgb),0.2)" : "rgba(199,210,254,1)",
-                    border: "1px solid rgba(99,102,241,0.28)",
+                    background: (!isOnline || !customQuestion.trim() || loadingCustom) ? "rgba(var(--rgb),0.04)" : "var(--btn-accent-bg)",
+                    color: (!isOnline || !customQuestion.trim() || loadingCustom) ? "rgba(var(--rgb),0.2)" : "var(--btn-accent)",
+                    border: "1px solid var(--btn-accent-border)",
                     cursor: (!isOnline || !customQuestion.trim() || loadingCustom) ? "not-allowed" : "pointer",
                   }}>
                   {loadingCustom ? (UI_STRINGS[lang] || UI_STRINGS.en).askingClaude : (UI_STRINGS[lang] || UI_STRINGS.en).askCustom}
@@ -1062,16 +1062,25 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
       fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : lang === 'hi' ? "'Noto Sans Devanagari','DM Sans',system-ui,sans-serif" : lang === 'pa' ? "'Noto Sans Gurmukhi','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
       "--rgb": isDark ? "255,255,255" : "15,15,30",
       "--surface": surface,
-      "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : "rgba(var(--rgb),0.04)",
-      "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : "rgba(var(--rgb),0.09)",
+      "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.82)",
+      "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : isDark ? "rgba(255,255,255,0.09)" : "rgba(15,15,30,0.13)",
       "--new-card-bg": isSpaghetti ? "rgba(5,35,30,0.88)" : "rgba(20,184,166,0.05)",
+      "--btn-accent": isDark ? "rgba(199,210,254,1)" : "rgba(55,48,163,1)",
+      "--btn-accent-bg": isDark ? "rgba(99,102,241,0.22)" : "rgba(99,102,241,0.14)",
+      "--btn-accent-border": isDark ? "rgba(99,102,241,0.28)" : "rgba(99,102,241,0.5)",
+      "--deep-bg": isDark ? "rgba(255,255,255,0.025)" : "rgba(15,15,30,0.04)",
+      "--deep-border": isDark ? "rgba(255,255,255,0.07)" : "rgba(15,15,30,0.1)",
+      "--link-known": isDark ? "rgba(147,197,253,1)" : "rgba(29,78,216,1)",
+      "--link-unknown": isDark ? "rgba(110,231,183,0.8)" : "rgba(4,120,87,1)",
+      "--highlight-bg": isDark ? "rgba(99,102,241,0.2)" : "rgba(99,102,241,0.12)",
+      "--highlight-text": isDark ? "rgba(199,210,254,1)" : "rgba(55,48,163,1)",
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Jost:ital,wght@1,700;1,800${lang === 'ko' ? '&family=Noto+Sans+KR:wght@400;500;700' : lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;700' : lang === 'hi' ? '&family=Noto+Sans+Devanagari:wght@400;500;700' : lang === 'pa' ? '&family=Noto+Sans+Gurmukhi:wght@400;500;700' : ''}&display=swap');*{box-sizing:border-box}::placeholder{animation:ph-shimmer 5s ease-in-out infinite;font-weight:700}input{caret-color:rgba(99,102,241,0.9)}@keyframes ai-border-spin{to{transform:rotate(1turn)}}@keyframes ai-glow-pulse{0%,100%{opacity:0.7}50%{opacity:1}}@keyframes ph-shimmer{0%,100%{color:rgba(147,197,253,0.45)}33%{color:rgba(216,180,254,0.45)}66%{color:rgba(249,168,212,0.45)}}@keyframes cursor-blink{0%,100%{opacity:1}50%{opacity:0}}.light-text-override .text-white{color:rgba(var(--rgb),0.88)!important}.light-text-override .hover\\:bg-white\\/5:hover{background:rgba(var(--rgb),0.05)!important}@media(max-width:768px){.spaghetti-wallpaper{background-size:300%!important;background-position:center 40%!important}}`}</style>
 
       {/* Fixed header */}
-      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid rgba(var(--rgb),0.07)" }}>
+      <div ref={headerRef} className="fixed top-0 left-0 right-0 z-50 px-5" style={{ background: "var(--surface)", borderBottom: "1px solid var(--deep-border)" }}>
         <div style={{ maxWidth: 680, margin: "0 auto", paddingTop: "1.1rem", paddingBottom: "1rem" }}>
 
           {/* Logo row */}
@@ -1148,7 +1157,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
             {searchQ.length > 1 && !generating && (
               <button onClick={() => isOnline && tryAdd(search)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-xs px-3 py-1.5 rounded-lg font-medium"
-                style={{ zIndex: 3, background: isOnline ? "rgba(99,102,241,0.22)" : "rgba(var(--rgb),0.06)", color: isOnline ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.25)", border: "1px solid rgba(99,102,241,0.18)", cursor: isOnline ? "pointer" : "default" }}>
+                style={{ zIndex: 3, background: isOnline ? "var(--btn-accent-bg)" : "rgba(var(--rgb),0.06)", color: isOnline ? "var(--btn-accent)" : "rgba(var(--rgb),0.25)", border: "1px solid var(--btn-accent-border)", cursor: isOnline ? "pointer" : "default" }}>
                 {isKnown ? strings.open : isOnline ? strings.add : strings.offline}
               </button>
             )}
