@@ -579,7 +579,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          {onDelete && hovered && canHover && (
+          {onDelete && (hovered || !canHover) && (
             <button onClick={e => { e.stopPropagation(); if (confirm(`Delete "${item.term}"?`)) onDelete(item.term); }}
               style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(var(--rgb),0.18)", fontSize: "0.85rem", padding: "2px 4px", lineHeight: 1 }}
               title="Delete term">✕</button>
