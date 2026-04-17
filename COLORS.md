@@ -10,8 +10,9 @@
 | `#080812` | Slight variant of page background |
 | `#0d0d1c` | Card / surface background |
 | `#16162a` | Elevated surface / input background |
-| `#eef0ff` | Light mode background |
-| `#f5f6ff` | Light mode surface |
+| `#c8e8d4` | **Mint mode** background gradient base |
+| `#d8f0e3` | Mint mode surface / header |
+| `#0f5a46` | Mint mode accent text (buttons, links) |
 
 ## Tag Colors
 

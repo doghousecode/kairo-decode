@@ -672,9 +672,10 @@ export default function AIGlossary() {
   const categoriesRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(200);
   const [categoriesHeight, setCategoriesHeight] = useState(90);
-  const [themeMode, setThemeMode] = useState("dark"); // "dark" | "light" | "spaghetti"
+  const [themeMode, setThemeMode] = useState("dark"); // "dark" | "mint" | "spaghetti"
   const isDark = themeMode === "dark" || themeMode === "spaghetti";
   const isSpaghetti = themeMode === "spaghetti";
+  const isMint = themeMode === "mint";
   const [isOnline, setIsOnline] = useState(true);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
@@ -1053,27 +1054,27 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
   const strings = UI_STRINGS[lang] || UI_STRINGS.en;
 
-  const surface = isDark ? "#0d0d1c" : "#f5f6ff";
+  const surface = isDark ? "#0d0d1c" : isMint ? "#d8f0e3" : "#f5f6ff";
   const fillBg  = surface;
 
   return (
     <div className={`min-h-screen${!isDark ? " light-text-override" : ""}`} style={{
-      background: isSpaghetti ? "transparent" : isDark ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)" : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)",
+      background: isSpaghetti ? "transparent" : isDark ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)" : isMint ? "linear-gradient(135deg,#c8e8d4 0%,#d8f0e3 60%,#c8e8d4 100%)" : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)",
       fontFamily: lang === 'ko' ? "'Noto Sans KR','DM Sans',system-ui,sans-serif" : lang === 'ja' ? "'Noto Sans JP','DM Sans',system-ui,sans-serif" : lang === 'hi' ? "'Noto Sans Devanagari','DM Sans',system-ui,sans-serif" : lang === 'pa' ? "'Noto Sans Gurmukhi','DM Sans',system-ui,sans-serif" : "'DM Sans',system-ui,sans-serif",
-      "--rgb": isDark ? "255,255,255" : "15,15,30",
+      "--rgb": isDark ? "255,255,255" : isMint ? "15,35,45" : "15,15,30",
       "--surface": surface,
       "--card-bg": isSpaghetti ? "rgba(12,12,22,0.85)" : isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.82)",
       "--card-border": isSpaghetti ? "rgba(255,255,255,0.10)" : isDark ? "rgba(255,255,255,0.09)" : "rgba(15,15,30,0.13)",
-      "--new-card-bg": isSpaghetti ? "rgba(5,35,30,0.88)" : "rgba(20,184,166,0.05)",
-      "--btn-accent": isDark ? "rgba(199,210,254,1)" : "rgba(55,48,163,1)",
-      "--btn-accent-bg": isDark ? "rgba(99,102,241,0.22)" : "rgba(99,102,241,0.14)",
-      "--btn-accent-border": isDark ? "rgba(99,102,241,0.28)" : "rgba(99,102,241,0.5)",
-      "--deep-bg": isDark ? "rgba(255,255,255,0.025)" : "rgba(15,15,30,0.04)",
-      "--deep-border": isDark ? "rgba(255,255,255,0.07)" : "rgba(15,15,30,0.1)",
-      "--link-known": isDark ? "rgba(147,197,253,1)" : "rgba(29,78,216,1)",
-      "--link-unknown": isDark ? "rgba(110,231,183,0.8)" : "rgba(4,120,87,1)",
-      "--highlight-bg": isDark ? "rgba(99,102,241,0.2)" : "rgba(99,102,241,0.12)",
-      "--highlight-text": isDark ? "rgba(199,210,254,1)" : "rgba(55,48,163,1)",
+      "--new-card-bg": isSpaghetti ? "rgba(5,35,30,0.88)" : isMint ? "rgba(20,184,166,0.1)" : "rgba(20,184,166,0.05)",
+      "--btn-accent": isDark ? "rgba(199,210,254,1)" : isMint ? "rgba(10,90,70,1)" : "rgba(55,48,163,1)",
+      "--btn-accent-bg": isDark ? "rgba(99,102,241,0.22)" : isMint ? "rgba(20,184,166,0.18)" : "rgba(99,102,241,0.14)",
+      "--btn-accent-border": isDark ? "rgba(99,102,241,0.28)" : isMint ? "rgba(20,184,166,0.5)" : "rgba(99,102,241,0.5)",
+      "--deep-bg": isDark ? "rgba(255,255,255,0.025)" : isMint ? "rgba(15,35,45,0.04)" : "rgba(15,15,30,0.04)",
+      "--deep-border": isDark ? "rgba(255,255,255,0.07)" : isMint ? "rgba(15,35,45,0.1)" : "rgba(15,15,30,0.1)",
+      "--link-known": isDark ? "rgba(147,197,253,1)" : isMint ? "rgba(6,95,70,1)" : "rgba(29,78,216,1)",
+      "--link-unknown": isDark ? "rgba(110,231,183,0.8)" : isMint ? "rgba(4,108,78,1)" : "rgba(4,120,87,1)",
+      "--highlight-bg": isDark ? "rgba(99,102,241,0.2)" : isMint ? "rgba(20,184,166,0.18)" : "rgba(99,102,241,0.12)",
+      "--highlight-text": isDark ? "rgba(199,210,254,1)" : isMint ? "rgba(10,90,70,1)" : "rgba(55,48,163,1)",
       position: "relative",
     }}>
       {isSpaghetti && <div className="spaghetti-wallpaper" style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", backgroundImage: "url('/spag.jpg')", backgroundSize: "cover", backgroundPosition: "center" }} />}
@@ -1100,7 +1101,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 {showLangPicker && (
                   <div style={{
                     position: "absolute", right: 0, top: "calc(100% + 8px)",
-                    background: isDark ? "#16162a" : "#fff",
+                    background: isDark ? "#16162a" : isMint ? "#c8e8d4" : "#fff",
                     border: "1px solid rgba(var(--rgb),0.12)",
                     borderRadius: "12px", padding: "0.35rem",
                     boxShadow: "0 12px 40px rgba(0,0,0,0.35)",
@@ -1114,7 +1115,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                           background: lang === l.code ? "rgba(99,102,241,0.18)" : "none",
                           border: "none", borderRadius: "8px", cursor: "pointer",
                           fontSize: "10pt", fontFamily: "inherit", textAlign: "left",
-                          color: lang === l.code ? "rgba(199,210,254,1)" : "rgba(var(--rgb),0.65)",
+                          color: lang === l.code ? "var(--btn-accent)" : "rgba(var(--rgb),0.65)",
                         }}>
                         <span style={{ fontSize: l.flag ? "1rem" : "0.8rem", fontWeight: l.flag ? undefined : 700, minWidth: "1.2rem", textAlign: "center" }}>{l.flag ?? l.label}</span>
                         <span>{l.nativeName}</span>
@@ -1124,9 +1125,9 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 )}
               </div>
               {/* Theme toggle */}
-              <button onClick={() => setThemeMode(m => m === "light" ? "dark" : m === "dark" ? "spaghetti" : "light")} title="Cycle theme: light → dark → spaghetti"
+              <button onClick={() => setThemeMode(m => m === "mint" ? "dark" : m === "dark" ? "spaghetti" : "mint")} title="Cycle theme: mint → dark → spaghetti"
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
-                {themeMode === "dark" ? "🌙" : themeMode === "light" ? "☀️" : "🍝"}
+                {themeMode === "dark" ? "🌙" : themeMode === "mint" ? "🌿" : "🍝"}
               </button>
             </div>
           </div>
