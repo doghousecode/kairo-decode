@@ -529,11 +529,11 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   const ref = useRef(null);
 
   useEffect(() => {
-    if ((isNew || shouldScrollTo) && ref.current) setTimeout(() => {
+    if (shouldScrollTo && ref.current) {
       const top = ref.current.getBoundingClientRect().top + window.scrollY - (headerHeight || 96) - 16;
       window.scrollTo({ top, behavior: "smooth" });
-    }, 150);
-  }, [isNew, shouldScrollTo]);
+    }
+  }, [shouldScrollTo]);
 
   const runDeepDive = async (idx) => {
     setLoadingIdx(idx);
@@ -1123,6 +1123,11 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         setTypingTerm(entry.term);
         persist(entry);
         setSearch("");
+        const addedTerm = entry.term;
+        setTimeout(() => {
+          setScrollToTerm(addedTerm);
+          setTimeout(() => setScrollToTerm(null), 600);
+        }, 350);
       }
     } catch { setFeedback({ type: "error" }); }
     setGenerating(null);
