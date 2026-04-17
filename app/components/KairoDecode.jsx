@@ -1416,7 +1416,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
           <button onClick={() => window.kairoShowSplash?.()} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "16px", width: "auto", display: "block", opacity: 0.7 }} />
-            <span style={{ fontSize: "0.72rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500, alignSelf: "flex-end", paddingBottom: "1px" }}>v1.1</span>
+            <span style={{ fontSize: "0.72rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500, position: "relative", top: "4px" }}>v1.1</span>
           </button>
           <span style={{ fontSize: "0.6rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500 }}>© 2026</span>
         </footer>
