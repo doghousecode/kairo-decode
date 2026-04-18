@@ -774,25 +774,28 @@ export default function AIGlossary() {
     setShowInitialsOverlay(false);
   };
 
-  const loadTerms = () => fetch("/api/terms")
-    .then(r => r.json())
-    .then(data => {
-      if (!Array.isArray(data) || !data.length) return;
-      const remote = data.map(t => ({
-        term: t.term,
-        emoji: t.emoji,
-        definition: t.definition,
-        examples: t.examples || [],
-        deepDive: (() => { if (Array.isArray(t.deep_dive)) return t.deep_dive; if (typeof t.deep_dive === 'string') { try { const p = JSON.parse(t.deep_dive); if (Array.isArray(p)) return p; } catch {} } return []; })(),
-        smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
-        tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
-        contributor: t.contributor || null,
-        seeded: false,
-      }));
-      const remoteNames = new Set(remote.map(t => t.term.toLowerCase()));
-      setTerms([...SEED_GLOSSARY.filter(s => !remoteNames.has(s.term.toLowerCase())), ...remote]);
-    })
-    .catch(() => {});
+  const loadTerms = () => {
+    const attempt = (n) => fetch("/api/terms")
+      .then(r => r.json())
+      .then(data => {
+        if (!Array.isArray(data) || !data.length) throw new Error("empty");
+        const remote = data.map(t => ({
+          term: t.term,
+          emoji: t.emoji,
+          definition: t.definition,
+          examples: t.examples || [],
+          deepDive: (() => { if (Array.isArray(t.deep_dive)) return t.deep_dive; if (typeof t.deep_dive === 'string') { try { const p = JSON.parse(t.deep_dive); if (Array.isArray(p)) return p; } catch {} } return []; })(),
+          smartLines: Array.isArray(t.smart_lines) ? t.smart_lines : [],
+          tag: KNOWN_MODELS.has(t.term.toLowerCase()) ? "Model" : ({ "Models": "Model", "Dev Tools": "Dev Tool", "Dev Tool": "Dev Tool", "Techniques": "Technique" }[t.tag] ?? t.tag),
+          contributor: t.contributor || null,
+          seeded: false,
+        }));
+        const remoteNames = new Set(remote.map(t => t.term.toLowerCase()));
+        setTerms([...SEED_GLOSSARY.filter(s => !remoteNames.has(s.term.toLowerCase())), ...remote]);
+      })
+      .catch(() => n < 2 ? new Promise(r => setTimeout(r, 1500)).then(() => attempt(n + 1)) : undefined);
+    return attempt(0);
+  };
 
   useEffect(() => {
     loadTerms().finally(() => setTermsLoaded(true));
