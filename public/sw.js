@@ -1,7 +1,6 @@
-const CACHE = 'kairo-decode-v7';
+const CACHE = 'kairo-decode-v8';
 
 self.addEventListener('install', event => {
-  // Don't pre-cache anything at install — avoids caching auth-redirect responses
   self.skipWaiting();
 });
 
@@ -21,8 +20,24 @@ self.addEventListener('fetch', event => {
   // Only handle same-origin GET requests
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  // Let the browser handle navigation normally — middleware auth must not be bypassed
-  if (request.mode === 'navigate') return;
+  // Main page navigation: network-first, cache fallback for offline use
+  // /visitors and /password still bypass (need live middleware auth)
+  if (request.mode === 'navigate') {
+    if (url.pathname === '/' || url.pathname === '') {
+      event.respondWith(
+        fetch(request)
+          .then(response => {
+            if (response.ok) {
+              const clone = response.clone();
+              caches.open(CACHE).then(cache => cache.put(request, clone));
+            }
+            return response;
+          })
+          .catch(() => caches.match(request).then(r => r || Response.error()))
+      );
+    }
+    return;
+  }
 
   // /api/terms: network-first, cache fallback for offline browsing
   if (url.pathname === '/api/terms') {
