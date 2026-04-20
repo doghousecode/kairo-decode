@@ -248,7 +248,7 @@ export async function GET() {
 <div class="page">
   <div class="badge">Session 1 · Rogues Gallery</div>
   <h1>What everyone built</h1>
-  <p class="subtitle">AI Jargon Busters from the workshop — yours could be here too</p>
+  <p class="subtitle">AI Jargon Busters from the workshop — upload yours!</p>
 
   <div class="upload-form">
     <input type="text" id="name-input" class="name-input" placeholder="Your name (optional)" maxlength="80">
@@ -257,7 +257,6 @@ export async function GET() {
         📸 Share yours
         <input type="file" id="file-input" accept="image/*" hidden>
       </label>
-      <span class="upload-hint" id="upload-hint">Upload a screenshot of your Jargon Buster</span>
       <span class="upload-status" id="upload-status"></span>
     </div>
   </div>
@@ -425,7 +424,6 @@ export async function GET() {
 
     const label      = document.getElementById('upload-label');
     const status     = document.getElementById('upload-status');
-    const hint       = document.getElementById('upload-hint');
     const nameInput  = document.getElementById('name-input');
 
     label.classList.add('uploading');
@@ -444,7 +442,6 @@ export async function GET() {
 
       status.textContent = '✓ Uploaded!';
       status.className = 'upload-status success';
-      hint.style.display = 'none';
 
       await load(true);
     } catch (e) {
