@@ -1204,7 +1204,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 <button onClick={() => setShowLangPicker(v => !v)} title="Change language"
                   style={{ background: "none", border: "1.5px solid rgba(99,102,241,0.35)", borderRadius: "7px", cursor: "pointer", fontSize: "1.05rem", lineHeight: 1, padding: "3px 5px", transition: "border-color 0.15s", opacity: batchTranslating ? 0.5 : 1 }}
                   aria-label="Change language">
-                  {(() => { const l = LANGUAGES.find(l => l.code === lang); return l?.flag ?? <span style={{ fontSize: "0.8rem", fontWeight: 700 }}>{l?.label}</span>; })()}
+                  {(() => { const l = LANGUAGES.find(l => l.code === lang); return l?.flag ?? <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "rgba(var(--rgb),0.85)" }}>{l?.label}</span>; })()}
                   {batchTranslating && <span style={{ fontSize: "0.5rem", verticalAlign: "super", marginLeft: "1px", opacity: 0.6 }}>…</span>}
                 </button>
                 {showLangPicker && (
@@ -1226,7 +1226,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                           fontSize: "10pt", fontFamily: "inherit", textAlign: "left",
                           color: lang === l.code ? "var(--btn-accent)" : "rgba(var(--rgb),0.65)",
                         }}>
-                        <span style={{ fontSize: l.flag ? "1rem" : "0.8rem", fontWeight: l.flag ? undefined : 700, minWidth: "1.2rem", textAlign: "center" }}>{l.flag ?? l.label}</span>
+                        <span style={{ fontSize: l.flag ? "1rem" : "0.8rem", fontWeight: l.flag ? undefined : 700, minWidth: "1.2rem", textAlign: "center", color: l.flag ? undefined : "rgba(var(--rgb),0.85)" }}>{l.flag ?? l.label}</span>
                         <span>{l.nativeName}</span>
                       </button>
                     ))}
