@@ -286,6 +286,7 @@ export async function GET() {
   let images = [];
   let active = 0;
   let touchStartX = 0;
+  let touchStartY = 0;
 
   const TX    = [0,   62,  105, 138];
   const SCALE = [1, 0.80, 0.64, 0.52];
@@ -362,8 +363,17 @@ export async function GET() {
     if (e.key === 'ArrowRight') next();
     if (e.key === 'Escape')     closeLightbox();
   });
-  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  document.addEventListener('touchend', e => {
+  const stage = document.getElementById('stage');
+  stage.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  stage.addEventListener('touchmove', e => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY);
+    if (dx > dy) e.preventDefault();
+  }, { passive: false });
+  stage.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
   });
