@@ -263,7 +263,7 @@ function InitialsOverlay({ onSave }) {
           onKeyDown={e => e.key === "Enter" && ready && onSave(value.trim())}
           placeholder="initials"
           style={{
-            width: "100%", textAlign: "center", fontSize: "1rem", fontWeight: 600,
+            width: "100%", textAlign: "center", fontSize: "16px", fontWeight: 600,
             letterSpacing: "0.15em", padding: "0.55rem 0.65rem", borderRadius: "10px",
             background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)",
             color: "#fff", outline: "none", marginBottom: "1rem", fontFamily: "inherit",
@@ -1267,7 +1267,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               value={search}
               onChange={e => { setSearch(e.target.value); setFeedback(null); }}
               onKeyDown={e => e.key === "Enter" && isOnline && tryAdd(search)}
-              className="w-full px-4 rounded-xl text-sm text-white outline-none"
+              className="w-full px-4 rounded-xl text-white outline-none"
               style={{ position: "relative", zIndex: 2, background: "transparent", border: "none", fontFamily: "inherit", fontSize: "16px", fontWeight: 700, paddingTop: "14px", paddingBottom: "14px" }}
             />
             {searchQ.length > 1 && !generating && (
