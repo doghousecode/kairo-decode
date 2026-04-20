@@ -348,7 +348,7 @@ export async function GET() {
   let didLongPress = false;
   let ctxFilename = null, ctxUrl = null;
 
-  const isAdmin = document.cookie.includes('kairo-auth=granted');
+  const isAdmin = document.cookie.includes('kairo-admin-ui=1');
 
   const TX    = [0,   62,  105, 138];
   const SCALE = [1, 0.80, 0.64, 0.52];

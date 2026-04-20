@@ -999,7 +999,7 @@ export default function AIGlossary() {
     setTerms(prev => prev.map(t => t.term === termName ? { ...t, ...updates } : t));
   };
 
-  const isAdmin = typeof window !== 'undefined' && document.cookie.includes('kairo-auth=granted');
+  const isAdmin = typeof window !== 'undefined' && document.cookie.includes('kairo-admin-ui=1');
 
   const handleDelete = async (termName) => {
     try {

@@ -20,5 +20,12 @@ export async function POST(request) {
     maxAge: 60 * 60 * 24 * 30,
     path: '/',
   })
+  response.cookies.set('kairo-admin-ui', '1', {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 30,
+    path: '/',
+  })
   return response
 }
