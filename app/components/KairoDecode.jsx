@@ -999,6 +999,8 @@ export default function AIGlossary() {
     setTerms(prev => prev.map(t => t.term === termName ? { ...t, ...updates } : t));
   };
 
+  const isAdmin = typeof window !== 'undefined' && document.cookie.includes('kairo-auth=granted');
+
   const handleDelete = async (termName) => {
     try {
       await fetch("/api/terms", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ term: termName }) });
@@ -1408,7 +1410,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               allTerms={terms}
               onTermClick={handleTermClick}
               onAddTerm={handleAddTerm}
-              onDelete={handleDelete}
+              onDelete={isAdmin ? handleDelete : null}
               onTermUpdate={handleTermUpdate}
               isTyping={typingTerm === item.term}
               isOnline={isOnline}
