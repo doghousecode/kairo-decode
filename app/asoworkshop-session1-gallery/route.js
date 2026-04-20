@@ -20,6 +20,8 @@ export async function GET() {
       align-items: center;
       padding: 2.5rem 1rem 3rem;
       overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .page { width: 100%; max-width: 820px; }
 
@@ -57,7 +59,7 @@ export async function GET() {
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px;
       color: #e5e5e7;
-      font-size: 10pt;
+      font-size: 16px;
       font-family: 'Inter', sans-serif;
       outline: none;
       transition: border-color 0.2s;
@@ -346,7 +348,7 @@ export async function GET() {
   let didLongPress = false;
   let ctxFilename = null, ctxUrl = null;
 
-  const isST = (localStorage.getItem('kairo-initials') || '').toUpperCase() === 'ST';
+  const isAdmin = document.cookie.includes('kairo-auth=granted');
 
   const TX    = [0,   62,  105, 138];
   const SCALE = [1, 0.80, 0.64, 0.52];
@@ -479,8 +481,8 @@ export async function GET() {
     const backdrop = document.getElementById('ctx-backdrop');
     const deleteBtn = document.getElementById('ctx-delete');
     const divider = document.getElementById('ctx-divider');
-    deleteBtn.style.display = isST ? 'flex' : 'none';
-    divider.style.display = isST ? 'block' : 'none';
+    deleteBtn.style.display = isAdmin ? 'flex' : 'none';
+    divider.style.display = isAdmin ? 'block' : 'none';
     menu.style.display = 'block';
     backdrop.classList.add('open');
   }
