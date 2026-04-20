@@ -107,6 +107,7 @@ export async function GET() {
       align-items: center;
       justify-content: center;
       margin-bottom: 0;
+      overflow: hidden;
     }
     .card {
       position: absolute;
@@ -128,6 +129,8 @@ export async function GET() {
     .card img {
       width: 100%;
       height: 100%;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
       display: block;
       background: #111118;
