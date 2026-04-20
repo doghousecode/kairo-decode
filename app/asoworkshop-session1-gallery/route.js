@@ -229,6 +229,11 @@ export async function GET() {
       text-align: center;
     }
 
+    @media (min-width: 640px) {
+      .stage { height: 620px; }
+      .card { width: 420px; height: 580px; }
+    }
+
     @media (max-width: 500px) {
       .stage { height: 340px; }
       .card { width: 220px; height: 310px; }
