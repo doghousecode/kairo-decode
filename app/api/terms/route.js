@@ -38,6 +38,11 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
+  const cookie = request.headers.get('cookie') || '';
+  if (!cookie.includes('kairo-auth=granted')) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { term } = await request.json();
 
   const { error } = await supabase()
