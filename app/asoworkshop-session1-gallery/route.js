@@ -121,9 +121,11 @@ export async function GET() {
                   opacity 0.38s ease;
       cursor: pointer;
       will-change: transform, opacity;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .card.center {
-      cursor: default;
+      cursor: zoom-in;
       box-shadow: 0 32px 80px rgba(99,102,241,0.25), 0 24px 64px rgba(0,0,0,0.6);
     }
     .card img {
@@ -134,7 +136,51 @@ export async function GET() {
       object-fit: contain;
       display: block;
       background: #111118;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: none;
     }
+
+    /* Context menu */
+    .ctx-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+    }
+    .ctx-backdrop.open { display: block; }
+    .ctx-menu {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e1e2e;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 0.4rem;
+      min-width: 220px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      z-index: 201;
+    }
+    .ctx-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: none;
+      border: none;
+      border-radius: 10px;
+      color: #e5e5e7;
+      font-size: 11pt;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      text-align: left;
+    }
+    .ctx-item:hover { background: rgba(255,255,255,0.07); }
+    .ctx-item.danger { color: #f87171; }
+    .ctx-divider { height: 1px; background: rgba(255,255,255,0.08); margin: 0.25rem 0; }
     .card .card-name {
       position: absolute;
       bottom: 0;
@@ -284,11 +330,23 @@ export async function GET() {
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
 </div>
 
+<!-- Context menu -->
+<div class="ctx-backdrop" id="ctx-backdrop" onclick="closeCtx()"></div>
+<div class="ctx-menu" id="ctx-menu" style="display:none;">
+  <button class="ctx-item" onclick="ctxOpen()">🔍 Open full size</button>
+  <div class="ctx-divider" id="ctx-divider" style="display:none;"></div>
+  <button class="ctx-item danger" id="ctx-delete" style="display:none;" onclick="ctxDelete()">🗑 Delete image</button>
+</div>
+
 <script>
   let images = [];
   let active = 0;
-  let touchStartX = 0;
-  let touchStartY = 0;
+  let touchStartX = 0, touchStartY = 0;
+  let longPressTimer = null;
+  let didLongPress = false;
+  let ctxFilename = null, ctxUrl = null;
+
+  const isST = (localStorage.getItem('kairo-initials') || '').toUpperCase() === 'ST';
 
   const TX    = [0,   62,  105, 138];
   const SCALE = [1, 0.80, 0.64, 0.52];
@@ -311,7 +369,7 @@ export async function GET() {
       'rotateY(' + (-dir * RY[abs]) + 'deg)';
     card.style.opacity  = String(OPAC[abs]);
     card.style.zIndex   = String(10 - abs);
-    card.style.pointerEvents = abs === 0 ? 'none' : 'auto';
+    card.style.pointerEvents = 'auto';
     card.classList.toggle('center', abs === 0);
   }
 
@@ -336,10 +394,32 @@ export async function GET() {
       }
 
       applyStyle(card, i - active);
+
+      // Click: navigate or open lightbox
       card.addEventListener('click', () => {
+        if (didLongPress) return;
         if (i !== active) navigate(i);
         else openLightbox(img.url);
       });
+
+      // Long press
+      card.addEventListener('contextmenu', e => e.preventDefault());
+      card.addEventListener('touchstart', e => {
+        didLongPress = false;
+        longPressTimer = setTimeout(() => {
+          didLongPress = true;
+          openCtx(img.filename, img.url);
+        }, 500);
+      }, { passive: true });
+      card.addEventListener('touchmove', e => {
+        clearTimeout(longPressTimer);
+      }, { passive: true });
+      card.addEventListener('touchend', () => {
+        clearTimeout(longPressTimer);
+        // reset didLongPress after a tick so the click handler can check it
+        setTimeout(() => { didLongPress = false; }, 100);
+      });
+
       stage.appendChild(card);
     });
     updateNav();
@@ -363,8 +443,10 @@ export async function GET() {
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  prev();
     if (e.key === 'ArrowRight') next();
-    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'Escape')     { closeLightbox(); closeCtx(); }
   });
+
+  // Stage swipe (horizontal only)
   const stage = document.getElementById('stage');
   stage.addEventListener('touchstart', e => {
     touchStartX = e.touches[0].clientX;
@@ -376,6 +458,7 @@ export async function GET() {
     if (dx > dy) e.preventDefault();
   }, { passive: false });
   stage.addEventListener('touchend', e => {
+    if (didLongPress) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 40) (dx < 0 ? next : prev)();
   });
@@ -386,6 +469,44 @@ export async function GET() {
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
+  }
+
+  // Context menu
+  function openCtx(filename, url) {
+    ctxFilename = filename;
+    ctxUrl = url;
+    const menu = document.getElementById('ctx-menu');
+    const backdrop = document.getElementById('ctx-backdrop');
+    const deleteBtn = document.getElementById('ctx-delete');
+    const divider = document.getElementById('ctx-divider');
+    deleteBtn.style.display = isST ? 'flex' : 'none';
+    divider.style.display = isST ? 'block' : 'none';
+    menu.style.display = 'block';
+    backdrop.classList.add('open');
+  }
+  function closeCtx() {
+    document.getElementById('ctx-menu').style.display = 'none';
+    document.getElementById('ctx-backdrop').classList.remove('open');
+  }
+  function ctxOpen() {
+    closeCtx();
+    window.open(ctxUrl, '_blank');
+  }
+  async function ctxDelete() {
+    if (!ctxFilename) return;
+    if (!confirm('Delete this image?')) return;
+    closeCtx();
+    try {
+      const res = await fetch('/api/gallery', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: ctxFilename }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      await load(false);
+    } catch {
+      alert('Delete failed — are you logged in?');
+    }
   }
 
   async function load(jumpToFirst) {

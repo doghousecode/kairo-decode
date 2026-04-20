@@ -36,11 +36,26 @@ export async function GET() {
   if (error) return Response.json({ error: error.message }, { status: 500 });
 
   const images = (data || []).map(row => ({
+    filename: row.filename,
     url: client.storage.from(BUCKET).getPublicUrl(row.filename).data.publicUrl,
     display_name: row.display_name || null,
   }));
 
   return Response.json({ images });
+}
+
+export async function DELETE(request) {
+  const cookie = request.headers.get('cookie') || '';
+  if (!cookie.includes('kairo-auth=granted')) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  const { filename } = await request.json();
+  if (!filename) return Response.json({ error: 'Missing filename' }, { status: 400 });
+
+  const client = supabase();
+  await client.from('gallery_entries').delete().eq('filename', filename);
+  await client.storage.from(BUCKET).remove([filename]);
+  return Response.json({ ok: true });
 }
 
 export async function POST(request) {
