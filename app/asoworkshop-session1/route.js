@@ -551,7 +551,6 @@ Update the decoder with these style improvements:
       <p style="font-size: 10pt; margin-bottom: 0.5rem;">If you finish early, try these:</p>
       <ul style="font-size: 10pt; margin-left: 1.25rem;">
         <li><strong>Run in Chrome or Safari:</strong> open Finder, go to ~/Documents/ai-decoder/index.html</li>
-        <li><strong>Rogues Gallery:</strong> share a screenshot of your Jargon Buster <a href="/asoworkshop-session1-gallery" target="_blank" rel="noopener noreferrer" style="color:#818cf8;">here</a>, and see what everyone else created!</li>
         <li><strong>Export it:</strong> "Create a button that exports all terms as a JSON file"</li>
         <li><strong>Make it a quiz:</strong> "Add a quiz mode that shows definitions and asks me to guess the term"</li>
         <li><strong>Add animations:</strong> "Add a subtle entrance animation when the page loads"</li>
@@ -565,6 +564,10 @@ Update the decoder with these style improvements:
     <h2>What's Next?</h2>
     <div class="whats-next-box">
       <ul class="whats-next-list">
+        <li>
+          <span class="wn-icon">🖼️</span>
+          <span><strong>Rogues Gallery:</strong> share a screenshot of your Jargon Buster <a href="/asoworkshop-session1-gallery" target="_blank" rel="noopener noreferrer">here</a>, and see what everyone else created!</span>
+        </li>
         <li>
           <span class="wn-icon">💬</span>
           <span>Join the <a href="https://apple.enterprise.slack.com/archives/C0ATE745KHP" target="_blank" rel="noopener noreferrer">ASO Ops AI Slack Channel</a></span>
