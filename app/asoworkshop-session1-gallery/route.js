@@ -238,7 +238,7 @@ export async function GET() {
 </head>
 <body>
 <div class="page">
-  <div class="badge">Session 1 · Rogues Gallery</div>
+  <div class="badge">Session 1 · Jargon Buster</div>
   <h1>What everyone built</h1>
   <p class="subtitle">AI Jargon Busters from the workshop — yours could be here too</p>
 
