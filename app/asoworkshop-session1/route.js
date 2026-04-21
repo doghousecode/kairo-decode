@@ -566,7 +566,7 @@ Update the decoder with these style improvements:
       <ul class="whats-next-list">
         <li>
           <span class="wn-icon">🖼️</span>
-          <span><strong>Rogues Gallery:</strong> share a screenshot of your Jargon Buster <a href="/asoworkshop-session1-gallery" target="_blank" rel="noopener noreferrer">here</a>, and see what everyone else created!</span>
+          <span><a href="/asoworkshop-session1-gallery" target="_blank" rel="noopener noreferrer"><strong>Rogues Gallery</strong></a>: share a screenshot of your Jargon Buster, and see what everyone else created!</span>
         </li>
         <li>
           <span class="wn-icon">💬</span>
