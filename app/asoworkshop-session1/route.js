@@ -567,6 +567,10 @@ Update the decoder with these style improvements:
     <div class="whats-next-box">
       <ul class="whats-next-list">
         <li>
+          <span class="wn-icon">🖼️</span>
+          <span><a href="/asoworkshop-session1-gallery" target="_blank" rel="noopener noreferrer"><strong>Rogues Gallery</strong></a>: share a screenshot of your Jargon Buster, and see what everyone else created!</span>
+        </li>
+        <li>
           <span class="wn-icon">💬</span>
           <span>Join the <a href="https://apple.enterprise.slack.com/archives/C0ATE745KHP" target="_blank" rel="noopener noreferrer">ASO Ops AI Slack Channel</a></span>
         </li>
