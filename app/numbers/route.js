@@ -179,7 +179,7 @@ export async function GET() {
     .refresh-btn:hover{background:rgba(255,255,255,.12);color:#fff}
     h2{font-size:12pt;font-weight:600;color:#fff;margin-top:2rem;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
     h2::before{content:'';display:inline-block;width:4px;height:1.1em;background:linear-gradient(180deg,#6366f1,#8b5cf6);border-radius:2px;flex-shrink:0}
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:1rem}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1rem}
     .stats-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
     .stat-card{background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:16px;padding:1.25rem}
     .page-label{font-size:9.5pt;color:#818cf8;margin-bottom:.5rem;font-weight:500}
@@ -227,7 +227,8 @@ export async function GET() {
   <div class="stats-grid">${statCards(DECODE_PAGES)}</div>
 
   <h2>Workshop</h2>
-  <div class="stats-grid-2">${statCards([...WORKSHOP_PAGES, ...WORKSHOP_LEGACY])}</div>
+  <div class="stats-grid-2">${statCards(WORKSHOP_PAGES)}</div>
+  <div class="stats-grid-2" style="margin-top:1rem">${statCards(WORKSHOP_LEGACY)}</div>
 
   <h2>Breakdown</h2>
   <div class="two-col">
