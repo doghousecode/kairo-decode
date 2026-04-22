@@ -743,7 +743,7 @@ export default function AIGlossary() {
   const categoriesRef = useRef(null);
   const [headerHeight, setHeaderHeight] = useState(200);
   const [categoriesHeight, setCategoriesHeight] = useState(90);
-  const [themeMode, setThemeMode] = useState("dark"); // "dark" | "mint" | "spaghetti"
+  const [themeMode, setThemeMode] = useState(() => typeof window !== 'undefined' ? (localStorage.getItem('kairo-theme') || 'dark') : 'dark'); // "dark" | "mint" | "spaghetti"
   const isDark = themeMode === "dark" || themeMode === "spaghetti";
   const isSpaghetti = themeMode === "spaghetti";
   const isMint = themeMode === "mint";
@@ -1236,7 +1236,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
                 )}
               </div>
               {/* Theme toggle */}
-              <button onClick={() => setThemeMode(m => m === "dark" ? "mint" : "dark")} title="Toggle theme"
+              <button onClick={() => setThemeMode(m => { const next = m === "dark" ? "mint" : "dark"; localStorage.setItem('kairo-theme', next); return next; })} title="Toggle theme"
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.15rem", lineHeight: 1, padding: "4px 2px" }}>
                 {themeMode === "dark" ? "🌙" : "🌿"}
               </button>
