@@ -4,6 +4,14 @@ Features discussed but not yet implemented, roughly in priority order.
 
 ---
 
+## Assets / Branding
+
+**Kairo wordmark — light/mint variant**
+- Create a dark/forest version of the short `kairo` wordmark (currently only white exists)
+- Needed for the footer in mint mode (currently using a CSS brightness filter as a workaround)
+
+---
+
 ## Translation & Localisation
 
 **Loc coverage checker**
@@ -16,33 +24,6 @@ Features discussed but not yet implemented, roughly in priority order.
 - Without localStorage there's a ~1s flash of English while Supabase fetches
 - Fix: re-introduce localStorage as a read-through cache, but only ever populated from confirmed Supabase data (never written from local state)
 - Gives instant render on repeat visits without the stale-data risk that caused the previous corruption issues
-
----
-
-## Export
-
-**Export / print glossary as PDF**
-- Let users export the current filtered view (or full glossary) as a formatted PDF
-- Could also support "copy all" or export to Notion/markdown
-
----
-
-## Analytics Dashboard
-
-**Visitors page → full analytics**
-- Currently basic; expand to show IP, location, device type
-- Cover all Kairo properties (not just Decode)
-- Loc coverage report panel (see above) as a tab or section
-- Could run loc checks on a schedule and surface results here
-
----
-
-## Social / Attribution
-
-**Contributor attribution**
-- Show name or initials on terms a specific person added
-- Opt-in at add-time (name field on the add flow)
-- Could display as a subtle byline on the card
 
 ---
 
