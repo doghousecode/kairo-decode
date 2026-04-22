@@ -226,9 +226,9 @@ const getTagColor = (tag, dark = true) => {
 
 const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
-const AVATAR_COLORS = ["#0d9488","#4f46e5","#e11d48","#d97706","#059669","#7c3aed","#0284c7","#ea580c"];
+const AVATAR_COLORS = ["#0d9488","#4f46e5","#e11d48","#d97706","#059669","#7c3aed","#0284c7","#ea580c","#db2777","#65a30d"];
 const getAvatarColor = (initials) => {
-  const hash = (initials || "?").split("").reduce((a, c, i) => a + c.charCodeAt(0) * (i + 1) * 31, 0);
+  const hash = (initials || "?").split("").reduce((a, c) => (c.charCodeAt(0) + (a << 6) + (a << 16) - a) >>> 0, 0);
   return AVATAR_COLORS[hash % AVATAR_COLORS.length];
 };
 
