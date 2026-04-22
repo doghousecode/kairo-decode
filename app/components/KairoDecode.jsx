@@ -1425,7 +1425,12 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         paddingBottom: "2rem",
         position: "relative",
         zIndex: 1,
+        minHeight: `calc(100vh - ${headerHeight}px)`,
+        display: "flex",
+        flexDirection: "column",
       }}>
+
+        <div style={{ flex: 1 }}>
 
         {!termsLoaded && (
           <div className="flex justify-center pt-12">
@@ -1547,6 +1552,8 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           ))}
         </div>
 
+        </div>
+
         <p className="text-center text-xs mt-8" style={{ color: "rgba(var(--rgb),0.13)" }}>
           {strings.footer(terms.length)}{" · "}
           <button onClick={handleExportPDF} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "rgba(var(--rgb),0.3)", fontSize: "inherit", fontFamily: "inherit", letterSpacing: "inherit", textDecoration: "underline", textUnderlineOffset: "2px" }}>
@@ -1556,10 +1563,10 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
         <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
           <button onClick={() => window.kairoShowSplash?.()} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "16px", width: "auto", display: "block", opacity: 0.7 }} />
-            <span style={{ fontSize: "0.72rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500, position: "relative", top: "4px" }}>v1.1</span>
+            <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "16px", width: "auto", display: "block", opacity: 0.7, filter: isMint ? "brightness(0) opacity(0.35)" : "none" }} />
+            <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.2)", letterSpacing: "0.1em", fontWeight: 500, position: "relative", top: "4px" }}>v1.1</span>
           </button>
-          <span style={{ fontSize: "0.6rem", color: "rgba(240,240,240,0.2)", letterSpacing: "0.1em", fontWeight: 500 }}>© 2026</span>
+          <span style={{ fontSize: "0.6rem", color: "rgba(var(--rgb),0.2)", letterSpacing: "0.1em", fontWeight: 500 }}>© 2026</span>
         </footer>
       </div>
     </div>
