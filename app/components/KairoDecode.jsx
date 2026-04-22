@@ -1110,9 +1110,18 @@ ${cardsHTML}
 
   const allTermNames = terms.map(t => t.term.toLowerCase());
 
+  // Cross-language aliases → canonical English term
+  const TERM_ALIASES = {
+    'ai': 'Artificial Intelligence', 'ki': 'Artificial Intelligence', 'ia': 'Artificial Intelligence',
+    'ml': 'Machine Learning', 'dl': 'Deep Learning',
+    'nlp': 'Natural Language Processing', 'llm': 'Large Language Model',
+    'llms': 'Large Language Model', 'rag': 'Retrieval-Augmented Generation',
+  };
+
   const tryAdd = async (raw) => {
     if (!isOnline) return;
-    const query = raw.trim();
+    const normalized = TERM_ALIASES[raw.trim().toLowerCase()];
+    const query = normalized || raw.trim();
     if (!query) return;
     setFeedback(null);
 
