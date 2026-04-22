@@ -758,6 +758,15 @@ export default function AIGlossary() {
     return 'en';
   });
   useEffect(() => { localStorage.setItem('kairo-lang', lang); }, [lang]);
+
+  useEffect(() => {
+    document.body.style.background = isMint
+      ? "linear-gradient(135deg,#c8e8d4 0%,#d8f0e3 60%,#c8e8d4 100%)"
+      : isDark
+      ? "linear-gradient(135deg,#080810 0%,#0d0d1c 60%,#080812 100%)"
+      : "linear-gradient(135deg,#eef0ff 0%,#f5f6ff 60%,#eef0ff 100%)";
+    return () => { document.body.style.background = ''; };
+  }, [isDark, isMint]);
   const [batchTranslations, setBatchTranslations] = useState(() => {
     if (typeof window === 'undefined') return {};
     try { const s = localStorage.getItem('kairo-translations'); return s ? JSON.parse(s) : {}; } catch { return {}; }
