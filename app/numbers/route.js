@@ -7,14 +7,14 @@ const supabase = () => createClient(
 
 const PAGE_LABELS = {
   'decode':               'Kairo Decode',
-  'decode-gallery':       'Rogues Gallery',
+  'decode-gallery':       'Gallery · Session 1',
   'asoworkshop-session1': 'Workshop · Session 1',
   'asoworkshop-session2': 'Workshop · Session 2',
   'asoworkshop':          'Workshop (original URL)',
 };
 
-const DECODE_PAGES    = ['decode', 'decode-gallery'];
-const WORKSHOP_PAGES  = ['asoworkshop-session1', 'asoworkshop-session2', 'asoworkshop'];
+const DECODE_PAGES    = ['decode'];
+const WORKSHOP_PAGES  = ['asoworkshop-session1', 'decode-gallery', 'asoworkshop-session2', 'asoworkshop'];
 
 const COUNTRY_NAMES = {
   GB:'🇬🇧 UK', US:'🇺🇸 US', AU:'🇦🇺 Australia', CA:'🇨🇦 Canada', DE:'🇩🇪 Germany',
