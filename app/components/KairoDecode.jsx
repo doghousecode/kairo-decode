@@ -1004,7 +1004,7 @@ export default function AIGlossary() {
   const handleExportPDF = () => {
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term));
     const tagCSS = Object.entries(TAG_COLORS).map(([tag, c]) =>
-      `.tag-${tag.replace(/\s+/g, '-')}{background:${c.bg};color:${c.text};border:1px solid ${c.border};}`
+      `.tag-${tag.replace(/\s+/g, '-')}{background:${c.lightBg};color:${c.lightText};border:1px solid ${c.lightBorder};}`
     ).join('');
     const cardsHTML = sorted.map(t => `
       <div class="card">
@@ -1021,32 +1021,38 @@ export default function AIGlossary() {
       </div>`).join('');
     const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-<title>Kairo Decode — AI Jargon Glossary</title>
+<title>Kairo Decode — AI Jargon Buster</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 @page{margin:0.65in;size:A4}
-body{font-family:'DM Sans',-apple-system,sans-serif;background:#080810;color:#e5e5f0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:'DM Sans',-apple-system,sans-serif;background:#fff;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .page{max-width:620px;margin:0 auto;padding:2rem}
-.hdr{margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(255,255,255,0.08)}
-.hdr h1{font-size:22pt;font-weight:700;letter-spacing:-0.03em;color:#fff;margin-bottom:0.2rem}
-.hdr .sub{font-size:9pt;color:rgba(255,255,255,0.32);letter-spacing:0.06em;text-transform:lowercase}
-.hdr .meta{font-size:8.5pt;color:rgba(255,255,255,0.2);margin-top:0.35rem}
-.card{padding:0.8rem 0;border-bottom:1px solid rgba(255,255,255,0.06);page-break-inside:avoid}
-.row{display:flex;align-items:flex-start;gap:0.7rem}
-.emoji{font-size:1.35rem;line-height:1.2;flex-shrink:0;width:1.75rem;text-align:center}
+.hdr{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid #6366f1;display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
+.hdr-left h1{font-size:20pt;font-weight:700;letter-spacing:-0.03em;color:#111;margin-bottom:0.1rem}
+.hdr-left .sub{font-size:8.5pt;color:#71717a;letter-spacing:0.06em;text-transform:lowercase}
+.hdr-right{text-align:right;flex-shrink:0}
+.hdr-right .meta{font-size:8pt;color:#a1a1aa}
+.card{padding:0.7rem 0;border-bottom:1px solid #f0f0f4;page-break-inside:avoid}
+.row{display:flex;align-items:flex-start;gap:0.65rem}
+.emoji{font-size:1.25rem;line-height:1.3;flex-shrink:0;width:1.6rem;text-align:center}
 .main{flex:1}
-.namerow{display:flex;align-items:center;gap:0.45rem;margin-bottom:0.25rem;flex-wrap:wrap}
-.name{font-size:11.5pt;font-weight:700;color:#fff;letter-spacing:-0.01em}
-.tag{font-size:7pt;font-weight:600;padding:0.12rem 0.45rem;border-radius:20px;letter-spacing:0.03em}
-.def{font-size:9.5pt;color:rgba(255,255,255,0.55);line-height:1.55}
+.namerow{display:flex;align-items:center;gap:0.4rem;margin-bottom:0.2rem;flex-wrap:wrap}
+.name{font-size:11pt;font-weight:700;color:#111;letter-spacing:-0.01em}
+.tag{font-size:6.5pt;font-weight:600;padding:0.1rem 0.42rem;border-radius:20px;border:1px solid;letter-spacing:0.03em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.def{font-size:9pt;color:#52525b;line-height:1.55}
 ${tagCSS}
 </style></head>
 <body><div class="page">
 <div class="hdr">
-  <h1>Kairo Decode</h1>
-  <p class="sub">adaptive intelligence jargon buster</p>
-  <p class="meta">${sorted.length} terms &middot; ${date}</p>
+  <div class="hdr-left">
+    <h1>Kairo Decode</h1>
+    <p class="sub">adaptive intelligence jargon buster</p>
+  </div>
+  <div class="hdr-right">
+    <p class="meta">${sorted.length} terms</p>
+    <p class="meta">${date}</p>
+  </div>
 </div>
 ${cardsHTML}
 </div><script>window.onload=function(){window.print()}</script></body></html>`;
