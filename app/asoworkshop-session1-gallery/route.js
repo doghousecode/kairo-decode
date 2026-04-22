@@ -584,7 +584,8 @@ export async function GET() {
     var key = 'kairo-tracked-decode-gallery';
     var last = parseInt(localStorage.getItem(key) || '0', 10);
     if (Date.now() - last > 10 * 60 * 1000) {
-      fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: 'decode-gallery' }) }).catch(() => {});
+      var initials = localStorage.getItem('kairo-initials') || null;
+      fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: 'decode-gallery', initials: initials }) }).catch(() => {});
       localStorage.setItem(key, String(Date.now()));
     }
   })();

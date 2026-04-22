@@ -810,7 +810,8 @@ export default function AIGlossary() {
     const key = 'kairo-tracked-decode';
     const last = parseInt(localStorage.getItem(key) || '0', 10);
     if (Date.now() - last > 10 * 60 * 1000) {
-      fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page: "decode" }) }).catch(() => {});
+      const initials = localStorage.getItem('kairo-initials') || null;
+      fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page: "decode", initials }) }).catch(() => {});
       localStorage.setItem(key, String(Date.now()));
     }
   }, []);

@@ -118,8 +118,12 @@ export async function GET() {
   const recentRows = visits.slice(0, 60).map(v => {
     const deviceIcon = ({ mobile: '📱', desktop: '🖥️', tablet: '📲' })[v.device] || '·';
     const countryFlag = v.country ? (COUNTRY_NAMES[v.country]?.split(' ')[0] || v.country) : '';
+    const avatar = v.initials
+      ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.7);color:rgba(99,102,241,0.9);font-size:6pt;font-weight:700;letter-spacing:0.03em;vertical-align:middle">${v.initials.slice(0,3).toUpperCase()}</span>`
+      : '<span style="color:#3f3f46;font-size:9pt">—</span>';
     return `<tr>
       <td>${PAGE_LABELS[v.page] || v.page}</td>
+      <td>${avatar}</td>
       <td>${deviceIcon} ${countryFlag}</td>
       <td>${fmt(v.visited_at)}</td>
       <td class="muted">${rel(v.visited_at, now)}</td>
@@ -219,7 +223,7 @@ export async function GET() {
   <h2>Recent Visits</h2>
   ${visits.length > 0 ? `
   <table>
-    <thead><tr><th>Page</th><th>Device · Country</th><th>Date</th><th>When</th></tr></thead>
+    <thead><tr><th>Page</th><th>Who</th><th>Device · Country</th><th>Date</th><th>When</th></tr></thead>
     <tbody>${recentRows}</tbody>
   </table>` : '<p class="empty">No visits recorded yet.</p>'}
 
