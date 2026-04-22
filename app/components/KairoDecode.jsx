@@ -1561,14 +1561,14 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           ))}
         </div>
 
-        </div>
-
         <p className="text-center text-xs mt-8" style={{ color: "rgba(var(--rgb),0.13)" }}>
           {strings.footer(terms.length)}{" · "}
           <button onClick={handleExportPDF} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "rgba(var(--rgb),0.3)", fontSize: "inherit", fontFamily: "inherit", letterSpacing: "inherit", textDecoration: "underline", textUnderlineOffset: "2px" }}>
             Export terms
           </button>
         </p>
+
+        </div>
 
         <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
           <button onClick={() => window.kairoShowSplash?.()} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
