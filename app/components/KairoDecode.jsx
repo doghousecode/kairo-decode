@@ -771,9 +771,14 @@ export default function AIGlossary() {
     if (!localStorage.getItem('kairo-initials')) setTimeout(() => setShowInitialsOverlay(true), 900);
   }, []);
   const saveInitials = (v) => {
+    const isFirstTime = !localStorage.getItem('kairo-initials');
     localStorage.setItem('kairo-initials', v);
     setUserInitials(v);
     setShowInitialsOverlay(false);
+    if (isFirstTime) {
+      fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page: "decode", initials: v }) }).catch(() => {});
+      localStorage.setItem('kairo-tracked-decode', String(Date.now()));
+    }
   };
 
   const loadTerms = () => {
