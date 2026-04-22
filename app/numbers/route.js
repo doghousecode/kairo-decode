@@ -61,7 +61,7 @@ export async function GET() {
 
   // Aggregate stats per page
   const totals = {}, weekCounts = {}, lastSeen = {};
-  const deviceCounts = { iphone: 0, ipad: 0, mac: 0, android: 0, 'android-tablet': 0, windows: 0, linux: 0, desktop: 0, unknown: 0 };
+  const deviceCounts = { iphone: 0, ipad: 0, mac: 0, android: 0, 'android-tablet': 0, windows: 0, linux: 0, desktop: 0, mobile: 0, tablet: 0, unknown: 0 };
   const countryCounts = {};
 
   visits.forEach(v => {
@@ -92,15 +92,17 @@ export async function GET() {
 
   // Device breakdown
   const DEVICE_META = {
-    iphone:         { label: 'iPhone',         icon: '📱', color: '#818cf8' },
-    ipad:           { label: 'iPad',            icon: '📲', color: '#fb923c' },
-    mac:            { label: 'Mac',             icon: '🖥️', color: '#34d399' },
-    android:        { label: 'Android',         icon: '📱', color: '#a78bfa' },
+    iphone:          { label: 'iPhone',         icon: '📱', color: '#818cf8' },
+    ipad:            { label: 'iPad',            icon: '📲', color: '#fb923c' },
+    mac:             { label: 'Mac',             icon: '🖥️', color: '#34d399' },
+    android:         { label: 'Android',         icon: '📱', color: '#a78bfa' },
     'android-tablet':{ label: 'Android tablet', icon: '📲', color: '#f97316' },
-    windows:        { label: 'Windows',         icon: '🖥️', color: '#22d3ee' },
-    linux:          { label: 'Linux',           icon: '🖥️', color: '#86efac' },
-    desktop:        { label: 'Desktop',         icon: '🖥️', color: '#34d399' },
-    unknown:        { label: 'Unknown',         icon: '·',  color: '#3f3f46' },
+    windows:         { label: 'Windows',         icon: '🖥️', color: '#22d3ee' },
+    linux:           { label: 'Linux',           icon: '🖥️', color: '#86efac' },
+    desktop:         { label: 'Desktop',         icon: '🖥️', color: '#34d399' },
+    mobile:          { label: 'Mobile',          icon: '📱', color: '#818cf8' },
+    tablet:          { label: 'Tablet',          icon: '📲', color: '#fb923c' },
+    unknown:         { label: 'Unknown',         icon: '·',  color: '#3f3f46' },
   };
   const deviceTotal = Object.values(deviceCounts).reduce((a, b) => a + b, 0) || 1;
   const deviceBar = Object.keys(DEVICE_META)
@@ -135,9 +137,9 @@ export async function GET() {
 
   // Recent visits (last 60)
   const recentRows = visits.slice(0, 60).map(v => {
-    const deviceMeta = { iphone:'📱', ipad:'📲', mac:'🖥️', android:'📱', 'android-tablet':'📲', windows:'🖥️', linux:'🖥️', desktop:'🖥️' };
-    const deviceIcon = deviceMeta[v.device] || '·';
-    const deviceLabel = DEVICE_META[v.device]?.label || v.device || '';
+    const dm = DEVICE_META[v.device];
+    const deviceIcon = dm?.icon || '·';
+    const deviceLabel = dm?.label || v.device || '';
     const countryFlag = v.country ? (COUNTRY_NAMES[v.country]?.split(' ')[0] || v.country) : '';
     const avatar = v.initials
       ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.7);color:rgba(99,102,241,0.9);font-size:6pt;font-weight:700;letter-spacing:0.03em;vertical-align:middle">${v.initials.slice(0,3).toUpperCase()}</span>`
