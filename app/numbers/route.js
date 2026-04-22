@@ -43,10 +43,19 @@ export async function GET() {
   const now = new Date();
   const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
 
-  const { data, error } = await supabase()
+  let { data, error } = await supabase()
     .from('page_visits')
     .select('page, visited_at, device, country, referrer, initials')
     .order('visited_at', { ascending: false });
+
+  if (error) {
+    const fallback = await supabase()
+      .from('page_visits')
+      .select('page, visited_at, device, country, referrer')
+      .order('visited_at', { ascending: false });
+    data = fallback.data;
+    error = fallback.error;
+  }
 
   const visits = data || [];
 
