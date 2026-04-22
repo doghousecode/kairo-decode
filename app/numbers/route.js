@@ -45,7 +45,7 @@ export async function GET() {
 
   const { data, error } = await supabase()
     .from('page_visits')
-    .select('page, visited_at, device, country, referrer')
+    .select('page, visited_at, device, country, referrer, initials')
     .order('visited_at', { ascending: false });
 
   const visits = data || [];
@@ -204,8 +204,7 @@ export async function GET() {
   <div class="stats-grid">${statCards(DECODE_PAGES)}</div>
 
   <h2>Workshop</h2>
-  <div class="stats-grid-2">${statCards(WORKSHOP_PAGES)}</div>
-  <div class="stats-grid" style="margin-top:1rem">${statCards(WORKSHOP_LEGACY)}</div>
+  <div class="stats-grid-2">${statCards([...WORKSHOP_PAGES, ...WORKSHOP_LEGACY])}</div>
 
   <h2>Breakdown</h2>
   <div class="two-col">
