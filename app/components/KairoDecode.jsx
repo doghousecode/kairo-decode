@@ -1001,6 +1001,59 @@ export default function AIGlossary() {
 
   const isAdmin = userInitials.toUpperCase() === 'ST';
 
+  const handleExportPDF = () => {
+    const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term));
+    const tagCSS = Object.entries(TAG_COLORS).map(([tag, c]) =>
+      `.tag-${tag.replace(/\s+/g, '-')}{background:${c.bg};color:${c.text};border:1px solid ${c.border};}`
+    ).join('');
+    const cardsHTML = sorted.map(t => `
+      <div class="card">
+        <div class="row">
+          <span class="emoji">${t.emoji || ''}</span>
+          <div class="main">
+            <div class="namerow">
+              <span class="name">${t.term}</span>
+              ${t.tag ? `<span class="tag tag-${t.tag.replace(/\s+/g, '-')}">${t.tag}</span>` : ''}
+            </div>
+            <p class="def">${t.definition}</p>
+          </div>
+        </div>
+      </div>`).join('');
+    const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
+<title>Kairo Decode — AI Jargon Glossary</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+@page{margin:0.65in;size:A4}
+body{font-family:'DM Sans',-apple-system,sans-serif;background:#080810;color:#e5e5f0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{max-width:620px;margin:0 auto;padding:2rem}
+.hdr{margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.hdr h1{font-size:22pt;font-weight:700;letter-spacing:-0.03em;color:#fff;margin-bottom:0.2rem}
+.hdr .sub{font-size:9pt;color:rgba(255,255,255,0.32);letter-spacing:0.06em;text-transform:lowercase}
+.hdr .meta{font-size:8.5pt;color:rgba(255,255,255,0.2);margin-top:0.35rem}
+.card{padding:0.8rem 0;border-bottom:1px solid rgba(255,255,255,0.06);page-break-inside:avoid}
+.row{display:flex;align-items:flex-start;gap:0.7rem}
+.emoji{font-size:1.35rem;line-height:1.2;flex-shrink:0;width:1.75rem;text-align:center}
+.main{flex:1}
+.namerow{display:flex;align-items:center;gap:0.45rem;margin-bottom:0.25rem;flex-wrap:wrap}
+.name{font-size:11.5pt;font-weight:700;color:#fff;letter-spacing:-0.01em}
+.tag{font-size:7pt;font-weight:600;padding:0.12rem 0.45rem;border-radius:20px;letter-spacing:0.03em}
+.def{font-size:9.5pt;color:rgba(255,255,255,0.55);line-height:1.55}
+${tagCSS}
+</style></head>
+<body><div class="page">
+<div class="hdr">
+  <h1>Kairo Decode</h1>
+  <p class="sub">adaptive intelligence jargon buster</p>
+  <p class="meta">${sorted.length} terms &middot; ${date}</p>
+</div>
+${cardsHTML}
+</div><script>window.onload=function(){window.print()}</script></body></html>`;
+    const win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); }
+  };
+
   const handleDelete = async (termName) => {
     try {
       await fetch("/api/terms", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ term: termName }) });
@@ -1197,9 +1250,13 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
           {/* Logo row */}
           <div style={{ display: "flex", alignItems: "center", gap: "0.45rem", position: "relative" }}>
-            <a href="https://meetkairo.ai" style={{ display: "block", lineHeight: 0 }}>
-              <img src={isMint ? "/kairo-decode-wordmark-forest-cropped.png" : "/kairo-decode-wordmark-cropped.png"} alt="Kairo Decode" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
-            </a>
+            <div style={{ position: "relative", display: "inline-block", lineHeight: 0 }}>
+              <a href="https://meetkairo.ai" style={{ display: "block", lineHeight: 0 }}>
+                <img src={isMint ? "/kairo-decode-wordmark-forest-cropped.png" : "/kairo-decode-wordmark-cropped.png"} alt="Kairo Decode" style={{ height: "28px", width: "auto", display: "block", transform: "translateY(-1px)" }} />
+              </a>
+              {/* Hidden export trigger — the last 'e' in decode */}
+              <button onClick={handleExportPDF} aria-hidden="true" style={{ position: "absolute", right: 0, top: 0, width: "13px", height: "100%", background: "transparent", border: "none", cursor: "default", padding: 0, zIndex: 10 }} />
+            </div>
             <div style={{ marginLeft: "auto", position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "0.5rem", zIndex: showLangPicker ? 9999 : "auto" }}>
               {/* Language picker */}
               <div ref={langPickerRef} style={{ position: "relative" }}>
