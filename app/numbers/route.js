@@ -61,7 +61,7 @@ export async function GET() {
 
   // Aggregate stats per page
   const totals = {}, weekCounts = {}, lastSeen = {};
-  const deviceCounts = { mobile: 0, desktop: 0, tablet: 0, unknown: 0 };
+  const deviceCounts = { iphone: 0, ipad: 0, mac: 0, android: 0, 'android-tablet': 0, windows: 0, linux: 0, desktop: 0, unknown: 0 };
   const countryCounts = {};
 
   visits.forEach(v => {
@@ -91,21 +91,31 @@ export async function GET() {
   }
 
   // Device breakdown
+  const DEVICE_META = {
+    iphone:         { label: 'iPhone',         icon: '📱', color: '#818cf8' },
+    ipad:           { label: 'iPad',            icon: '📲', color: '#fb923c' },
+    mac:            { label: 'Mac',             icon: '🖥️', color: '#34d399' },
+    android:        { label: 'Android',         icon: '📱', color: '#a78bfa' },
+    'android-tablet':{ label: 'Android tablet', icon: '📲', color: '#f97316' },
+    windows:        { label: 'Windows',         icon: '🖥️', color: '#22d3ee' },
+    linux:          { label: 'Linux',           icon: '🖥️', color: '#86efac' },
+    desktop:        { label: 'Desktop',         icon: '🖥️', color: '#34d399' },
+    unknown:        { label: 'Unknown',         icon: '·',  color: '#3f3f46' },
+  };
   const deviceTotal = Object.values(deviceCounts).reduce((a, b) => a + b, 0) || 1;
-  const deviceBar = ['mobile', 'desktop', 'tablet']
+  const deviceBar = Object.keys(DEVICE_META)
     .filter(d => deviceCounts[d])
     .map(d => {
       const pct = Math.round(deviceCounts[d] / deviceTotal * 100);
-      const colors = { mobile: '#818cf8', desktop: '#34d399', tablet: '#fb923c' };
-      return `<div class="bar-seg" style="width:${pct}%;background:${colors[d]}" title="${d}: ${deviceCounts[d]}"></div>`;
+      return `<div class="bar-seg" style="width:${pct}%;background:${DEVICE_META[d].color}" title="${DEVICE_META[d].label}: ${deviceCounts[d]}"></div>`;
     }).join('');
 
-  const deviceLegend = ['mobile', 'desktop', 'tablet']
+  const deviceLegend = Object.keys(DEVICE_META)
     .filter(d => deviceCounts[d])
     .map(d => {
       const pct = Math.round(deviceCounts[d] / deviceTotal * 100);
-      const icons = { mobile: '📱', desktop: '🖥️', tablet: '📲' };
-      return `<span class="legend-item"><span class="legend-dot" style="background:${({mobile:'#818cf8',desktop:'#34d399',tablet:'#fb923c'})[d]}"></span>${icons[d]} ${d} <strong>${pct}%</strong></span>`;
+      const m = DEVICE_META[d];
+      return `<span class="legend-item"><span class="legend-dot" style="background:${m.color}"></span>${m.icon} ${m.label} <strong>${pct}%</strong></span>`;
     }).join('');
 
   // Country breakdown (top 8)
@@ -125,7 +135,9 @@ export async function GET() {
 
   // Recent visits (last 60)
   const recentRows = visits.slice(0, 60).map(v => {
-    const deviceIcon = ({ mobile: '📱', desktop: '🖥️', tablet: '📲' })[v.device] || '·';
+    const deviceMeta = { iphone:'📱', ipad:'📲', mac:'🖥️', android:'📱', 'android-tablet':'📲', windows:'🖥️', linux:'🖥️', desktop:'🖥️' };
+    const deviceIcon = deviceMeta[v.device] || '·';
+    const deviceLabel = DEVICE_META[v.device]?.label || v.device || '';
     const countryFlag = v.country ? (COUNTRY_NAMES[v.country]?.split(' ')[0] || v.country) : '';
     const avatar = v.initials
       ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.7);color:rgba(99,102,241,0.9);font-size:6pt;font-weight:700;letter-spacing:0.03em;vertical-align:middle">${v.initials.slice(0,3).toUpperCase()}</span>`
@@ -133,7 +145,7 @@ export async function GET() {
     return `<tr>
       <td>${PAGE_LABELS[v.page] || v.page}</td>
       <td>${avatar}</td>
-      <td>${deviceIcon} ${countryFlag}</td>
+      <td>${deviceIcon} ${deviceLabel} ${countryFlag}</td>
       <td>${fmt(v.visited_at)}</td>
       <td class="muted">${rel(v.visited_at, now)}</td>
     </tr>`;

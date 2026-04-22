@@ -17,8 +17,13 @@ const supabase = () => createClient(
 
 function getDevice(ua = "") {
   if (!ua) return null;
-  if (/tablet|ipad/i.test(ua)) return "tablet";
-  if (/mobile|iphone|android|ipod/i.test(ua)) return "mobile";
+  if (/ipad/i.test(ua)) return "ipad";
+  if (/iphone|ipod/i.test(ua)) return "iphone";
+  if (/android/i.test(ua) && /mobile/i.test(ua)) return "android";
+  if (/android/i.test(ua)) return "android-tablet";
+  if (/macintosh|mac os x/i.test(ua)) return "mac";
+  if (/windows/i.test(ua)) return "windows";
+  if (/linux/i.test(ua)) return "linux";
   return "desktop";
 }
 
