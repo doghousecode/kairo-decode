@@ -1003,10 +1003,15 @@ export default function AIGlossary() {
 
   const handleExportPDF = () => {
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term));
+    const langLabel = LANGUAGES.find(l => l.code === lang)?.nativeName;
+    const isTranslated = lang !== 'en' && Object.keys(batchTranslations[lang] || {}).length > 0;
     const tagCSS = Object.entries(TAG_COLORS).map(([tag, c]) =>
       `.tag-${tag.replace(/\s+/g, '-')}{background:${c.lightBg};color:${c.lightText};border:1px solid ${c.lightBorder};}`
     ).join('');
-    const cardsHTML = sorted.map(t => `
+    const cardsHTML = sorted.map(t => {
+      const def = (isTranslated && batchTranslations[lang]?.[t.term]?.definition) ? batchTranslations[lang][t.term].definition : t.definition;
+      const contrib = t.contributor ? t.contributor.slice(0, 3).toUpperCase() : '';
+      return `
       <div class="card">
         <div class="row">
           <span class="emoji">${t.emoji || ''}</span>
@@ -1014,11 +1019,13 @@ export default function AIGlossary() {
             <div class="namerow">
               <span class="name">${t.term}</span>
               ${t.tag ? `<span class="tag tag-${t.tag.replace(/\s+/g, '-')}">${t.tag}</span>` : ''}
+              ${contrib ? `<span class="avatar">${contrib}</span>` : ''}
             </div>
-            <p class="def">${t.definition}</p>
+            <p class="def">${def}</p>
           </div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
     const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     const html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
 <title>Kairo Decode — AI Jargon Buster</title>
@@ -1033,6 +1040,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#fff;color:#111;-
 .hdr-left .sub{font-size:8.5pt;color:#71717a;letter-spacing:0.06em;text-transform:lowercase}
 .hdr-right{text-align:right;flex-shrink:0}
 .hdr-right .meta{font-size:8pt;color:#a1a1aa}
+.lang-badge{display:inline-block;font-size:7.5pt;font-weight:600;color:#6366f1;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-radius:10px;padding:0.1rem 0.45rem;margin-top:0.3rem;letter-spacing:0.03em}
 .card{padding:0.7rem 0;border-bottom:1px solid #f0f0f4;page-break-inside:avoid}
 .row{display:flex;align-items:flex-start;gap:0.65rem}
 .emoji{font-size:1.25rem;line-height:1.3;flex-shrink:0;width:1.6rem;text-align:center}
@@ -1040,6 +1048,7 @@ body{font-family:'DM Sans',-apple-system,sans-serif;background:#fff;color:#111;-
 .namerow{display:flex;align-items:center;gap:0.4rem;margin-bottom:0.2rem;flex-wrap:wrap}
 .name{font-size:11pt;font-weight:700;color:#111;letter-spacing:-0.01em}
 .tag{font-size:6.5pt;font-weight:600;padding:0.1rem 0.42rem;border-radius:20px;border:1px solid;letter-spacing:0.03em;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.avatar{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1.5px solid #6366f1;color:#6366f1;font-size:5.5pt;font-weight:700;letter-spacing:0.03em;flex-shrink:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .def{font-size:9pt;color:#52525b;line-height:1.55}
 ${tagCSS}
 </style></head>
@@ -1048,6 +1057,7 @@ ${tagCSS}
   <div class="hdr-left">
     <h1>Kairo Decode</h1>
     <p class="sub">adaptive intelligence jargon buster</p>
+    ${isTranslated ? `<span class="lang-badge">${langLabel}</span>` : ''}
   </div>
   <div class="hdr-right">
     <p class="meta">${sorted.length} terms</p>
