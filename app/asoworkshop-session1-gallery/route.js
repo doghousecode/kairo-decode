@@ -579,7 +579,14 @@ export async function GET() {
   });
 
   load(false);
-  fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: 'decode-gallery' }) }).catch(() => {});
+  (function() {
+    var key = 'kairo-tracked-decode-gallery';
+    var last = parseInt(localStorage.getItem(key) || '0', 10);
+    if (Date.now() - last > 30 * 60 * 1000) {
+      fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page: 'decode-gallery' }) }).catch(() => {});
+      localStorage.setItem(key, String(Date.now()));
+    }
+  })();
 </script>
 </body>
 </html>`;
