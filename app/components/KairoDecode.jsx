@@ -804,8 +804,8 @@ export default function AIGlossary() {
   }, []);
 
   useEffect(() => {
-    // Signal layout to hide splash as soon as the app mounts
-    window.kairoReady?.();
+    // Signal layout to hide splash — minimum 1.2s so it's always visible briefly
+    setTimeout(() => window.kairoReady?.(), 1200);
 
     setIsOnline(navigator.onLine);
     const goOnline = () => setIsOnline(true);
