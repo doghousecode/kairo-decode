@@ -1,7 +1,16 @@
-const CACHE = 'kairo-decode-v8';
+const CACHE = 'kairo-decode-v9';
+
+const PRECACHE_ASSETS = [
+  '/kairo-wordmark-cropped.png',
+  '/kairo-decode-wordmark-cropped.png',
+  '/kairo-decode-wordmark-forest-cropped.png',
+];
 
 self.addEventListener('install', event => {
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE).then(cache => cache.addAll(PRECACHE_ASSETS))
+  );
 });
 
 self.addEventListener('activate', event => {

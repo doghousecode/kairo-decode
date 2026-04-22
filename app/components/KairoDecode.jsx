@@ -1335,7 +1335,11 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
 
         {/* Offline banner */}
         {!isOnline && (
-          <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.22)", color: "rgba(252,211,77,0.8)" }}>
+          <div className="mb-4 px-4 py-3 rounded-xl text-sm" style={{
+            background: isMint ? "rgba(180,83,9,0.08)" : "rgba(245,158,11,0.07)",
+            border: `1px solid ${isMint ? "rgba(180,83,9,0.25)" : "rgba(245,158,11,0.22)"}`,
+            color: isMint ? "rgba(120,53,15,0.9)" : "rgba(252,211,77,0.85)",
+          }}>
             {strings.offlineBanner}
           </div>
         )}
