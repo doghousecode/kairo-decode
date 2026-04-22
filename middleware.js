@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server'
 export function middleware(request) {
   const { pathname } = request.nextUrl
 
-  // Only the visitors page is password-protected
-  if (!pathname.startsWith('/visitors')) return NextResponse.next()
+  // Analytics pages are password-protected
+  if (!pathname.startsWith('/visitors') && !pathname.startsWith('/numbers')) return NextResponse.next()
 
   const auth = request.cookies.get('kairo-auth')
   if (!auth || auth.value !== 'granted') {

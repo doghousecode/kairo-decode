@@ -226,7 +226,7 @@ const getTagColor = (tag, dark = true) => {
 
 const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
-const AVATAR_COLORS = ["#0d9488","#4f46e5","#e11d48","#d97706","#059669","#7c3aed","#0284c7","#ea580c","#db2777","#65a30d"];
+const AVATAR_COLORS = ["#0d9488","#e11d48","#4f46e5","#d97706","#059669","#7c3aed","#0284c7","#ea580c","#db2777","#65a30d"];
 const getAvatarColor = (initials) => {
   const hash = (initials || "?").split("").reduce((a, c) => (c.charCodeAt(0) + (a << 6) + (a << 16) - a) >>> 0, 0);
   return AVATAR_COLORS[hash % AVATAR_COLORS.length];
@@ -803,6 +803,10 @@ export default function AIGlossary() {
     loadTerms().finally(() => setTermsLoaded(true));
     const interval = setInterval(loadTerms, 60000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page: "decode" }) }).catch(() => {});
   }, []);
 
   useEffect(() => {
