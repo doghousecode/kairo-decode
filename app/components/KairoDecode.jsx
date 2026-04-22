@@ -37,9 +37,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" isn't in the glossary yet`,
     addPrompt: "Press Enter or tap Add to generate an entry",
     connectToAdd: "Connect to add new terms",
-    discovered: (n) => `+${n} discovered`,
+    discovered: (n) => `+${n} terms discovered.`,
     generatingEntry: "Generating entry",
-    footer: (total, gen) => `${total} terms · ${gen} auto-discovered · Kairo Decode`,
+    footer: (n) => `${n} terms discovered · Kairo Decode`,
     tags: { "All":"All","Model":"Model","Core Concept":"Core Concept","Training":"Training","Inference":"Inference","Dev Tool":"Dev Tool","Risk":"Risk","Behaviour":"Behaviour","Economics":"Economics","Technique":"Technique","Architecture":"Architecture","Craft":"Craft" },
   },
   fr: {
@@ -55,9 +55,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" n'est pas encore dans le glossaire`,
     addPrompt: "Appuyez sur Entrée ou sur Ajouter pour générer une entrée",
     connectToAdd: "Connectez-vous pour ajouter des termes",
-    discovered: (n) => `+${n} découverts`,
+    discovered: (n) => `+${n} termes découverts.`,
     generatingEntry: "Génération en cours",
-    footer: (total, gen) => `${total} termes · ${gen} découverts · Kairo Decode`,
+    footer: (n) => `${n} termes découverts · Kairo Decode`,
     tags: { "All":"Tout","Model":"Modèle","Core Concept":"Concept clé","Training":"Entraînement","Inference":"Inférence","Dev Tool":"Outil dev","Risk":"Risque","Behaviour":"Comportement","Economics":"Économie","Technique":"Technique","Architecture":"Architecture","Craft":"Artisanat" },
   },
   de: {
@@ -73,9 +73,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" ist noch nicht im Glossar`,
     addPrompt: "Enter drücken oder Hinzufügen antippen",
     connectToAdd: "Verbinden, um Begriffe hinzuzufügen",
-    discovered: (n) => `+${n} entdeckt`,
+    discovered: (n) => `+${n} Begriffe entdeckt.`,
     generatingEntry: "Eintrag wird generiert",
-    footer: (total, gen) => `${total} Begriffe · ${gen} entdeckt · Kairo Decode`,
+    footer: (n) => `${n} Begriffe entdeckt · Kairo Decode`,
     tags: { "All":"Alle","Model":"Modell","Core Concept":"Kernkonzept","Training":"Training","Inference":"Inferenz","Dev Tool":"Dev-Tool","Risk":"Risiko","Behaviour":"Verhalten","Economics":"Wirtschaft","Technique":"Technik","Architecture":"Architektur","Craft":"Handwerk" },
   },
   es: {
@@ -91,9 +91,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" aún no está en el glosario`,
     addPrompt: "Pulsa Enter o toca Añadir para generar una entrada",
     connectToAdd: "Conéctate para añadir términos",
-    discovered: (n) => `+${n} descubiertos`,
+    discovered: (n) => `+${n} términos descubiertos.`,
     generatingEntry: "Generando entrada",
-    footer: (total, gen) => `${total} términos · ${gen} descubiertos · Kairo Decode`,
+    footer: (n) => `${n} términos descubiertos · Kairo Decode`,
     tags: { "All":"Todo","Model":"Modelo","Core Concept":"Concepto clave","Training":"Entrenamiento","Inference":"Inferencia","Dev Tool":"Herramienta dev","Risk":"Riesgo","Behaviour":"Comportamiento","Economics":"Economía","Technique":"Técnica","Architecture":"Arquitectura","Craft":"Oficio" },
   },
   it: {
@@ -109,9 +109,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" non è ancora nel glossario`,
     addPrompt: "Premi Invio o tocca Aggiungi per generare una voce",
     connectToAdd: "Connettiti per aggiungere termini",
-    discovered: (n) => `+${n} scoperti`,
+    discovered: (n) => `+${n} termini scoperti.`,
     generatingEntry: "Generazione in corso",
-    footer: (total, gen) => `${total} termini · ${gen} scoperti · Kairo Decode`,
+    footer: (n) => `${n} termini scoperti · Kairo Decode`,
     tags: { "All":"Tutto","Model":"Modello","Core Concept":"Concetto chiave","Training":"Addestramento","Inference":"Inferenza","Dev Tool":"Strumento dev","Risk":"Rischio","Behaviour":"Comportamento","Economics":"Economia","Technique":"Tecnica","Architecture":"Architettura","Craft":"Artigianato" },
   },
   nl: {
@@ -127,9 +127,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" staat nog niet in het woordenboek`,
     addPrompt: "Druk op Enter of tik op Toevoegen om een vermelding te genereren",
     connectToAdd: "Verbind om termen toe te voegen",
-    discovered: (n) => `+${n} ontdekt`,
+    discovered: (n) => `+${n} termen ontdekt.`,
     generatingEntry: "Vermelding genereren",
-    footer: (total, gen) => `${total} termen · ${gen} ontdekt · Kairo Decode`,
+    footer: (n) => `${n} termen ontdekt · Kairo Decode`,
     tags: { "All":"Alles","Model":"Model","Core Concept":"Kernbegrip","Training":"Training","Inference":"Inferentie","Dev Tool":"Dev-tool","Risk":"Risico","Behaviour":"Gedrag","Economics":"Economie","Technique":"Techniek","Architecture":"Architectuur","Craft":"Vakmanschap" },
   },
   ko: {
@@ -145,9 +145,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}"은(는) 아직 용어집에 없습니다`,
     addPrompt: "Enter를 누르거나 추가를 탭하여 항목을 생성하세요",
     connectToAdd: "용어를 추가하려면 연결하세요",
-    discovered: (n) => `+${n} 발견됨`,
+    discovered: (n) => `+${n}개 용어 발견됨.`,
     generatingEntry: "항목 생성 중",
-    footer: (total, gen) => `${total}개 용어 · ${gen}개 자동 발견 · Kairo Decode`,
+    footer: (n) => `${n}개 용어 발견됨 · Kairo Decode`,
     tags: { "All":"전체","Model":"모델","Core Concept":"핵심 개념","Training":"학습","Inference":"추론","Dev Tool":"개발 도구","Risk":"위험","Behaviour":"동작","Economics":"경제","Technique":"기법","Architecture":"아키텍처","Craft":"기술" },
   },
   ja: {
@@ -163,9 +163,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}"はまだ用語集にありません`,
     addPrompt: "Enterを押すか追加をタップしてエントリを生成",
     connectToAdd: "用語を追加するには接続してください",
-    discovered: (n) => `+${n} 発見`,
+    discovered: (n) => `+${n}用語発見.`,
     generatingEntry: "エントリ生成中",
-    footer: (total, gen) => `${total}用語 · ${gen}自動発見 · Kairo Decode`,
+    footer: (n) => `${n}用語発見 · Kairo Decode`,
     tags: { "All":"すべて","Model":"モデル","Core Concept":"基本概念","Training":"学習","Inference":"推論","Dev Tool":"開発ツール","Risk":"リスク","Behaviour":"動作","Economics":"経済","Technique":"テクニック","Architecture":"アーキテクチャ","Craft":"クラフト" },
   },
   hi: {
@@ -181,9 +181,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" अभी शब्दकोश में नहीं है`,
     addPrompt: "एंट्री बनाने के लिए Enter दबाएं या जोड़ें टैप करें",
     connectToAdd: "शब्द जोड़ने के लिए कनेक्ट करें",
-    discovered: (n) => `+${n} खोजे गए`,
+    discovered: (n) => `+${n} शब्द खोजे गए.`,
     generatingEntry: "एंट्री बन रही है",
-    footer: (total, gen) => `${total} शब्द · ${gen} स्वचालित खोजे · Kairo Decode`,
+    footer: (n) => `${n} शब्द खोजे गए · Kairo Decode`,
     tags: { "All":"सभी","Model":"मॉडल","Core Concept":"मूल अवधारणा","Training":"प्रशिक्षण","Inference":"अनुमान","Dev Tool":"डेव टूल","Risk":"जोखिम","Behaviour":"व्यवहार","Economics":"अर्थशास्त्र","Technique":"तकनीक","Architecture":"आर्किटेक्चर","Craft":"शिल्प" },
   },
   pa: {
@@ -199,9 +199,9 @@ const UI_STRINGS = {
     notInGlossary: (term) => `"${term}" ਅਜੇ ਸ਼ਬਦਕੋਸ਼ ਵਿੱਚ ਨਹੀਂ ਹੈ`,
     addPrompt: "ਐਂਟਰੀ ਬਣਾਉਣ ਲਈ Enter ਦਬਾਓ ਜਾਂ ਜੋੜੋ ਟੈਪ ਕਰੋ",
     connectToAdd: "ਸ਼ਬਦ ਜੋੜਨ ਲਈ ਕਨੈਕਟ ਕਰੋ",
-    discovered: (n) => `+${n} ਖੋਜੇ ਗਏ`,
+    discovered: (n) => `+${n} ਸ਼ਬਦ ਖੋਜੇ ਗਏ.`,
     generatingEntry: "ਐਂਟਰੀ ਬਣ ਰਹੀ ਹੈ",
-    footer: (total, gen) => `${total} ਸ਼ਬਦ · ${gen} ਆਪੋ-ਆਪ ਖੋਜੇ · Kairo Decode`,
+    footer: (n) => `${n} ਸ਼ਬਦ ਖੋਜੇ ਗਏ · Kairo Decode`,
     tags: { "All":"ਸਾਰੇ","Model":"ਮਾਡਲ","Core Concept":"ਮੁੱਖ ਧਾਰਣਾ","Training":"ਸਿਖਲਾਈ","Inference":"ਅਨੁਮਾਨ","Dev Tool":"ਡੈੱਵ ਟੂਲ","Risk":"ਜੋਖ਼ਮ","Behaviour":"ਵਤੀਰਾ","Economics":"ਅਰਥਸ਼ਾਸਤਰ","Technique":"ਤਕਨੀਕ","Architecture":"ਆਰਕੀਟੈਕਚਰ","Craft":"ਕਾਰੀਗਰੀ" },
   },
 };
@@ -1533,7 +1533,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         </div>
 
         <p className="text-center text-xs mt-8" style={{ color: "rgba(var(--rgb),0.13)" }}>
-          {strings.footer(terms.length, generatedCount)}
+          {strings.footer(terms.length)}
         </p>
 
         <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
