@@ -2,7 +2,7 @@ import './globals.css'
 
 export const metadata = {
   title: 'Kairo',
-  description: 'Your AI chief of staff.',
+  description: 'AI chief of staff.',
 }
 
 export default function RootLayout({ children }) {
