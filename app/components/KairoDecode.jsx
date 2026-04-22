@@ -806,6 +806,7 @@ export default function AIGlossary() {
   }, []);
 
   useEffect(() => {
+    if (localStorage.getItem('kairo-owner') === '1') return;
     const key = 'kairo-tracked-decode';
     const last = parseInt(localStorage.getItem(key) || '0', 10);
     if (Date.now() - last > 10 * 60 * 1000) {
@@ -1011,6 +1012,7 @@ export default function AIGlossary() {
   };
 
   const isAdmin = userInitials.toUpperCase() === 'ST';
+  if (isAdmin) localStorage.setItem('kairo-owner', '1');
 
   const handleExportPDF = () => {
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term));

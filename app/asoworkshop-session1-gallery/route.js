@@ -580,6 +580,7 @@ export async function GET() {
 
   load(false);
   (function() {
+    if (localStorage.getItem('kairo-owner') === '1') return;
     var key = 'kairo-tracked-decode-gallery';
     var last = parseInt(localStorage.getItem(key) || '0', 10);
     if (Date.now() - last > 10 * 60 * 1000) {
