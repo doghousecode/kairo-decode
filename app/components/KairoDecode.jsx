@@ -241,6 +241,7 @@ function AvatarCircle({ initials, size = 26, isMint = false, style: extraStyle }
       border: `1.5px solid ${color}`,
       color, display: "flex", alignItems: "center", justifyContent: "center",
       fontSize: size * 0.38, fontWeight: 700, letterSpacing: "0.03em",
+      lineHeight: 1, paddingTop: "1px",
       flexShrink: 0, userSelect: "none", transition: "opacity 0.15s, box-shadow 0.15s",
       ...extraStyle,
     }}>
