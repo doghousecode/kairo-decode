@@ -1434,7 +1434,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         paddingBottom: "2rem",
         position: "relative",
         zIndex: 1,
-        minHeight: `calc(100vh - ${headerHeight}px)`,
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
       }}>
