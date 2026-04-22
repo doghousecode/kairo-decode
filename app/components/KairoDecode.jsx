@@ -232,7 +232,7 @@ const getAvatarColor = (initials) => {
   return AVATAR_COLORS[hash % AVATAR_COLORS.length];
 };
 
-function AvatarCircle({ initials, size = 26, isMint = false }) {
+function AvatarCircle({ initials, size = 26, isMint = false, style: extraStyle }) {
   const color = isMint ? "rgba(42,58,106,0.75)" : getAvatarColor(initials);
   return (
     <div style={{
@@ -241,9 +241,10 @@ function AvatarCircle({ initials, size = 26, isMint = false }) {
       border: `1.5px solid ${color}`,
       color, display: "flex", alignItems: "center", justifyContent: "center",
       fontSize: size * 0.38, fontWeight: 700, letterSpacing: "0.03em",
-      flexShrink: 0, userSelect: "none",
+      flexShrink: 0, userSelect: "none", transition: "opacity 0.15s, box-shadow 0.15s",
+      ...extraStyle,
     }}>
-      {initials}
+      {(initials || "?").slice(0, 3).toUpperCase()}
     </div>
   );
 }
@@ -733,6 +734,7 @@ export default function AIGlossary() {
   const [openTerm, setOpenTerm] = useState(null);
   const [search, setSearch] = useState("");
   const [activeTag, setActiveTag] = useState("All");
+  const [filterContributor, setFilterContributor] = useState(null);
   const [generating, setGenerating] = useState(null);
   const [streamingPreview, setStreamingPreview] = useState("");
   const [showCategories, setShowCategories] = useState(true);
@@ -1225,7 +1227,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
     .filter(item => {
       const q = search.trim().toLowerCase();
       const matchSearch = !q || item.term.toLowerCase().includes(q) || item.definition.toLowerCase().includes(q);
-      return matchSearch && (activeTag === "All" || item.tag === activeTag);
+      return matchSearch && (activeTag === "All" || item.tag === activeTag) && (!filterContributor || item.contributor === filterContributor);
     })
     .sort((a, b) => {
       const q = search.trim().toLowerCase();
@@ -1239,6 +1241,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
   const isKnown = searchQ && terms.some(t => t.term.toLowerCase() === searchQ.toLowerCase());
   const showAddHint = searchQ.length > 1 && !isKnown && !generating && filtered.length === 0;
   const generatedCount = terms.filter(t => !t.seeded).length;
+  const contributors = [...new Set(terms.map(t => t.contributor).filter(Boolean))].sort();
 
   const strings = UI_STRINGS[lang] || UI_STRINGS.en;
 
@@ -1477,9 +1480,26 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
           </div>
         )}
 
-        {generatedCount > 0 && (
-          <div className="mb-3">
-            <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>{strings.discovered(generatedCount)}</span>
+        {(generatedCount > 0 || contributors.length > 0) && (
+          <div className="mb-3" style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "0.4rem" }}>
+            {generatedCount > 0 && (
+              <span className="text-xs" style={{ color: "rgba(20,184,166,0.65)" }}>{strings.discovered(generatedCount)}</span>
+            )}
+            {contributors.length > 0 && (
+              <>
+                {generatedCount > 0 && <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.2)" }}>·</span>}
+                <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.35)" }}>Contributors:</span>
+                {contributors.map(c => (
+                  <button key={c} onClick={() => setFilterContributor(filterContributor === c ? null : c)}
+                    title={filterContributor === c ? "Clear filter" : `Show ${c}'s terms`}
+                    style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                    <AvatarCircle initials={c} size={20} isMint={isMint}
+                      style={filterContributor === c ? { opacity: 1, boxShadow: `0 0 0 2px ${isMint ? "rgba(42,58,106,0.5)" : "rgba(199,210,254,0.6)"}` } : { opacity: filterContributor && filterContributor !== c ? 0.35 : 0.8 }}
+                    />
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         )}
 
