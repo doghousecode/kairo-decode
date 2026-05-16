@@ -1,8 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
+import { escapeHtml } from "@/lib/security";
 
 const supabase = () => createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const PAGE_LABELS = {
@@ -83,9 +84,9 @@ export async function GET() {
       const week = weekCounts[page] || 0;
       const last = rel(lastSeen[page], now);
       return `<div class="stat-card">
-        <div class="page-label">${label}</div>
+        <div class="page-label">${escapeHtml(label)}</div>
         <div class="page-count">${total}</div>
-        <div class="page-meta">${week} this week · last ${last}</div>
+        <div class="page-meta">${week} this week · last ${escapeHtml(last)}</div>
       </div>`;
     }).join('');
   }
@@ -127,7 +128,7 @@ export async function GET() {
       const label = COUNTRY_NAMES[code] || code;
       const pct = Math.round(count / totalAll * 100);
       return `<div class="country-row">
-        <span class="country-label">${label}</span>
+        <span class="country-label">${escapeHtml(label)}</span>
         <div class="country-bar-wrap">
           <div class="country-bar" style="width:${Math.max(pct, 2)}%"></div>
         </div>
@@ -141,20 +142,23 @@ export async function GET() {
     const deviceIcon = dm?.icon || '·';
     const deviceLabel = dm?.label || v.device || '';
     const countryFlag = v.country ? (COUNTRY_NAMES[v.country]?.split(' ')[0] || v.country) : '';
-    const avatar = v.initials
-      ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.7);color:rgba(99,102,241,0.9);font-size:6pt;font-weight:700;letter-spacing:0.03em;vertical-align:middle">${v.initials.slice(0,3).toUpperCase()}</span>`
+    const safeInitials = typeof v.initials === 'string'
+      ? v.initials.replace(/[^A-Za-z0-9]/g, '').slice(0, 3).toUpperCase()
+      : '';
+    const avatar = safeInitials
+      ? `<span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.7);color:rgba(99,102,241,0.9);font-size:6pt;font-weight:700;letter-spacing:0.03em;vertical-align:middle">${safeInitials}</span>`
       : '<span style="color:#3f3f46;font-size:9pt">—</span>';
     return `<tr>
-      <td>${PAGE_LABELS[v.page] || v.page}</td>
+      <td>${escapeHtml(PAGE_LABELS[v.page] || v.page)}</td>
       <td>${avatar}</td>
-      <td>${deviceIcon} ${deviceLabel} ${countryFlag}</td>
+      <td>${deviceIcon} ${escapeHtml(deviceLabel)} ${escapeHtml(countryFlag)}</td>
       <td>${fmt(v.visited_at)}</td>
       <td class="muted">${rel(v.visited_at, now)}</td>
     </tr>`;
   }).join('');
 
   const loadedAt = now.toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
-  const errorNote = error ? `<p style="color:#fb7185;font-size:10pt;margin-bottom:1rem">⚠️ ${error.message}</p>` : '';
+  const errorNote = error ? `<p style="color:#fb7185;font-size:10pt;margin-bottom:1rem">⚠️ ${escapeHtml(error.message)}</p>` : '';
 
   const html = `<!DOCTYPE html>
 <html lang="en">

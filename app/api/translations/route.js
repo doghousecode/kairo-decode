@@ -1,9 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
+import { isSameOrigin } from '@/lib/security';
 
 /*
-  Run this SQL in your Supabase dashboard (SQL editor):
+  Supabase setup (run once, then drop the old permissive policies):
 
-  create table translations (
+  create table if not exists translations (
     term text not null,
     lang text not null,
     definition text,
@@ -12,17 +13,17 @@ import { createClient } from "@supabase/supabase-js";
     primary key (term, lang)
   );
   alter table translations enable row level security;
-  create policy "allow_select" on translations for select using (true);
-  create policy "allow_insert" on translations for insert with check (true);
-  create policy "allow_update" on translations for update using (true);
 
-  -- If table already exists, just add the column:
-  -- alter table translations add column if not exists deep_dive jsonb;
+  -- No policies needed: this route uses the service-role key, which bypasses RLS.
+  -- The anon key now has no access, which is what we want.
+  drop policy if exists "allow_select" on translations;
+  drop policy if exists "allow_insert" on translations;
+  drop policy if exists "allow_update" on translations;
 */
 
 const supabase = () => createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
 );
 
 export async function GET(request) {
@@ -49,6 +50,8 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  if (!isSameOrigin(request)) return Response.json({ ok: false }, { status: 403 });
+
   const { lang, translations } = await request.json();
   if (!lang || !translations) return Response.json({ ok: false }, { status: 400 });
 

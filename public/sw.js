@@ -1,4 +1,4 @@
-const CACHE = 'kairo-decode-v9';
+const CACHE = 'kairo-decode-v10';
 
 const PRECACHE_ASSETS = [
   '/kairo-wordmark-cropped.png',

@@ -1029,6 +1029,9 @@ export default function AIGlossary() {
   const isAdmin = userInitials.toUpperCase() === 'ST';
 
   const handleExportPDF = () => {
+    const esc = (s) => String(s ?? '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term));
     const langLabel = LANGUAGES.find(l => l.code === lang)?.nativeName;
     const isTranslated = lang !== 'en' && Object.keys(batchTranslations[lang] || {}).length > 0;
@@ -1038,17 +1041,18 @@ export default function AIGlossary() {
     const cardsHTML = sorted.map(t => {
       const def = (isTranslated && batchTranslations[lang]?.[t.term]?.definition) ? batchTranslations[lang][t.term].definition : t.definition;
       const contrib = t.contributor ? t.contributor.slice(0, 3).toUpperCase() : '';
+      const tagClass = t.tag ? t.tag.replace(/[^A-Za-z0-9-]/g, '-') : '';
       return `
       <div class="card">
         <div class="row">
-          <span class="emoji">${t.emoji || ''}</span>
+          <span class="emoji">${esc(t.emoji || '')}</span>
           <div class="main">
             <div class="namerow">
-              <span class="name">${t.term}</span>
-              ${t.tag ? `<span class="tag tag-${t.tag.replace(/\s+/g, '-')}">${t.tag}</span>` : ''}
-              ${contrib ? `<span class="avatar">${contrib}</span>` : ''}
+              <span class="name">${esc(t.term)}</span>
+              ${t.tag ? `<span class="tag tag-${esc(tagClass)}">${esc(t.tag)}</span>` : ''}
+              ${contrib ? `<span class="avatar">${esc(contrib)}</span>` : ''}
             </div>
-            <p class="def">${def}</p>
+            <p class="def">${esc(def)}</p>
           </div>
         </div>
       </div>`;
@@ -1084,7 +1088,7 @@ ${tagCSS}
   <div class="hdr-left">
     <h1>Kairo Decode</h1>
     <p class="sub">adaptive intelligence jargon buster</p>
-    ${isTranslated ? `<span class="lang-badge">${langLabel}</span>` : ''}
+    ${isTranslated ? `<span class="lang-badge">${esc(langLabel)}</span>` : ''}
   </div>
   <div class="hdr-right">
     <p class="meta">${sorted.length} terms</p>
@@ -1574,7 +1578,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         <footer style={{ borderTop: "0.5px solid rgba(var(--rgb),0.07)", padding: "1.75rem 0", display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "2rem" }}>
           <button onClick={() => window.kairoShowSplash?.()} style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <img src="/kairo-wordmark-cropped.png" alt="Kairo" style={{ height: "16px", width: "auto", display: "block", opacity: 0.7, filter: isMint ? "brightness(0) opacity(0.35)" : "none" }} />
-            <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.2)", letterSpacing: "0.1em", fontWeight: 500, position: "relative", top: "4px" }}>v1.2</span>
+            <span style={{ fontSize: "0.72rem", color: "rgba(var(--rgb),0.2)", letterSpacing: "0.1em", fontWeight: 500, position: "relative", top: "4px" }}>v2.0</span>
           </button>
           <span style={{ fontSize: "0.6rem", color: "rgba(var(--rgb),0.2)", letterSpacing: "0.1em", fontWeight: 500 }}>© 2026</span>
         </footer>

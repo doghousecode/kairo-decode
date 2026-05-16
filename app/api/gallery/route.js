@@ -1,20 +1,24 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
+import { isSameOrigin, isAuthed } from '@/lib/security';
 
 /*
-  Run this SQL in your Supabase dashboard (SQL editor):
+  Supabase setup (run once, then drop the old permissive policies):
 
-  create table gallery_entries (
+  create table if not exists gallery_entries (
     id uuid default gen_random_uuid() primary key,
     filename text not null unique,
     display_name text,
     uploaded_at timestamptz default now() not null
   );
   alter table gallery_entries enable row level security;
-  create policy "allow_insert" on gallery_entries for insert with check (true);
-  create policy "allow_select" on gallery_entries for select using (true);
 
-  Storage bucket "session1-gallery" should remain public with an INSERT policy.
-  No SELECT storage policy needed — we read from the table instead.
+  -- This route uses the service-role key, which bypasses RLS.
+  drop policy if exists "allow_insert" on gallery_entries;
+  drop policy if exists "allow_select" on gallery_entries;
+
+  -- Storage: keep the session1-gallery bucket public for SELECT (we serve
+  -- public URLs from it). Drop any anon INSERT policy on the bucket —
+  -- uploads now go through this route, which uses the service-role key.
 */
 
 const MAX_BYTES = 10 * 1024 * 1024;
@@ -22,7 +26,7 @@ const BUCKET = 'session1-gallery';
 
 const supabase = () => createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
 );
 
 export async function GET() {
@@ -45,10 +49,9 @@ export async function GET() {
 }
 
 export async function DELETE(request) {
-  const cookie = request.headers.get('cookie') || '';
-  if (!cookie.includes('kairo-auth=granted')) {
-    return Response.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  if (!isSameOrigin(request)) return Response.json({ error: 'forbidden' }, { status: 403 });
+  if (!isAuthed(request)) return Response.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { filename } = await request.json();
   if (!filename) return Response.json({ error: 'Missing filename' }, { status: 400 });
 
@@ -59,6 +62,8 @@ export async function DELETE(request) {
 }
 
 export async function POST(request) {
+  if (!isSameOrigin(request)) return Response.json({ error: 'forbidden' }, { status: 403 });
+
   try {
     const formData = await request.formData();
     const file = formData.get('image');

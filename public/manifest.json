@@ -1,17 +1,38 @@
 {
+  "id": "/?v=2",
   "name": "Kairo Decode",
   "short_name": "Decode",
   "description": "Adaptive intelligence jargon buster",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
   "icons": [
     {
-      "src": "/kairo-wordmark-cropped.png",
-      "sizes": "any",
+      "src": "/icon.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

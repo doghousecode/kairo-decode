@@ -1,21 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
-
-/*
-  Requires a Supabase table — run this SQL in your Supabase dashboard:
-
-  create table page_visits (
-    id uuid default gen_random_uuid() primary key,
-    page text not null,
-    visited_at timestamptz default now() not null
-  );
-  alter table page_visits enable row level security;
-  create policy "allow_insert" on page_visits for insert with check (true);
-  create policy "allow_select" on page_visits for select using (true);
-*/
+import { escapeHtml } from "@/lib/security";
 
 const supabase = () => createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 const PAGE_LABELS = {
@@ -74,22 +62,22 @@ export async function GET() {
     const last = formatRelative(lastSeen[page], now);
     return `
       <div class="stat-card">
-        <div class="page-label">${label}</div>
+        <div class="page-label">${escapeHtml(label)}</div>
         <div class="page-count">${total}</div>
-        <div class="page-meta">${week} this week &middot; last ${last}</div>
+        <div class="page-meta">${week} this week &middot; last ${escapeHtml(last)}</div>
       </div>`;
   }).join('');
 
   const recentRows = allVisits.slice(0, 50).map(v => `
     <tr>
-      <td>${PAGE_LABELS[v.page] || v.page}</td>
+      <td>${escapeHtml(PAGE_LABELS[v.page] || v.page)}</td>
       <td>${formatDateTime(v.visited_at)}</td>
       <td class="muted">${formatRelative(v.visited_at, now)}</td>
     </tr>`).join('');
 
   const totalAll = allVisits.length;
   const loadedAt = now.toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-  const errorNote = error ? `<p style="color:#fb7185;font-size:10pt;margin-bottom:1rem;">⚠️ ${error.message}</p>` : '';
+  const errorNote = error ? `<p style="color:#fb7185;font-size:10pt;margin-bottom:1rem;">⚠️ ${escapeHtml(error.message)}</p>` : '';
 
   const html = `<!DOCTYPE html>
 <html lang="en">
