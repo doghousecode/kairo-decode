@@ -4,16 +4,10 @@ import { escapeHtml, supabaseKey } from "@/lib/security";
 const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 const PAGE_LABELS = {
-  'decode':               'Kairo Decode',
-  'decode-gallery':       'Gallery · Session 1',
-  'asoworkshop-session1': 'Workshop · Session 1',
-  'asoworkshop-session2': 'Workshop · Session 2',
-  'asoworkshop':          'Workshop (original URL)',
+  'decode': 'Kairo Decode',
 };
 
-const DECODE_PAGES    = ['decode'];
-const WORKSHOP_PAGES  = ['asoworkshop-session1', 'decode-gallery', 'asoworkshop-session2'];
-const WORKSHOP_LEGACY = ['asoworkshop'];
+const DECODE_PAGES = ['decode'];
 
 const COUNTRY_NAMES = {
   GB:'🇬🇧 UK', US:'🇺🇸 US', AU:'🇦🇺 Australia', CA:'🇨🇦 Canada', DE:'🇩🇪 Germany',
@@ -44,12 +38,14 @@ export async function GET() {
   let { data, error } = await supabase()
     .from('page_visits')
     .select('page, visited_at, device, country, referrer, initials')
+    .in('page', DECODE_PAGES)
     .order('visited_at', { ascending: false });
 
   if (error) {
     const fallback = await supabase()
       .from('page_visits')
       .select('page, visited_at, device, country, referrer')
+      .in('page', DECODE_PAGES)
       .order('visited_at', { ascending: false });
     data = fallback.data;
     error = fallback.error;
@@ -226,10 +222,6 @@ export async function GET() {
 
   <h2>Decode</h2>
   <div class="stats-grid">${statCards(DECODE_PAGES)}</div>
-
-  <h2>Workshop</h2>
-  <div class="stats-grid-2">${statCards(WORKSHOP_PAGES)}</div>
-  <div class="stats-grid-2" style="margin-top:1rem">${statCards(WORKSHOP_LEGACY)}</div>
 
   <h2>Breakdown</h2>
   <div class="two-col">

@@ -19,13 +19,9 @@ import { isSameOrigin, supabaseKey } from '@/lib/security';
 const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 // Pages the client is allowed to record visits for. Anything else is dropped,
-// which prevents a stored-XSS vector via the analytics dashboards.
+// which prevents a stored-XSS vector via the analytics dashboard.
 const ALLOWED_PAGES = new Set([
   'decode',
-  'decode-gallery',
-  'asoworkshop',
-  'asoworkshop-session1',
-  'asoworkshop-session2',
 ]);
 
 function getDevice(ua = '') {

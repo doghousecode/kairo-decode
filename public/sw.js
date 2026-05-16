@@ -30,7 +30,7 @@ self.addEventListener('fetch', event => {
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
   // Main page navigation: network-first, cache fallback for offline use
-  // /visitors and /password still bypass (need live middleware auth)
+  // /numbers and /password still bypass (need live middleware auth)
   if (request.mode === 'navigate') {
     if (url.pathname === '/' || url.pathname === '') {
       event.respondWith(
