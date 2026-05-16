@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { isSameOrigin } from '@/lib/security';
+import { isSameOrigin, supabaseKey } from '@/lib/security';
 
 /*
   Supabase setup (run once, then drop the old permissive policies):
@@ -21,10 +21,7 @@ import { isSameOrigin } from '@/lib/security';
   drop policy if exists "allow_update" on translations;
 */
 
-const supabase = () => createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-);
+const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 export async function GET(request) {
   const lang = new URL(request.url).searchParams.get('lang');

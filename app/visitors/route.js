@@ -1,10 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
-import { escapeHtml } from "@/lib/security";
+import { escapeHtml, supabaseKey } from "@/lib/security";
 
-const supabase = () => createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 const PAGE_LABELS = {
   'asoworkshop':          'ASO Workshop (original URL)',

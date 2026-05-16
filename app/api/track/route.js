@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { isSameOrigin } from '@/lib/security';
+import { isSameOrigin, supabaseKey } from '@/lib/security';
 
 /*
   Run this SQL in Supabase to add enrichment columns (safe to run on existing table):
@@ -16,10 +16,7 @@ import { isSameOrigin } from '@/lib/security';
   drop policy if exists "allow_select" on page_visits;
 */
 
-const supabase = () => createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-);
+const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 // Pages the client is allowed to record visits for. Anything else is dropped,
 // which prevents a stored-XSS vector via the analytics dashboards.

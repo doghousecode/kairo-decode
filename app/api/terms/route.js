@@ -1,12 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
-import { isSameOrigin, isAuthed } from '@/lib/security';
+import { isSameOrigin, isAuthed, supabaseKey } from '@/lib/security';
 
 // Service-role key bypasses RLS — never expose to the client. All writes
 // are gated below by isSameOrigin / isAuthed.
-const supabase = () => createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-);
+const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 export async function GET() {
   const { data, error } = await supabase()

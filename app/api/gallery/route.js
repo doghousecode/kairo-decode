@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { isSameOrigin, isAuthed } from '@/lib/security';
+import { isSameOrigin, isAuthed, supabaseKey } from '@/lib/security';
 
 /*
   Supabase setup (run once, then drop the old permissive policies):
@@ -24,10 +24,7 @@ import { isSameOrigin, isAuthed } from '@/lib/security';
 const MAX_BYTES = 10 * 1024 * 1024;
 const BUCKET = 'session1-gallery';
 
-const supabase = () => createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-);
+const supabase = () => createClient(process.env.SUPABASE_URL, supabaseKey());
 
 export async function GET() {
   const client = supabase();
