@@ -226,6 +226,28 @@ const getTagColor = (tag, dark = true) => {
 
 const KNOWN_MODELS = new Set(["claude", "chatgpt", "gpt-4", "gpt-4o", "gemini", "perplexity", "llama", "mistral", "grok", "copilot", "dall-e", "sora", "midjourney"]);
 
+// Fire-and-forget event recorder. Same-origin only; payload size is capped server-side.
+function trackEvent(payload) {
+  if (typeof window === 'undefined') return;
+  try {
+    fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {}
+}
+
+// Parse #term=Foo%20Bar out of the URL hash. Returns null when missing.
+function readHashTerm() {
+  if (typeof window === 'undefined') return null;
+  const h = window.location.hash || '';
+  const m = h.match(/[#&]term=([^&]+)/);
+  if (!m) return null;
+  try { return decodeURIComponent(m[1].replace(/\+/g, ' ')); } catch { return null; }
+}
+
 const AVATAR_COLORS = ["#0d9488","#e11d48","#4f46e5","#d97706","#059669","#7c3aed","#0284c7","#ea580c","#db2777","#65a30d"];
 const getAvatarColor = (initials) => {
   const hash = (initials || "?").split("").reduce((a, c) => (c.charCodeAt(0) + (a << 6) + (a << 16) - a) >>> 0, 0);
@@ -386,6 +408,30 @@ function LinkedDefinition({ text, terms, currentTerm, onTermClick, onAddTerm, hi
   );
 }
 
+function ShareLinkButton({ term }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    const url = `${window.location.origin}${window.location.pathname}#term=${encodeURIComponent(term)}`;
+    const plain = new Blob([url], { type: 'text/plain' });
+    const item = new ClipboardItem({ 'text/plain': plain });
+    navigator.clipboard.write([item])
+      .catch(() => navigator.clipboard.writeText(url))
+      .then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500); });
+  };
+  return (
+    <button onClick={copy} title="Copy link to this term" style={{
+      background: "none", border: "none", cursor: "pointer", padding: "2px", flexShrink: 0,
+      color: copied ? "rgba(20,184,166,0.8)" : "rgba(var(--rgb),0.22)",
+      display: "inline-flex", alignItems: "center", transition: "color 0.15s",
+    }}>
+      {copied
+        ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        : <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      }
+    </button>
+  );
+}
+
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
@@ -409,7 +455,7 @@ function CopyButton({ text }) {
   );
 }
 
-function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight, isDark, contributor }) {
+function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms, onTermClick, onAddTerm, onDelete, onTermUpdate, isTyping, isOnline, lang, tagLabel, preTranslatedDef, preTranslatedSmartLines, preTranslatedDeepDive, headerHeight, isDark, contributor, userInitials }) {
   const [deepDives, setDeepDives] = useState(Array.isArray(item.deepDive) ? item.deepDive : [item.deepDive]);
   const [smartLines, setSmartLines] = useState(item.smartLines || []);
   const [generatingSmartLines, setGeneratingSmartLines] = useState(false);
@@ -425,6 +471,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001", max_tokens: 300,
+          purpose: "card-smartlines", term: item.term, initials: userInitials, lang,
           system: `You write short example sentences for a tech glossary. Mildly witty is fine, but keep them useful and grounded. Respond ONLY with a raw JSON array — no markdown, no backticks.`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nWrite exactly 2 sentences (max 20 words each) using this term naturally.\nFormat: ["sentence one.","sentence two."]` }],
         }),
@@ -450,6 +497,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001", max_tokens: 400,
+          purpose: "card-deepdive-gen", term: item.term, initials: userInitials, lang,
           system: `You generate deep-dive questions for a tech glossary aimed at people new to AI. Respond ONLY with a raw JSON array of 3 strings — no markdown, no backticks.`,
           messages: [{ role: "user", content: `Term: "${item.term}"\nDefinition: "${item.definition}"\n\nGenerate exactly 3 questions that someone new to AI would genuinely want answered — not expert-level, but the kind that build real understanding. Cover: (1) what it actually means in plain terms, (2) when or why someone would realistically encounter it, (3) a common misconception or surprising fact about it.\nFormat: ["question 1?","question 2?","question 3?"]` }],
         }),
@@ -512,11 +560,13 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
     if (!q) return;
     setLoadingCustom(true);
     setCustomResponse(null);
+    trackEvent({ event_type: 'custom_ask', term: item.term, payload: { question: q }, initials: userInitials, lang });
     try {
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6", max_tokens: 1000,
+          purpose: "custom-ask", term: item.term, initials: userInitials, lang,
           system: `You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.${lang !== 'en' ? ` Respond in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: q }],
         }),
@@ -540,11 +590,13 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
   const runDeepDive = async (idx) => {
     setLoadingIdx(idx);
     setResponses(prev => { const next = [...prev]; next[idx] = null; return next; });
+    trackEvent({ event_type: 'deep_dive_run', term: item.term, payload: { idx, prompt: deepDives[idx] }, initials: userInitials, lang });
     try {
       const res = await fetch("/api/claude", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6", max_tokens: 1000,
+          purpose: "deep-dive-run", term: item.term, initials: userInitials, lang,
           system: `You are a sharp, practical AI tutor. Answer concisely — max 200 words. Plain language. No bullet spam. Brief paragraphs.${lang !== 'en' ? ` Respond in ${LANG_NAMES[lang]}.` : ''}`,
           messages: [{ role: "user", content: deepDives[idx] }],
         }),
@@ -605,6 +657,7 @@ function GlossaryCard({ item, isOpen, onToggle, isNew, shouldScrollTo, allTerms,
                 : <LinkedDefinition text={displayDef} terms={allTerms} currentTerm={item.term} onTermClick={onTermClick} onAddTerm={onAddTerm} />
               }
             </p>
+            {(!isTyping || typingDone) && <ShareLinkButton term={item.term} />}
             {(!isTyping || typingDone) && <CopyButton text={`${item.term.toUpperCase()}\n\n${displayDef}`} />}
           </div>
 
@@ -820,6 +873,58 @@ export default function AIGlossary() {
     return () => clearInterval(interval);
   }, []);
 
+  // Open the term referenced in the URL hash once the glossary has loaded.
+  // Runs once per page load — the openTerm-sync effect handles updates from there.
+  const initialHashHandled = useRef(false);
+  useEffect(() => {
+    if (!termsLoaded || initialHashHandled.current) return;
+    initialHashHandled.current = true;
+    const hashTerm = readHashTerm();
+    if (!hashTerm) return;
+    const match = terms.find(t => t.term.toLowerCase() === hashTerm.toLowerCase());
+    if (match) {
+      setActiveTag("All");
+      setSearch("");
+      setOpenTerm(match.term);
+      setScrollToTerm(match.term);
+      setTimeout(() => setScrollToTerm(null), 800);
+      trackEvent({ event_type: 'deep_link_hit', term: match.term, payload: { found: true }, initials: userInitials, lang });
+    } else {
+      trackEvent({ event_type: 'deep_link_hit', term: hashTerm, payload: { found: false }, initials: userInitials, lang });
+    }
+  }, [termsLoaded]);
+
+  // Keep the URL hash in sync with the currently open card so the link is shareable.
+  // replaceState doesn't fire hashchange, so no loop with the listener below.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const desired = openTerm ? `#term=${encodeURIComponent(openTerm)}` : '';
+    if ((window.location.hash || '') === desired) return;
+    const url = `${window.location.pathname}${window.location.search}${desired}`;
+    history.replaceState(null, '', url);
+  }, [openTerm]);
+
+  // Respond to back/forward navigation that changes the hash externally.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onHashChange = () => {
+      const hashTerm = readHashTerm();
+      if (hashTerm) {
+        const match = terms.find(t => t.term.toLowerCase() === hashTerm.toLowerCase());
+        if (match && match.term !== openTerm) {
+          setActiveTag("All"); setSearch("");
+          setOpenTerm(match.term);
+          setScrollToTerm(match.term);
+          setTimeout(() => setScrollToTerm(null), 600);
+        }
+      } else if (openTerm) {
+        setOpenTerm(null);
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [terms, openTerm]);
+
   useEffect(() => {
     const key = 'kairo-tracked-decode';
     const last = parseInt(localStorage.getItem(key) || '0', 10);
@@ -902,6 +1007,7 @@ export default function AIGlossary() {
             signal: ctrl.signal,
             body: JSON.stringify({
               model, max_tokens: MAX_TOKENS,
+              purpose: "translate-batch", initials: userInitials, lang: targetLang,
               system: "You translate tech glossary content. Respond ONLY with a raw JSON object — no markdown, no backticks. JSON keys must stay in English. Translate ALL text values (definitions, smart lines, questions) fully into the target language — even when the entry is about a product or acronym. Only the proper name itself (e.g. Claude, ChatGPT, MCP, CI/CD) should remain in English when it appears within the translated text.",
               messages: [{ role: "user", content: `Translate all definition, smartLines, and deepDive values to ${LANG_NAMES[targetLang]}. Return exact same JSON structure:\n${JSON.stringify(payload)}` }],
             }),
@@ -1117,6 +1223,8 @@ ${cardsHTML}
       return;
     }
 
+    trackEvent({ event_type: 'card_open', term: termName, initials: userInitials, lang });
+
     // Anchor the viewport to the card being opened: capture its screen-space
     // top before React re-renders, then scroll by the delta afterwards so it
     // stays exactly where the user tapped.
@@ -1182,6 +1290,7 @@ ${cardsHTML}
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6", max_tokens: 1000, stream: true,
+          purpose: "add-term", term: query, initials: userInitials, lang,
           system: `You maintain a glossary for AI, ML, software dev, and tech entrepreneurship.
 Given a term, decide if it's genuinely relevant to that domain. If yes, generate a glossary entry.
 Respond ONLY with raw JSON — no markdown, no backticks, no explanation.
@@ -1237,6 +1346,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
         setOpenTerm(entry.term);
         setTypingTerm(entry.term);
         persist(entry);
+        trackEvent({ event_type: 'term_added', term: entry.term, initials: userInitials, lang });
         setSearch("");
         const addedTerm = entry.term;
         setTimeout(() => {
@@ -1562,6 +1672,7 @@ Already in glossary (do not duplicate): ${allTermNames.join(", ")}`,
               headerHeight={headerHeight}
               isDark={isDark}
               contributor={item.contributor}
+              userInitials={userInitials}
             />
           ))}
         </div>

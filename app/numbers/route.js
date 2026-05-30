@@ -34,13 +34,27 @@ function fmt(dateStr) {
 export async function GET() {
   const now = new Date();
   const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+  const sixtyDaysAgo = new Date(now - 60 * 24 * 60 * 60 * 1000);
 
-  let { data, error } = await supabase()
-    .from('page_visits')
-    .select('page, visited_at, device, country, referrer, initials')
-    .in('page', DECODE_PAGES)
-    .order('visited_at', { ascending: false });
+  const [visitsRes, eventsRes, usageRes] = await Promise.all([
+    supabase()
+      .from('page_visits')
+      .select('page, visited_at, device, country, referrer, initials')
+      .in('page', DECODE_PAGES)
+      .order('visited_at', { ascending: false }),
+    supabase()
+      .from('decode_events')
+      .select('event_type, term, payload, initials, lang, created_at')
+      .gte('created_at', sixtyDaysAgo.toISOString())
+      .order('created_at', { ascending: false }),
+    supabase()
+      .from('decode_claude_usage')
+      .select('purpose, model, input_tokens, output_tokens, cache_read_tokens, cost_usd, term, initials, lang, created_at')
+      .gte('created_at', sixtyDaysAgo.toISOString())
+      .order('created_at', { ascending: false }),
+  ]);
 
+  let { data, error } = visitsRes;
   if (error) {
     const fallback = await supabase()
       .from('page_visits')
@@ -52,6 +66,8 @@ export async function GET() {
   }
 
   const visits = data || [];
+  const events = eventsRes.data || [];
+  const usage = usageRes.data || [];
 
   // Aggregate stats per page
   const totals = {}, weekCounts = {}, lastSeen = {};
@@ -150,6 +166,88 @@ export async function GET() {
     </tr>`;
   }).join('');
 
+  // === Engagement analytics: aggregate decode_events ===
+  const termOpens = {};            // term → count
+  const deepDiveRuns = {};         // term → count
+  const customAsks = [];           // { term, question, initials, lang, at }
+  const deepLinkHits = [];         // { term, found, at }
+
+  events.forEach(e => {
+    if (e.event_type === 'card_open' && e.term) termOpens[e.term] = (termOpens[e.term] || 0) + 1;
+    else if (e.event_type === 'deep_dive_run' && e.term) deepDiveRuns[e.term] = (deepDiveRuns[e.term] || 0) + 1;
+    else if (e.event_type === 'custom_ask') customAsks.push({ term: e.term, question: e.payload?.question || '', initials: e.initials, lang: e.lang, at: e.created_at });
+    else if (e.event_type === 'deep_link_hit') deepLinkHits.push({ term: e.term, found: !!e.payload?.found, at: e.created_at });
+  });
+
+  const topOpens = Object.entries(termOpens).sort(([,a],[,b]) => b - a).slice(0, 10);
+  const topDives = Object.entries(deepDiveRuns).sort(([,a],[,b]) => b - a).slice(0, 10);
+  const maxOpens = topOpens[0]?.[1] || 1;
+  const maxDives = topDives[0]?.[1] || 1;
+
+  const termBars = (entries, max) => entries.length === 0
+    ? '<p class="empty">No data yet.</p>'
+    : entries.map(([term, count]) => `<div class="country-row">
+        <span class="country-label" title="${escapeHtml(term)}">${escapeHtml(term)}</span>
+        <div class="country-bar-wrap"><div class="country-bar" style="width:${Math.max(Math.round(count / max * 100), 2)}%"></div></div>
+        <span class="country-count">${count}</span>
+      </div>`).join('');
+
+  const recentCustomAsks = customAsks.slice(0, 20).map(a => `
+    <div class="qa-row">
+      <div class="qa-meta">
+        ${a.initials ? `<span class="qa-initials">${escapeHtml(a.initials)}</span>` : '<span class="qa-initials qa-anon">—</span>'}
+        <span class="qa-term">${escapeHtml(a.term || '·')}</span>
+        <span class="qa-when">${escapeHtml(rel(a.at, now))}</span>
+      </div>
+      <p class="qa-q">"${escapeHtml(a.question)}"</p>
+    </div>
+  `).join('') || '<p class="empty">No custom questions yet.</p>';
+
+  // === Token spend: aggregate decode_claude_usage ===
+  let costTotal = 0, costWeek = 0;
+  let tokTotal = 0, tokWeek = 0;
+  const costByPurpose = {};
+  const costByUser = {};
+  const callsByPurpose = {};
+  usage.forEach(u => {
+    const c = Number(u.cost_usd) || 0;
+    const t = (u.input_tokens || 0) + (u.output_tokens || 0);
+    costTotal += c; tokTotal += t;
+    if (new Date(u.created_at) > sevenDaysAgo) { costWeek += c; tokWeek += t; }
+    const p = u.purpose || 'unknown';
+    costByPurpose[p] = (costByPurpose[p] || 0) + c;
+    callsByPurpose[p] = (callsByPurpose[p] || 0) + 1;
+    const who = u.initials || '—';
+    costByUser[who] = (costByUser[who] || 0) + c;
+  });
+
+  const fmtCost = (n) => n >= 1 ? `$${n.toFixed(2)}` : n >= 0.01 ? `$${n.toFixed(3)}` : `$${n.toFixed(4)}`;
+  const fmtTokens = (n) => n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
+
+  const purposeRows = Object.entries(costByPurpose).sort(([,a],[,b]) => b - a).map(([purpose, cost]) => {
+    const pct = costTotal > 0 ? Math.round(cost / costTotal * 100) : 0;
+    return `<div class="country-row">
+      <span class="country-label" title="${escapeHtml(purpose)}">${escapeHtml(purpose)} <span class="muted-inline">${callsByPurpose[purpose]} calls</span></span>
+      <div class="country-bar-wrap"><div class="country-bar" style="width:${Math.max(pct, 2)}%"></div></div>
+      <span class="country-count">${fmtCost(cost)}</span>
+    </div>`;
+  }).join('') || '<p class="empty">No Claude calls logged yet.</p>';
+
+  const userRows = Object.entries(costByUser).sort(([,a],[,b]) => b - a).slice(0, 10).map(([who, cost]) => {
+    const pct = costTotal > 0 ? Math.round(cost / costTotal * 100) : 0;
+    return `<div class="country-row">
+      <span class="country-label">${escapeHtml(who)}</span>
+      <div class="country-bar-wrap"><div class="country-bar" style="width:${Math.max(pct, 2)}%"></div></div>
+      <span class="country-count">${fmtCost(cost)}</span>
+    </div>`;
+  }).join('') || '<p class="empty">No data yet.</p>';
+
+  const recentDeepLinks = deepLinkHits.slice(0, 10).map(h => `<tr>
+    <td>${escapeHtml(h.term || '·')}</td>
+    <td>${h.found ? '<span style="color:#34d399">✓</span>' : '<span style="color:#fb7185">✗</span>'}</td>
+    <td class="muted">${escapeHtml(rel(h.at, now))}</td>
+  </tr>`).join('');
+
   const loadedAt = now.toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
   const errorNote = error ? `<p style="color:#fb7185;font-size:10pt;margin-bottom:1rem">⚠️ ${escapeHtml(error.message)}</p>` : '';
 
@@ -201,6 +299,20 @@ export async function GET() {
     tr:last-child td{border-bottom:none}
     td.muted{color:#52525b}
     .empty{font-size:10pt;color:#52525b;padding:.5rem 0}
+    .muted-inline{color:#52525b;font-size:8.5pt;margin-left:.35rem}
+    .qa-row{padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .qa-row:last-child{border-bottom:none}
+    .qa-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem;font-size:9pt}
+    .qa-initials{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:18px;border-radius:9px;border:1.5px solid rgba(99,102,241,0.7);color:rgba(99,102,241,0.9);font-size:7.5pt;font-weight:700;padding:0 4px;letter-spacing:.03em}
+    .qa-initials.qa-anon{border-color:rgba(255,255,255,.12);color:#52525b}
+    .qa-term{color:#a1a1aa;font-weight:500}
+    .qa-when{color:#52525b;margin-left:auto;font-size:8.5pt}
+    .qa-q{font-size:10pt;color:#c4c4cf;line-height:1.45;font-style:italic;padding-left:.2rem}
+    .cost-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
+    .cost-card{background:rgba(20,184,166,.07);border:1px solid rgba(20,184,166,.2);border-radius:14px;padding:1rem 1.1rem}
+    .cost-label{font-size:9pt;color:rgba(94,234,212,1);margin-bottom:.35rem;font-weight:500}
+    .cost-value{font-size:22pt;font-weight:700;color:#fff;letter-spacing:-.03em;line-height:1;margin-bottom:.25rem}
+    .cost-sub{font-size:8.5pt;color:#52525b}
     footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:10pt;color:#3f3f46}
   </style>
 </head>
@@ -235,6 +347,54 @@ export async function GET() {
       ${topCountries}
     </div>
   </div>
+
+  <h2>Engagement</h2>
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title">Most opened terms</div>
+      ${termBars(topOpens, maxOpens)}
+    </div>
+    <div class="panel">
+      <div class="panel-title">Most-run deep dives</div>
+      ${termBars(topDives, maxDives)}
+    </div>
+  </div>
+
+  <h2>Token spend</h2>
+  <div class="cost-grid">
+    <div class="cost-card">
+      <div class="cost-label">Total</div>
+      <div class="cost-value">${fmtCost(costTotal)}</div>
+      <div class="cost-sub">${fmtTokens(tokTotal)} tokens · ${usage.length} calls</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-label">This week</div>
+      <div class="cost-value">${fmtCost(costWeek)}</div>
+      <div class="cost-sub">${fmtTokens(tokWeek)} tokens</div>
+    </div>
+  </div>
+  <div class="two-col" style="margin-top:1rem">
+    <div class="panel">
+      <div class="panel-title">Spend by purpose</div>
+      ${purposeRows}
+    </div>
+    <div class="panel">
+      <div class="panel-title">Spend by user</div>
+      ${userRows}
+    </div>
+  </div>
+
+  <h2>Custom questions</h2>
+  <div class="panel">
+    ${recentCustomAsks}
+  </div>
+
+  ${deepLinkHits.length > 0 ? `
+  <h2>Deep-link hits</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Found</th><th>When</th></tr></thead>
+    <tbody>${recentDeepLinks}</tbody>
+  </table>` : ''}
 
   <h2>Recent Visits</h2>
   ${visits.length > 0 ? `
