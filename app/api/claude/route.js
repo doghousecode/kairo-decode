@@ -2,7 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 import { isSameOrigin, supabaseKey } from '@/lib/security';
 
 /*
-  Run this SQL in Supabase to create the usage table:
+  Run this SQL in Supabase to create the usage table.
+  RLS is enabled with NO policies — the route uses the service-role key
+  (which bypasses RLS), and the anon key gets denied by default. Same
+  posture as page_visits.
 
   CREATE TABLE IF NOT EXISTS decode_claude_usage (
     id bigserial PRIMARY KEY,
@@ -18,6 +21,7 @@ import { isSameOrigin, supabaseKey } from '@/lib/security';
     lang text,
     created_at timestamptz DEFAULT now()
   );
+  ALTER TABLE decode_claude_usage ENABLE ROW LEVEL SECURITY;
   CREATE INDEX IF NOT EXISTS decode_claude_usage_created_at_idx ON decode_claude_usage (created_at DESC);
   CREATE INDEX IF NOT EXISTS decode_claude_usage_purpose_idx ON decode_claude_usage (purpose);
 */

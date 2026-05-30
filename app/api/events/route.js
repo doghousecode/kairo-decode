@@ -2,7 +2,10 @@ import { createClient } from '@supabase/supabase-js';
 import { isSameOrigin, supabaseKey } from '@/lib/security';
 
 /*
-  Run this SQL in Supabase to create the events table:
+  Run this SQL in Supabase to create the events table.
+  RLS is enabled with NO policies — the route uses the service-role key
+  (which bypasses RLS), and the anon key gets denied by default. Same
+  posture as page_visits.
 
   CREATE TABLE IF NOT EXISTS decode_events (
     id bigserial PRIMARY KEY,
@@ -13,6 +16,7 @@ import { isSameOrigin, supabaseKey } from '@/lib/security';
     lang text,
     created_at timestamptz DEFAULT now()
   );
+  ALTER TABLE decode_events ENABLE ROW LEVEL SECURITY;
   CREATE INDEX IF NOT EXISTS decode_events_created_at_idx ON decode_events (created_at DESC);
   CREATE INDEX IF NOT EXISTS decode_events_type_idx ON decode_events (event_type);
   CREATE INDEX IF NOT EXISTS decode_events_term_idx ON decode_events (term);
