@@ -873,11 +873,13 @@ export default function AIGlossary() {
     return () => clearInterval(interval);
   }, []);
 
-  // Open the term referenced in the URL hash once the glossary has loaded.
-  // Runs once per page load — the openTerm-sync effect handles updates from there.
+  // Open the term referenced in the URL hash once both the glossary has loaded
+  // AND the splash has dropped (the splash overlay locks <html> overflow, so
+  // an earlier scrollTo would silently no-op). Runs once per page load — the
+  // openTerm-sync effect handles updates from there.
   const initialHashHandled = useRef(false);
   useEffect(() => {
-    if (!termsLoaded || initialHashHandled.current) return;
+    if (!termsLoaded || !splashReady || initialHashHandled.current) return;
     initialHashHandled.current = true;
     const hashTerm = readHashTerm();
     if (!hashTerm) return;
@@ -886,13 +888,17 @@ export default function AIGlossary() {
       setActiveTag("All");
       setSearch("");
       setOpenTerm(match.term);
-      setScrollToTerm(match.term);
-      setTimeout(() => setScrollToTerm(null), 800);
+      // Give the splash fade-out (0.8s) and any layout reflow a beat before
+      // scrolling, so the smooth-scroll lands on a stable header height.
+      setTimeout(() => {
+        setScrollToTerm(match.term);
+        setTimeout(() => setScrollToTerm(null), 800);
+      }, 250);
       trackEvent({ event_type: 'deep_link_hit', term: match.term, payload: { found: true }, initials: userInitials, lang });
     } else {
       trackEvent({ event_type: 'deep_link_hit', term: hashTerm, payload: { found: false }, initials: userInitials, lang });
     }
-  }, [termsLoaded]);
+  }, [termsLoaded, splashReady]);
 
   // Keep the URL hash in sync with the currently open card so the link is shareable.
   // replaceState doesn't fire hashchange, so no loop with the listener below.
@@ -935,9 +941,12 @@ export default function AIGlossary() {
     }
   }, []);
 
+  const [splashReady, setSplashReady] = useState(false);
   useEffect(() => {
-    // Signal layout to hide splash — minimum 1.2s so it's always visible briefly
-    setTimeout(() => window.kairoReady?.(), 1200);
+    // Signal layout to hide splash — minimum 1.2s so it's always visible briefly.
+    // Track the same moment locally so effects that need a scrollable viewport
+    // (deep-link handler) can wait until <html> overflow is unlocked.
+    setTimeout(() => { window.kairoReady?.(); setSplashReady(true); }, 1200);
 
     setIsOnline(navigator.onLine);
     const goOnline = () => setIsOnline(true);
