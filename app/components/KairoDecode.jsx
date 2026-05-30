@@ -942,7 +942,6 @@ export default function AIGlossary() {
     }
   }, []);
 
-  const [splashReady, setSplashReady] = useState(false);
   useEffect(() => {
     // Signal layout to hide splash — minimum 1.2s so it's always visible briefly.
     // Track the same moment locally so effects that need a scrollable viewport
