@@ -804,6 +804,7 @@ export default function AIGlossary() {
   const isSpaghetti = themeMode === "spaghetti";
   const isMint = themeMode === "mint";
   const [isOnline, setIsOnline] = useState(true);
+  const [splashReady, setSplashReady] = useState(false);
   const [feedback, setFeedback] = useState(null); // { type: "notRelevant"|"error", term }
   const [scrollToTerm, setScrollToTerm] = useState(null);
   const [typingTerm, setTypingTerm] = useState(null);
