@@ -903,8 +903,12 @@ export default function AIGlossary() {
 
   // Keep the URL hash in sync with the currently open card so the link is shareable.
   // replaceState doesn't fire hashchange, so no loop with the listener below.
+  // Skip the very first run — otherwise an incoming #term=… hash gets stripped
+  // before the initial-hash effect has a chance to read it.
+  const urlSyncMounted = useRef(false);
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (!urlSyncMounted.current) { urlSyncMounted.current = true; return; }
     const desired = openTerm ? `#term=${encodeURIComponent(openTerm)}` : '';
     if ((window.location.hash || '') === desired) return;
     const url = `${window.location.pathname}${window.location.search}${desired}`;
